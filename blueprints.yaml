@@ -1,0 +1,32 @@
+name: Jungschar
+slug: jungschar
+type: theme
+version: 0.1.0
+description: A theme featuring special layout for youthwork
+icon: rebel
+author:
+  name: SAV
+  email: simon@boesch.onl
+homepage: https://github.com/IamSAB/grav-theme-jungschar
+demo: http://demo.yoursite.com
+keywords: grav, theme, etc
+bugs: https://github.com/IamSAB/grav-theme-jungschar/issues
+readme: https://github.com/IamSAB/grav-theme-jungschar/blob/develop/README.md
+license: MIT
+
+dependencies:
+  - { name: grav, version: '>=1.6.0' }
+
+form:
+    validation: loose
+    fields:
+        production:
+            type: toggle
+            label: Production Mode
+            highlight: 1
+            default: 1
+            options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+            validate:
+                type: bool
