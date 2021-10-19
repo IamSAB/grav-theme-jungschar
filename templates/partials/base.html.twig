@@ -1,67 +1,167 @@
 {% set extension = config.theme.production ? '.min' : '' %}
+
 <!DOCTYPE html>
-<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e }}">
-<head>
-    {% block head %}
-        <meta charset="utf-8" />
-        <title>{% if header.title %}{{ header.title|e }} | {% endif %}{{ site.title|e }}</title>
+<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e }}" data-theme="garden">
 
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        {% include 'partials/metadata.html.twig' %}
+	<head>
+		{% block head %}
+			<meta charset="utf-8"/>
+			<title>
+				{% if header.title %}
+					{{ header.title|e }}
+					|
+				{% endif %}
+				{{ site.title|e }}</title>
 
-        <link rel="icon" type="image/png" href="{{ url('theme://images/logo.png')|e }}" />
-        <link rel="canonical" href="{{ page.url(true, true)|e }}" />
-    {% endblock head %}
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			{% include 'partials/metadata.html.twig' %}
 
-    {% block stylesheets %}
-        {% do assets.addCss('theme://dist/css/app' ~ extension ~ '.css', 98) %}
-    {% endblock %}
+			<link rel="icon" type="image/png" href="{{ url('theme://images/logo.png')|e }}"/>
+			<link rel="canonical" href="{{ page.url(true, true)|e }}"/>
+		{% endblock head %}
 
-    {% block javascripts %}
-    {% endblock %}
+		{% block stylesheets %}
+			{% do assets.addCss('theme://output.css', 98) %}
+		{% endblock %}
 
-    {% block assets deferred %}
-    {{ assets.css()|raw }}
-    {{ assets.js()|raw }}
-    {% endblock %}
-</head>
-<body id="top" class="{{ page.header.body_classes|e }} {{ config.theme.production ?: 'debug-screens' }}">
+		{% block javascripts %}{% endblock %}
 
-{% block header %}
-    <div class="header">
-        <div class="">
-            <a class="logo" href="{{ home_url|e }}">
-                {{ config.site.title|e }}
-            </a>
-            {% block header_navigation %}
-                <nav class="main-nav">
-                    {% include 'partials/navigation.html.twig' %}
-                </nav>
-            {% endblock %}
-        </div>
-    </div>
-{% endblock %}
+		{% block assets deferred %}
+			{{ assets.css()|raw }}
+			{{ assets.js()|raw }}
+		{% endblock %}
+	</head>
 
-{% block body %}
-    <section id="body">
-        <div class="prose">
-            {% block content %}{% endblock %}
-        </div>
-    </section>
-{% endblock %}
+	<body id="top" class="drawer drawer-end {{ config.theme.production ?: 'debug-screens' }}">
+		<input id="menu-drawer" type="checkbox" class="drawer-toggle">
+		<div class="drawer-content">
 
-{% block footer %}
-    <div class="footer text-center">
-        <div class="">
-            <p><a href="http://getgrav.org">Grav</a>, by <a href="http://www.rockettheme.com">RocketTheme</a>.</p>
-        </div>
-    </div>
-{% endblock %}
+			{% block header %}
 
-{% block bottom %}
-    {{ assets.js('bottom')|raw }}
-{% endblock %}
+				{% set header_image = page.header.image ? page.media.images[page.header.image] : page.media.images|first %}
+				{% set bg_url = header_image ? header_image.url : 'data:image/svg+xml,'~svg('theme://svg/topography.svg')|url_encode %}
 
-</body>
+				<header class="bg-neutral bg-blend-overlay" style="background-image: url('{{ bg_url }}')">
+
+					<div class="navbar mb-2 shadow-lg text-neutral-content">
+						<div class="px-2 mx-2 navbar-start">
+							<a href="/">
+								{{ svg('theme://svg/logo.svg', 'fill-current w-12 h-12')|raw }}
+							</a>
+						</div>
+						<nav class="hidden px-2 mx-2 navbar-center lg:flex">
+							<ul class="flex items-stretch space-x-2">
+								{% for page in pages.children.visible %}
+									{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
+									<a href="{{ page.url|e }}" class="btn btn-ghost btn-sm rounded-btn {{ current_page|e }}">
+										{{ page.menu|e }}
+									</a>
+								{% endfor %}
+							</ul>
+						</nav>
+						<div class="navbar-end">
+							<label for="menu-drawer" class="btn btn-square btn-ghost drawer-button">
+								{{ svg('theme://svg/menu.svg', 'fill-current')|raw }}
+							</label>
+						</div>
+
+					</div>
+
+					<div class="flex items-center justify-center h-96">
+						<h1 class="text-7xl text-neutral-content">{{ page.title }}</h1>
+					</div>
+
+				</header>
+
+
+			{% endblock %}
+
+			{% block body %}
+				<main id="body">
+					<div class="px-4 my-16">
+						{% block content %}{% endblock %}
+					</div>
+				</main>
+			{% endblock %}
+
+			{% block footer %}
+
+				<footer class="p-10 footer bg-base-200 text-base-content">
+					<div>
+						{{ svg('theme://svg/logo.svg', 'fill-current w-12 h-12 text-neutral-content')|raw }}
+						<p class="text-lg">{{ config.site.title}}</p>
+            <p>&copy; {{ "now"|date("Y") }}</p>
+					</div>
+					<div>
+						<span class="footer-title">Hauptmenü</span>
+						{% for page in pages.children.visible %}
+							{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
+							<a href="{{ page.url|e }}" class="link link-hover {{ current_page|e }}">
+								{{ page.menu|e }}
+							</a>
+						{% endfor %}
+					</div>
+					<div>
+						<span class="footer-title">Weiteres</span>
+						{% for page in pages.children.invisible %}
+							{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
+							<a href="{{ page.url|e }}" class="link link-hover {{ current_page|e }}">
+								{{ page.menu|e }}
+							</a>
+						{% endfor %}
+				</div>
+				<div>
+					<span class="footer-title">Netzwerke</span>
+					<div class="grid grid-flow-col gap-4">
+						<a>
+							{{ svg('theme://svg/instagram.svg', 'fill-current')|raw }}
+						</a>
+						<a>
+							{{ svg('theme://svg/youtube.svg', 'fill-current')|raw }}
+						</a>
+					</div>
+				</div>
+			</footer>
+      {% endblock %}
+
+		</div>
+
+		<div class="drawer-side">
+			<label for="menu-drawer" class="drawer-overlay"></label>
+			<ul class="menu p-4 overflow-y-auto w-80 bg-base-100 text-base-content space-y-2">
+				<li class="menu-title">
+					<span>
+						Hauptmenü
+					</span>
+				</li>
+				{% for page in pages.children.visible %}
+					{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
+					<li>
+						<a href="{{ page.url|e }}" class="{{ current_page|e }}">
+							{{ page.menu|e }}
+						</a>
+					</li>
+				{% endfor %}
+				<li class="menu-title mt-6">
+					<span>
+						Weiteres
+					</span>
+				</li>
+				{% for page in pages.children.invisible %}
+					{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
+					<li>
+						<a href="{{ page.url|e }}" class="{{ current_page|e }}">
+							{{ page.menu|e }}
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+
+		{% block bottom %}
+			{{ assets.js('bottom')|raw }}
+		{% endblock %}
+
+	</body>
 </html>

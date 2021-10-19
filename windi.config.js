@@ -1,18 +1,23 @@
-// const colors = require('windicss/colors');
+const colors = require('daisyui/colors');
 const typography = require('windicss/plugin/typography');
-const { transform, defineConfig } = require('windicss/helpers');
+const { transform } = require('windicss/helpers');
 
 module.exports = {
   extract: {
-    include: ['./templates/**.twig'],
+    include: ['./templates/**/*.twig'],
   },
-  safelist: [/data-theme$/],
+  safelist: [/data-theme$/, 'fill-current','w-12', 'h-12'],
   darkMode: 'class',
   theme: {
-    fontFamily: {
-      sans: ['Roboto', 'sans-serif'],
-      serif: ['Merriweather', 'serif'],
-    },
+    extend: {
+      colors: {
+        ...colors
+      },
+      fontFamily: {
+        sans: ['Roboto', 'sans-serif'],
+        serif: ['Merriweather', 'serif'],
+      },
+    }
   },
   daisyui: {
     themes: [
