@@ -25,7 +25,7 @@ module.exports = {
     ],
   },
   plugins: [
-    typography,
+    require('windicss/plugin/typography'),
     transform('daisyui'),
   ]
 }
