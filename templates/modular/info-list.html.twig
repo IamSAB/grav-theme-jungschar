@@ -1,0 +1,41 @@
+{% set items = taxonomy.findTaxonomy(page.header.list.taxonomy, 'or') %}
+{% set order_by = page.header.list.order.by %}
+{% set order_dir = page.header.list.order.dir %}
+
+<div class="prose text-center">
+	{{ page.content|raw }}
+</div>
+<div class="grid grid-cols-2 gap-4 items-start mt-6">
+	{% for item in items.order(order_by, order_dir)|slice(0, page.header.list.limit) %}
+		<div class="card bordered">
+			<div class="card-body">
+				<div class="flex items-center mb-4">
+					{% set image = item.media.images|first %}
+					{% if image %}
+						<figure class="!w-auto mask mask-squircle mr-3">
+							{{ image.cropZoom(100,100).html|raw }}
+						</figure>
+					{% endif %}
+					<div class="flex-1">
+						<div class="flex justify-between">
+							<div class="font-light">{{ item.header.dtend|date('d. M y')}}</div>
+							<div>
+								{% for tag in item.taxonomy.tag %}
+									<div class="badge badge-neutral">{{tag}}</div>
+								{% endfor %}
+							</div>
+						</div>
+						<h2 class="card-title">{{ item.title }}</h2>
+						<div>{{ item.subtitle }}</div>
+					</div>
+				</div>
+				<div>{{ item.summary|raw }}</div>
+				<div class="card-actions">
+					<a class="text-primary link link-hover" href="{{item.url}}">Weiterlesen</a>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div>Nichts gefunden.</div>
+	{% endfor %}
+</div>

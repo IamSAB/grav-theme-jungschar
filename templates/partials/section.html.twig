@@ -1,0 +1,10 @@
+<section id="{{ item.menu|hyphenize }}" class="container my-12">
+	<header class="flex flex-col items-center">
+		<i class="icon-{{ item.header.icon }} icon-lg"></i>
+		<h2 class="uppercase font-black text-7xl text-base-300 mt-4">{{ item.title }}</h2>
+		<div class="text-2xl font-bold -mt-6 text-primary">{{ item.header.subtitle }}</div>
+	</header>
+	<div>
+		{{ item.content|raw }}
+	</div>
+</section>

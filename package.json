@@ -1,9 +1,11 @@
 {
   "scripts": {
-    "dev": "windicss --preflight --config windi.config.js -o output.css --dev",
-    "build": "windicss --preflight --config windi.config.js -o output.css --minify"
+    "dev": "windicss --preflight --config windi.config.js -o css/output.css --dev",
+    "build": "windicss --preflight --config windi.config.js -o css/output.css --minify"
   },
   "devDependencies": {
+    "@windicss/plugin-heropatterns": "^0.0.8",
+    "@windicss/plugin-icons": "^1.0.2",
     "daisyui": "latest",
     "windicss": "latest"
   }

@@ -22,7 +22,8 @@
 		{% endblock head %}
 
 		{% block stylesheets %}
-			{% do assets.addCss('theme://output.css', 98) %}
+			{% do assets.addCss('theme://css/output.css', 98) %}
+			{% do assets.addCss('theme://css/line-awesome.min.css') %}
 		{% endblock %}
 
 		{% block javascripts %}{% endblock %}
@@ -40,14 +41,13 @@
 			{% block header %}
 
 				{% set header_image = page.header.image ? page.media.images[page.header.image] : page.media.images|first %}
-				{% set bg_url = header_image ? header_image.url : 'data:image/svg+xml,'~svg('theme://svg/topography.svg')|url_encode %}
 
-				<header class="bg-neutral bg-blend-overlay" style="background-image: url('{{ bg_url }}')">
+				<header class="bg-neutral bg-blend-overlay bg-hero-topography">
 
 					<div class="navbar mb-2 shadow-lg text-neutral-content">
 						<div class="px-2 mx-2 navbar-start">
 							<a href="/">
-								{{ svg('theme://svg/logo.svg', 'fill-current w-12 h-12')|raw }}
+								{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10')|raw }}
 							</a>
 						</div>
 						<nav class="hidden px-2 mx-2 navbar-center lg:flex">
@@ -55,22 +55,27 @@
 								{% for page in pages.children.visible %}
 									{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
 									<a href="{{ page.url|e }}" class="btn btn-ghost btn-sm rounded-btn {{ current_page|e }}">
-										{{ page.menu|e }}
+										{% if page.header.icon %}
+											<i class="icon-{{ page.header.icon }} mr-1"></i>
+										{% endif %}
+										<span>{{ page.menu|e }}</span>
 									</a>
 								{% endfor %}
 							</ul>
 						</nav>
 						<div class="navbar-end">
 							<label for="menu-drawer" class="btn btn-square btn-ghost drawer-button">
-								{{ svg('theme://svg/menu.svg', 'fill-current')|raw }}
+								<i class="icon-menu-right"></i>
 							</label>
 						</div>
 
 					</div>
 
-					<div class="flex items-center justify-center h-96">
-						<h1 class="text-7xl text-neutral-content">{{ page.title }}</h1>
-					</div>
+					{% block header_content %}
+						<div class="text-center py-12">
+							<h1 class="text-7xl text-neutral-content">{{ page.title }}</h1>
+						</div>
+					{% endblock %}
 
 				</header>
 
@@ -91,39 +96,40 @@
 					<div>
 						{{ svg('theme://svg/logo.svg', 'fill-current w-12 h-12 text-neutral-content')|raw }}
 						<p class="text-lg">{{ config.site.title}}</p>
-            <p>&copy; {{ "now"|date("Y") }}</p>
+						<p>&copy;
+							{{ "now"|date("Y") }}</p>
 					</div>
 					<div>
 						<span class="footer-title">Hauptmenü</span>
 						{% for page in pages.children.visible %}
 							{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
-							<a href="{{ page.url|e }}" class="link link-hover {{ current_page|e }}">
+							<a href="{{ page.url|e }}" class="link link-hover flex {{ current_page|e }}">
 								{{ page.menu|e }}
 							</a>
 						{% endfor %}
 					</div>
 					<div>
 						<span class="footer-title">Weiteres</span>
-						{% for page in pages.children.invisible %}
+						{% for page in pages.children.nonvisible %}
 							{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
 							<a href="{{ page.url|e }}" class="link link-hover {{ current_page|e }}">
 								{{ page.menu|e }}
 							</a>
 						{% endfor %}
-				</div>
-				<div>
-					<span class="footer-title">Netzwerke</span>
-					<div class="grid grid-flow-col gap-4">
-						<a>
-							{{ svg('theme://svg/instagram.svg', 'fill-current')|raw }}
-						</a>
-						<a>
-							{{ svg('theme://svg/youtube.svg', 'fill-current')|raw }}
-						</a>
 					</div>
-				</div>
-			</footer>
-      {% endblock %}
+					<div>
+						<span class="footer-title">Netzwerke</span>
+						<div class="grid grid-flow-col gap-4">
+							<a>
+								{{ svg('theme://svg/instagram.svg', 'fill-current')|raw }}
+							</a>
+							<a>
+								{{ svg('theme://svg/youtube.svg', 'fill-current')|raw }}
+							</a>
+						</div>
+					</div>
+				</footer>
+			{% endblock %}
 
 		</div>
 
@@ -132,23 +138,26 @@
 			<ul class="menu p-4 overflow-y-auto w-80 bg-base-100 text-base-content space-y-2">
 				<li class="menu-title">
 					<span>
-						Hauptmenü
+						Allgemein
 					</span>
 				</li>
-				{% for page in pages.children.visible %}
+				{% for page in pages.children.visible.ofOneOfTheseTypes(['sections','chronicle']) %}
 					{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
 					<li>
 						<a href="{{ page.url|e }}" class="{{ current_page|e }}">
+							{% if page.header.icon %}
+								<i class="icon-{{ page.header.icon }} mr-1"></i>
+							{% endif %}
 							{{ page.menu|e }}
 						</a>
 					</li>
 				{% endfor %}
 				<li class="menu-title mt-6">
 					<span>
-						Weiteres
+						Gruppen
 					</span>
 				</li>
-				{% for page in pages.children.invisible %}
+				{% for page in pages.children.ofType('group') %}
 					{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
 					<li>
 						<a href="{{ page.url|e }}" class="{{ current_page|e }}">

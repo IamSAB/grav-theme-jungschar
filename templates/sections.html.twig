@@ -1,0 +1,39 @@
+{% extends "partials/base.html.twig" %}
+
+{% block header_content %}
+	{% for module in page.collection() if module.template == 'modular/hero' %}
+		<div class="text-center py-12 prose-lg">
+			<div>{{ module.header.subtitle }}</div>
+			<h1>{{ module.title }}</h1>
+			<div>{{ module.content|raw }}</div>
+		</div>
+	{% endfor %}
+{% endblock %}
+
+{% block content %}
+	<div class="prose-lg">{{ page.content|raw }}</div>
+	<div class="flex">
+		<div class="flex flex-1 justify-end">
+			<div class="mr-16">
+				<ul class="sticky top-4">
+					{% for module in page.collection() if module.template != 'modular/hero' %}
+						<li class="hover:font-bold hover:text-primary mt-4">
+							<a href="#{{ module.menu|hyphenize }}" class="flex flex-col items-center">
+								<div class="w-6 h-6 flex items-center justify-center">
+									<i class="icon-{{module.header.icon}}"></i>
+								</div>
+								<div class="uppercase text-sm font-semibold mt-1">{{ module.header.title }}</div>
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		<div>
+			{% for module in page.collection() if module.template != 'modular/hero' %}
+				{% include 'partials/section.html.twig' with {item: module} %}
+			{% endfor %}
+		</div>
+		<div class="h-12 flex-1"></div>
+	</div>
+{% endblock %}
