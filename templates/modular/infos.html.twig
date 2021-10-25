@@ -1,0 +1,35 @@
+<div class="prose mx-auto text-center">
+	{{ page.content|raw }}
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-start mt-6">
+	{% for item in page.collection %}
+		<div class="card bordered">
+			<div class="card-body">
+				<div class="flex justify-between">
+					<div class="font-light">{{ item.header.dtend|date('d. M y')}}</div>
+					<div>
+						{% for tag in item.taxonomy.tag %}
+							<div class="badge badge-neutral">{{tag}}</div>
+						{% endfor %}
+					</div>
+				</div>
+				<div class="flex items-center mt-2 mb-4">
+					{% set image = item.media.images|first %}
+					{% if image %}
+						{{ image.cropZoom(100,100).html(item.title, '', 'mask mask-squircle')|raw }}
+					{% endif %}
+					<div class="flex-1 ml-4">
+						<h2 class="card-title mt-2 mb-0">{{ item.title }}</h2>
+						<div>{{ item.header.subtitle }}</div>
+					</div>
+				</div>
+				<div>{{ item.summary|raw }}</div>
+				<div class="card-actions">
+					<a class="btn btn-primary btn-xs" href="{{item.url}}">Weiterlesen</a>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div>Nichts gefunden.</div>
+	{% endfor %}
+</div>

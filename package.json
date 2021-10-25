@@ -1,12 +1,17 @@
 {
   "scripts": {
-    "dev": "windicss --preflight --config windi.config.js -o css/output.css --dev",
-    "build": "windicss --preflight --config windi.config.js -o css/output.css --minify"
+    "dev": "npx tailwindcss -i ./tailwind.css -o ./css/tailwind.css --watch",
+    "build": "NODE_ENV=production npx tailwindcss -i ./tailwind.css -o ./dist/tailwind.min.css --minify"
   },
   "devDependencies": {
     "@windicss/plugin-heropatterns": "^0.0.8",
     "@windicss/plugin-icons": "^1.0.2",
     "daisyui": "latest",
+    "tailwind-heropatterns": "^0.0.8",
     "windicss": "latest"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.4.1",
+    "tailwindcss-hero-patterns": "^0.0.1"
   }
 }

@@ -1,7 +1,7 @@
 {% set extension = config.theme.production ? '.min' : '' %}
 
 <!DOCTYPE html>
-<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e }}" data-theme="garden">
+<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e }}" data-theme="{% block theme %}garden{% endblock %}">
 
 	<head>
 		{% block head %}
@@ -22,8 +22,7 @@
 		{% endblock head %}
 
 		{% block stylesheets %}
-			{% do assets.addCss('theme://css/output.css', 98) %}
-			{% do assets.addCss('theme://css/line-awesome.min.css') %}
+			{% do assets.addCss('theme://css/tailwind'~extension~'.css', 98) %}
 		{% endblock %}
 
 		{% block javascripts %}{% endblock %}
@@ -54,31 +53,32 @@
 							<ul class="flex items-stretch space-x-2">
 								{% for page in pages.children.visible %}
 									{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
-									<a href="{{ page.url|e }}" class="btn btn-ghost btn-sm rounded-btn {{ current_page|e }}">
-										{% if page.header.icon %}
-											<i class="icon-{{ page.header.icon }} mr-1"></i>
-										{% endif %}
-										<span>{{ page.menu|e }}</span>
-									</a>
+									<li>
+										<a href="{{ page.url|e }}" class="btn btn-ghost btn-sm rounded-btn {{ current_page|e }}">
+											{% if page.header.icon %}
+												{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
+											{% endif %}
+											<span>{{ page.menu|e }}</span>
+										</a>
+									</li>
 								{% endfor %}
 							</ul>
 						</nav>
 						<div class="navbar-end">
 							<label for="menu-drawer" class="btn btn-square btn-ghost drawer-button">
-								<i class="icon-menu-right"></i>
+								{{ svg('theme://svg/icon/menu-right.svg','icon w-8')|raw }}
 							</label>
 						</div>
 
 					</div>
 
 					{% block header_content %}
-						<div class="text-center py-12">
-							<h1 class="text-7xl text-neutral-content">{{ page.title }}</h1>
+						<div class="text-center py-16">
+							<h1 class="text-6xl md:text-7xl font-black text-neutral-content">{{ page.title }}</h1>
 						</div>
 					{% endblock %}
 
 				</header>
-
 
 			{% endblock %}
 
@@ -104,6 +104,9 @@
 						{% for page in pages.children.visible %}
 							{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
 							<a href="{{ page.url|e }}" class="link link-hover flex {{ current_page|e }}">
+								{% if page.header.icon %}
+									{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
+								{% endif %}
 								{{ page.menu|e }}
 							</a>
 						{% endfor %}
@@ -113,6 +116,9 @@
 						{% for page in pages.children.nonvisible %}
 							{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
 							<a href="{{ page.url|e }}" class="link link-hover {{ current_page|e }}">
+								{% if page.header.icon %}
+									{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
+								{% endif %}
 								{{ page.menu|e }}
 							</a>
 						{% endfor %}
@@ -146,7 +152,7 @@
 					<li>
 						<a href="{{ page.url|e }}" class="{{ current_page|e }}">
 							{% if page.header.icon %}
-								<i class="icon-{{ page.header.icon }} mr-1"></i>
+								{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-6 mr-1')|raw }}
 							{% endif %}
 							{{ page.menu|e }}
 						</a>
@@ -161,6 +167,9 @@
 					{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
 					<li>
 						<a href="{{ page.url|e }}" class="{{ current_page|e }}">
+							{% if page.header.icon %}
+								{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-6 mr-1')|raw }}
+							{% endif %}
 							{{ page.menu|e }}
 						</a>
 					</li>

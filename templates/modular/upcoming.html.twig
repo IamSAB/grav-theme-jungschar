@@ -1,0 +1,56 @@
+<div class="flex flex-col items-center">
+	<div class="prose text-center">
+		{{ page.content|raw }}
+	</div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-start justify-items-stretch gap-4 mt-6">
+
+	{% for item in page.collection|reverse %}
+
+		{% set hasEvents = item.header.events is defined %}
+		{% set upcoming = hasEvents ? item.header.events|filter(i => date(i.dtend) >= date())|first : item.header %}
+
+		<div class="card bordered indicator overflow-visible mt-8 w-full">
+			<div class="indicator-item indicator-center w-16 h-16 mask mask-squircle flex flex-col items-center justify-center bg-primary text-primary-content">
+				<div class="font-bold text-md">{{ upcoming.dtstart|date('d')}}</div>
+				<div class="text-sm -mt-1">{{ upcoming.dtstart|date('M')}}</div>
+			</div>
+			<div class="card-body text-center">
+				<h3 class="text-xl">{{ upcoming.title }}</h3>
+				<div>
+					{% for group in item.taxonomy.group %}
+						<div class="badge badge-ghost">
+							<i class="icon-flag-alt" style="--tw-icon: .7"></i>
+							{{ group }}
+						</div>
+					{% endfor %}
+				</div>
+				<div>
+					<span class="badge badge-ghost">Start</span>
+					{{ upcoming.dtstart|date('d.m.y G:i') }}
+					<br>
+					{{ upcoming.locstart ?? item.header.locstart }}
+				</div>
+				<div class="card-actions">
+					<a class="text-primary link link-hover" href="{{ item.url }}">Details</a>
+				</div>
+				<div class="border-t-1 border-base-300">
+					<div>Zugehörig</div>
+					<h3>{{ item.title }}</h3>
+					<div>
+						{% for category in item.taxonomy.category %}
+							<div class="badge badge-ghost">
+								<i class="icon-folder" style="--tw-icon: .7"></i>
+								{{ category }}
+							</div>
+						{% endfor %}
+					</div>
+					<div>{{ item.header.description }}</div>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div>Nichts gefunden.</div>
+	{% endfor %}
+</div>

@@ -1,0 +1,28 @@
+<div class="prose mx-auto text-center">
+	{{ page.content|raw }}
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-6">
+
+	{% for item in page.collection %}
+
+		<div class="indicator">
+				<div class="rounded-md overflow-hidden">
+					{% set image = item.media.images|first %}
+					{{ image.cropZoom(600,400).html(item.title, item.subtitle, 'w-full h-full object-cover')|raw }}
+				</div>
+				<div class="indicator-item indicator-bottom indicator-center bg-primary text-primary-content rounded min-w-1/2 text-center">
+					<div>
+						{% for cat in item.taxonomy.category %}
+							<span class="badge badge-outline">{{cat}}</span>
+						{% endfor %}
+					</div>
+					<h3 class="text-lg">{{ item.title }}</h3>
+					<div>{{ item.header.subtitle }}</div>
+				</div>
+		</div>
+
+	{% else %}
+		<div>Keine vergangene Anlässe gefunden.</div>
+	{% endfor %}
+</div>

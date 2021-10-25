@@ -1,0 +1,36 @@
+<article id="{{ page.menu|hyphenize }}" class="modular-article {{ page.header.article_classes }}">
+
+	<header class="text-center">
+		<div class="flex justify-center mb-3">
+			{% if page.header.svg %}
+				{{ svg('theme://svg/'~page.header.svg~'.svg', 'fill-current text-primary w-64')|raw }}
+			{% endif %}
+			{% for image in page.media.images %}
+				{{ image.cropZoom(200,200).html('','','mask mask-squircle')|raw }}
+			{% endfor %}
+		</div>
+		<div class="uppercase text-neutral tracking-wide font-semibold">{{ page.header.label }}</div>
+		<h2 class="text-2xl font-bold">{{ page.title }}</h2>
+		<div class="text-md font-light">{{ page.header.subtitle }}</div>
+	</header>
+
+	<div class="prose mx-auto mt-4">
+		{{ page.content|raw }}
+	</div>
+
+	{% if page.collection %}
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+			{% for module in page.collection %}
+				<div>{{ module.content|raw }}</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+
+
+	{% if page.header.link %}
+		<footer class="text-center">
+			<a href="{{ page.header.link }}" class="btn btn-default">Mehr</a>
+		</footer>
+	{% endif %}
+
+</article>

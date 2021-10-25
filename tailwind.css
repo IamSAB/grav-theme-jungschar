@@ -1,0 +1,12 @@
+/* ./src/tailwind.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+svg.icon {
+  @apply stroke-current;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  fill: none;
+  stroke-width: 1.5;
+}

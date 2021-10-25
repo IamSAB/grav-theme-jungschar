@@ -1,0 +1,16 @@
+<div class="card bordered">
+  <figure>
+  {% set image = page.media.images|first %}
+    {{ image.cropZoom(600,400).html|raw }}
+  </figure> 
+  <div class="card-body">
+    <h2 class="card-title m-0">{{ page.title }}</h2>
+    <div class="font-light text-md">{{ page.header.subtitle }}</div>
+    <div class="prose mt-3">{{ page.content|raw }}</div>
+    {% if page.header.link %}
+    <div class="justify-end card-actions">
+      <a href="{{ page.header.link }}" class="btn btn-secondary btn-sm">Mehr</a>
+    </div>
+    {% endif %}
+  </div>
+</div> 
