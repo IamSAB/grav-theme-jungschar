@@ -78,6 +78,10 @@
 						</div>
 					{% endblock %}
 
+					<div class="container mx-auto mb-12">
+						{% include 'partials/breadcrumbs.html.twig' %}
+					</div>
+
 				</header>
 
 			{% endblock %}
@@ -100,10 +104,10 @@
 							{{ "now"|date("Y") }}</p>
 					</div>
 					<div>
-						<span class="footer-title">Hauptmenü</span>
-						{% for page in pages.children.visible %}
-							{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
-							<a href="{{ page.url|e }}" class="link link-hover flex {{ current_page|e }}">
+						<span class="footer-title">Jungschar</span>
+						{% for page in pages.children.ofOneOfTheseTypes(['sections','chronicle']) %}
+							{% set current_page = (page.active or page.activeChild) ? 'link-primary' : '' %}
+							<a href="{{ page.url|e }}" class="flex space-x-1 items-center link link-hover {{ current_page|e }}">
 								{% if page.header.icon %}
 									{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
 								{% endif %}
@@ -112,10 +116,22 @@
 						{% endfor %}
 					</div>
 					<div>
-						<span class="footer-title">Weiteres</span>
-						{% for page in pages.children.nonvisible %}
-							{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
-							<a href="{{ page.url|e }}" class="link link-hover {{ current_page|e }}">
+						<span class="footer-title">Gruppen</span>
+						{% for page in pages.children.ofType('group') %}
+							{% set current_page = (page.active or page.activeChild) ? 'link-primary' : '' %}
+							<a href="{{ page.url|e }}" class="flex space-x-1 items-center link link-hover {{ current_page|e }}">
+								{% if page.header.icon %}
+									{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
+								{% endif %}
+								{{ page.menu|e }}
+							</a>
+						{% endfor %}
+					</div>
+					<div>
+						<span class="footer-title">Sonstiges</span>
+						{% for page in pages.children.ofType('page') %}
+							{% set current_page = (page.active or page.activeChild) ? 'link-primary' : '' %}
+							<a href="{{ page.url|e }}" class="flex space-x-1 items-center link link-hover {{ current_page|e }}">
 								{% if page.header.icon %}
 									{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
 								{% endif %}
@@ -127,10 +143,10 @@
 						<span class="footer-title">Netzwerke</span>
 						<div class="grid grid-flow-col gap-4">
 							<a>
-								{{ svg('theme://svg/instagram.svg', 'fill-current')|raw }}
+								{{ svg('theme://svg/icon/instagram.svg', 'icon w-8')|raw }}
 							</a>
 							<a>
-								{{ svg('theme://svg/youtube.svg', 'fill-current')|raw }}
+								{{ svg('theme://svg/icon/youtube.svg', 'icon w-8')|raw }}
 							</a>
 						</div>
 					</div>

@@ -10,3 +10,31 @@ svg.icon {
   fill: none;
   stroke-width: 1.5;
 }
+
+.form-field {
+  @apply form-control items-center
+}
+.form-label {
+  @apply label
+}
+.form-label > label {
+  @apply label-text
+}
+input {
+  @apply input input-bordered
+}
+select {
+  @apply select select-bordered
+}
+textarea {
+  @apply textarea textarea-bordered
+}
+form .buttons {
+  @apply flex justify-center space-x-3 mt-3
+}
+form .buttons button[type='submit'] {
+  @apply btn btn-sm btn-primary
+}
+form .buttons button[type='reset'] {
+  @apply btn btn-sm btn-outline
+}

@@ -1,0 +1,31 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block content %}
+	<div class="flex justify-center">
+		<article class="prose mr-8">
+			{{ page.content|raw }}
+		</article>
+		<aside>
+			<nav>
+				<ul class="menu py-3 shadow-lg bg-secondary text-secondary-content rounded-box">
+					<li class="menu-title">
+						<span>
+							Seiten
+						</span>
+					</li>
+					{% for page in pages.children.ofType('page') %}
+						{% set current_page = (page.active or page.activeChild) ? 'bg-secondary-focus' : '' %}
+						<li>
+							<a href="{{ page.url|e }}" class="{{ current_page|e }}">
+								{% if page.header.icon %}
+									{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
+								{% endif %}
+								<span>{{ page.menu|e }}</span>
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</nav>
+		</aside>
+	</div>
+{% endblock %}
