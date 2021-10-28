@@ -12,12 +12,13 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('daisyui'),
     require('tailwind-heropatterns')({
-      patterns: ['topography', 'brick-wall'],
+      patterns: ['topography', 'brick-wall', 'texture'],
       colors: {
         'default': '#fff'
       },
       opacity: {
-        default: '0.4'
+        default: '.2',
+        "80": ".8"
       },
     }),
     ({ addComponents, theme }) => {

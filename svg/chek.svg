@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-   <path style="filter: invert(.4);"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 100 512 325" class="fill-current">
+   <path
+      class="text-primary"
       d="M395.818 237.786H312.57L196.388 403.71H512zm-41.624-59.446l28.988 41.4h-57.976zM0 403.71l116.182-165.924 77.538-.386L77.268 403.71z" />
-   <path d="M98.288 403.71h75.66L290.13 237.786h-75.66zm206.856-295.42l-78.038 111.45h75.66l40.208-57.423z" />
+   <path class="text-primary-focus" d="M98.288 403.71h75.66L290.13 237.786h-75.66zm206.856-295.42l-78.038 111.45h75.66l40.208-57.423z" />
 </svg>

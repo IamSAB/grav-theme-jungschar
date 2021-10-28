@@ -11,6 +11,24 @@ svg.icon {
   stroke-width: 1.5;
 }
 
+.scrolled {
+  min-height: 3rem;
+  @apply fixed bg-primary bg-hero-texture shadow-sm;
+}
+
+.scrolled .btn {
+  font-size: .75rem;
+  line-height: 1.4rem;
+}
+
+.scrolled .btn svg {
+  @apply w-4;
+}
+
+.scrolled .navbar-start svg {
+  @apply w-6 h-6;
+}
+
 .form-field {
   @apply form-control items-center
 }

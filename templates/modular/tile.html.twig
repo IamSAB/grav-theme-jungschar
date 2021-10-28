@@ -1,21 +1,21 @@
-<div class="card bordered indicator overflow-visible mt-16">
-	<div class="indicator-item indicator-top indicator-center w-32 h-32">
+<div class="grid grid-flow-row auto-rows-max gap-4" style="grid-template-columns: minmax(8rem, 20%) 1fr 1fr;">
+	<div class="md:row-span-2 justify-self-center self-center md:self-start">
 		{% if page.header.svg %}
 			{{ svg('theme://svg/'~page.header.svg~'.svg', 'fill-current text-primary w-full')|raw }}
 		{% endif %}
 		{% for image in page.media.images %}
-			{{ image.cropZoom(200,200).html('','','mask mask-squircle')|raw }}
+			{{ image.cropZoom(200,200).html('','','mask mask-squircle w-full')|raw }}
 		{% endfor %}
+		<div class="text-center mt-2">
+			{% if page.header.link %}
+				<a href="{{ page.header.link }}" class="hidden md:inline btn btn-outline btn-sm mt-3">Mehr</a>
+			{% endif %}
+		</div>
 	</div>
-	<div class="card-body mt-16">
-		<div class="text-sm uppercase tracking-wide font-semibold textarea-primary">{{page.header.label}}</div>
+	<div class="col-start-2 col-span-2 self-center">
+		<div class="text-sm uppercase tracking-wide font-semibold opacity-50">{{ page.header.label }}</div>
 		<h2 class="card-title m-0">{{ page.title }}</h2>
-		<div class="font-light text-md">{{ page.header.subtitle }}</div>
-		<div class="prose mt-6">{{ page.content|raw }}</div>
-		{% if page.header.link %}
-			<div class="justify-end card-actions">
-				<a href="{{ page.header.link }}" class="btn btn-ghost btn-sm">Mehr</a>
-			</div>
-		{% endif %}
+		<div>{{ page.header.subtitle }}</div>
 	</div>
+	<div class="col-start-1 col-span-3 md:col-start-2 md:col-span-2 prose">{{ page.content|raw }}</div>
 </div>

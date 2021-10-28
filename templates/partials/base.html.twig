@@ -17,7 +17,7 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			{% include 'partials/metadata.html.twig' %}
 
-			<link rel="icon" type="image/png" href="{{ url('theme://images/logo.png')|e }}"/>
+			<link rel="icon" type="image/png" href="{{ url('theme://svg/logo.svg')|e }}"/>
 			<link rel="canonical" href="{{ page.url(true, true)|e }}"/>
 		{% endblock head %}
 
@@ -25,7 +25,9 @@
 			{% do assets.addCss('theme://css/tailwind'~extension~'.css', 98) %}
 		{% endblock %}
 
-		{% block javascripts %}{% endblock %}
+		{% block javascripts %}
+			{% do assets.addJs('theme://js/site.js', {group:'bottom'}) %}
+		{% endblock %}
 
 		{% block assets deferred %}
 			{{ assets.css()|raw }}
@@ -35,13 +37,13 @@
 
 	<body id="top" class="drawer drawer-end {{ config.theme.production ?: 'debug-screens' }}">
 		<input id="menu-drawer" type="checkbox" class="drawer-toggle">
-		<div class="drawer-content">
+		<div id="scroll" class="drawer-content bg-hero-texture-80">
 
 			{% block header %}
 
-				<header class="bg-neutral {{ page.header.image ? 'bg-cover' : 'bg-hero-topography bg-blend-overlay'}}" {{ page.header.image ? 'style="background-image: url('~page.header.image.resize(2560,1440).url~');"'}}>
+				<header class="bg-neutral {{ page.header.image ? 'bg-cover' : 'bg-hero-topography'}}" {{ page.header.image ? 'style="background-image: url('~page.header.image.resize(2560,1440).url~');"'}}>
 
-					<div class="navbar mb-2 shadow-lg text-neutral-content">
+					<div id="navbar" class="navbar z-10 text-neutral-content transition-all duration-300 w-full bg-blend-overlay shadow-lg">
 						<div class="px-2 mx-2 navbar-start">
 							<a href="/">
 								{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10')|raw }}
@@ -92,7 +94,7 @@
 
 			{% block footer %}
 
-				<footer class="p-10 footer bg-base-200 text-base-content">
+				<footer class="p-10 footer bg-neutral text-neutral-content bg-hero-topography">
 
 					<div class="max-w-xs prose-sm">
 						<blockquote>
@@ -108,9 +110,9 @@
 
 				</footer>
 
-				<footer class="px-10 py-4 border-t footer bg-base-200 text-base-content border-base-300">
+				<footer class="px-10 py-4 border-t footer bg-neutral text-neutral-content border-neutral-focus bg-hero-brick-wall">
 					<div class="items-center grid-flow-col">
-						{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10 text-neutral-content')|raw }}
+						{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10')|raw }}
 						<div class="ml-2">&copy;
 							{{ "now"|date("Y") }}
 							{{ config.site.title}}<br><span class="text-light">Aktivitäten für Kinder und Jugendliche</span>

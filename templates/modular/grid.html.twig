@@ -2,7 +2,7 @@
   {{ page.content|raw }}
 </div>
 
-<div class="grid gap-8 mt-8 {{ page.header.grid ?? 'grid-cols-1 lg:grid-cols-2' }}">
+<div class="grid gap-8 mt-12 {{ page.header.grid ?? 'grid-cols-1 lg:grid-cols-2' }}">
   {% for module in page.collection %}
     <div class="{{ module.header.grid ?? '' }}">
       {{ module.content|raw }}
