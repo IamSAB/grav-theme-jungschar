@@ -17,12 +17,16 @@ svg.icon {
 }
 
 .scrolled .btn {
-  font-size: .75rem;
+  @apply btn-xs;
   line-height: 1.4rem;
 }
 
 .scrolled .btn svg {
   @apply w-4;
+}
+
+.scrolled .navbar-end label svg {
+  @apply w-8;
 }
 
 .scrolled .navbar-start svg {

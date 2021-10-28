@@ -1,10 +1,7 @@
 {% extends 'partials/base.html.twig' %}
 
 {% block content %}
-    <div class="h-screen flex items-center justify-center">
-        <div class="prose text-center">
-            <h1 class="">Error</h1>
-            {{ page.content|raw }}
-        </div>
-    </div>
+	<div class="prose mx-auto py-24">
+		{{ page.content|raw }}
+	</div>
 {% endblock %}

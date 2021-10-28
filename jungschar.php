@@ -10,7 +10,7 @@ class Jungschar extends Theme
   public static function getSubscribedEvents()
   {
     return [
-      'onTwigInitialized'     => ['onTwigInitialized', 0],
+      'onTwigInitialized' => ['onTwigInitialized', 0],
     ];
   }
 
@@ -18,7 +18,7 @@ class Jungschar extends Theme
   {
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEnd', [$this, 'startEnd']));
 
-    $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('sortCreatedEXIF', [$this, 'sortCreatedEXIF']));
+    $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('sortByExifCreated', [$this, 'sortByExifCreated']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('dataSize', [$this, 'dataSize']));
   }
 
@@ -83,7 +83,7 @@ class Jungschar extends Theme
     return $img->width . 'x' . $img->height;
   }
 
-  public function sortCreatedEXIF($images)
+  public function sortByExifCreated($images)
   {
     if (!extension_loaded('exif')) {
       throw new \RuntimeException('You need to EXIF PHP Extension to use this function');

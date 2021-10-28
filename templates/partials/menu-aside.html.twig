@@ -6,7 +6,7 @@
 				{% if page.header.icon %}
 					{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
 				{% endif %}
-				{{ page.menu|e }}
+				{{ page.title|e }}
 			</a>
 		</li>
 	{% endfor %}

@@ -51,8 +51,6 @@
 			</div>
 		</div>
 	{% else %}
-		<div class="text-center py-16 font-bold text-2xl text-base-300">
-			Keine Einträge gefunden.
-		</div>
+		{% include 'partials/empty.html.twig' with { msg: 'Keine Einträge gefunden.' } %}
 	{% endfor %}
 </div>

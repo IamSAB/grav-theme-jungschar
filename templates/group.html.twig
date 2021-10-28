@@ -1,0 +1,68 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block hero %}
+	<article class="mx-auto text-center pt-16 pb-24 max-w-5xl">
+		<div class="text-2xl md:text-3xl uppercase font-extrabold tracking-wide text-base-200">{{ page.header.title }}</div>
+		<h1 class="text-6xl md:text-7xl font-black my-2 text-neutral-content">{{ page.header.subtitle }}</h1>
+		<div class="text-2xl md:text-3xl text-bold text-base-100">{{ page.header.age }}</div>
+	</article>
+{% endblock %}
+
+{% set about %}
+<article class="prose mx-auto">
+	{{ page.content|raw }}
+</article>
+{% endset %}
+
+{% set semester %}
+test
+{% endset %}
+
+{% set upcoming %}
+test
+{% endset %}
+
+{% set gallery %}
+  {% include 'partials/gallery.html.twig' with { images: page.media.images ?? [] } %}
+{% endset %}
+
+{% set sections = [
+  {
+    title: page.title,
+    content: about,
+    slug: 'ueber',
+    header: {
+      subtitle: page.header.slogan,
+      icon: 'circle-dotted',
+    }
+  },
+  {
+    title: 'Semester',
+    slug: 'semester',
+    content: semester,
+    header: {
+      subtitle: 'Nachmittage',
+      icon: 'trees'
+    }
+  },
+  {
+    title: 'Sonstiges',
+    slug: 'naechstens',
+    content: upcoming,
+    header: {
+      icon: 'calendar-event',
+      subtitle: 'In die Agenda eintragen'
+    }
+  },
+  {
+    title: 'Gallerie',
+    slug: 'gallerie',
+    content: gallery,
+    header: {
+      icon: 'photo',
+      subtitle: 'Impressionen'
+    }
+  }
+] %}
+
+{% use 'blocks/sections.html.twig' %}

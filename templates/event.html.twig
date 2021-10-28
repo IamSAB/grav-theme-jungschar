@@ -1,0 +1,55 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block hero %}
+	<article class="mx-auto text-center pt-16 pb-24 max-w-5xl">
+		<div class="text-2xl md:text-3xl uppercase font-extrabold tracking-wide text-base-200">{{ page.header.dtstart|startEnd(page.header.dtend) }}</div>
+		<h1 class="text-6xl md:text-7xl font-black my-2 text-neutral-content">{{ page.header.title }}</h1>
+		<div class="text-2xl md:text-3xl text-bold text-base-100">{{ page.header.subtitle }}</div>
+	</article>
+{% endblock %}
+
+{% set infos %}
+  TODO
+{% endset %}
+
+{% set article %}
+<article class="prose mx-auto">
+	{{ page.content|raw }}
+</article>
+{% endset %}
+
+{% set gallery %}
+  {% include 'partials/gallery.html.twig' with { images: page.media.images ?? [] } %}
+{% endset %}
+
+{% set sections = [
+  {
+    title: 'Infos',
+    content: infos,
+    slug: 'infos',
+    header: {
+      subtitle: page.title,
+      icon: 'circle-dotted',
+    }
+  },
+  {
+    title: 'Bericht',
+    slug: 'bericht',
+    content: article,
+    header: {
+      icon: 'news',
+      subtitle: 'Rückblick'
+    }
+  },
+  {
+    title: 'Gallerie',
+    slug: 'gallerie',
+    content: gallery,
+    header: {
+      icon: 'photo',
+      subtitle: 'Impressionen'
+    }
+  }
+] %}
+
+{% use 'blocks/sections.html.twig' %}
