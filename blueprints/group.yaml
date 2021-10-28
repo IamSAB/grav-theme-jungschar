@@ -1,0 +1,66 @@
+extends@: default
+
+form:
+  fields:
+    tabs:
+      fields:
+        group:
+          type: tab
+          title: Gruppe
+          fields:
+
+            columns:
+              type: columns
+              fields:
+
+                column1:
+                  type: column
+                  fields:
+
+                    header_general:
+                      type: section
+                      title: Gruppe
+                      underline: true
+
+                    header.subtitle:
+                      label: Untertitel
+                      type: text
+
+                    header.slogan:
+                      label: Slogan
+                      type: text
+
+                    header.age:
+                      label: Alter
+                      type: text
+                      help: Altersspanne in Klassen
+
+                column2:
+                  type: column
+                  fields:
+
+                    header_coach:
+                      type: section
+                      title: Coach
+                      underline: true
+
+                    header.coach.name:
+                      label: Name
+                      type: text
+
+                    header.coach.tel:
+                      label: Telefon
+                      type: tel
+
+                    header_contact:
+                      type: section
+                      title: Kontakt
+                      underline: true
+
+                    header.contact.email:
+                      label: Email
+                      type: email
+
+                    header.contact.tel:
+                      label: Telefon
+                      type: tel

@@ -32,6 +32,21 @@ module.exports = {
             maxWidth: theme("screens.lg"),
           },
         },
+      }),
+      addComponents({
+        ".container-xl": {
+          paddingInline: theme("spacing.4"),
+          maxWidth: theme("screens.sm"),
+          "@screen md": {
+            maxWidth: theme("screens.md"),
+          },
+          "@screen lg": {
+            maxWidth: theme("screens.lg"),
+          },
+          "@screen xl": {
+            maxWidth: theme("screens.xl"),
+          },
+        },
       })
     }
   ]

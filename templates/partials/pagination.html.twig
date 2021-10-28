@@ -1,0 +1,48 @@
+{% set pagination = pagination|default(page.collection.params.pagination) %}
+{% set base_url = base_url|default(page.url) %}
+
+{% if pagination|length > 1 %}
+
+	<ul class="flex space-x-1">
+		{% if pagination.hasPrev %}
+			{% set url =  (base_url ~ pagination.params ~ pagination.prevUrl)|replace({'//':'/'}) %}
+			<li>
+				<a class="btn btn-circle" rel="prev" href="{{ url }}">{{ svg('theme://svg/icon/chevrons-left.svg', 'icon w-6')|raw }}</a>
+			</li>
+		{% else %}
+			<li>
+				<span class="btn btn-circle btn-disabled">{{ svg('theme://svg/icon/chevrons-left.svg', 'icon w-6')|raw }}</span>
+			</li>
+		{% endif %}
+
+		{% for paginate in pagination %}
+
+			{% if paginate.isCurrent %}
+				<li>
+					<span class="btn btn-circle btn-active">{{ paginate.number }}</span>
+				</li>
+			{% elseif paginate.isInDelta %}
+				{% set url = (base_url ~ pagination.params ~ paginate.url)|replace({'//':'/'}) %}
+				<li>
+					<a class="btn btn-circle" href="{{ url }}">{{ paginate.number }}</a>
+				</li>
+			{% elseif paginate.isDeltaBorder %}
+				<li>
+					<span class="btn btn-circle btn-disabled">{{ svg('theme://svg/icon/dots.svg', 'icon w-6')|raw }}</span>
+				</li>
+			{% endif %}
+
+		{% endfor %}
+		{% if pagination.hasNext %}
+			{% set url = (base_url ~ pagination.params ~ pagination.nextUrl)|replace({'//':'/'}) %}
+			<li>
+				<a class="btn btn-circle" rel="next" href="{{ url }}">{{ svg('theme://svg/icon/chevrons-right.svg', 'icon w-6')|raw }}</a>
+			</li>
+		{% else %}
+			<li>
+				<span class="btn btn-circle btn-disabled">{{ svg('theme://svg/icon/chevrons-right.svg', 'icon w-6')|raw }}</span>
+			</li>
+		{% endif %}
+	</ul>
+
+{% endif %}

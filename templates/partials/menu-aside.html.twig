@@ -1,0 +1,13 @@
+<ul class="menu compact">
+	{% for page in pages %}
+		{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
+		<li>
+			<a href="{{ page.url|e }}" class="{{ current_page|e }}">
+				{% if page.header.icon %}
+					{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5')|raw }}
+				{% endif %}
+				{{ page.menu|e }}
+			</a>
+		</li>
+	{% endfor %}
+</ul>

@@ -14,7 +14,7 @@
 				<ul class="sticky top-4">
 					{% for module in page.collection() if module.template != 'modular/hero' %}
 						<li class="hover:font-bold hover:text-primary mt-4">
-							<a href="#{{ module.menu|hyphenize }}" class="flex flex-col items-center">
+							<a href="#{{ module.slug }}" class="flex flex-col items-center">
 								{{ svg('theme://svg/icon/'~module.header.icon~'.svg', 'icon w-10')|raw }}
 								<div class="uppercase text-sm font-semibold mt-1">{{ module.header.title }}</div>
 							</a>

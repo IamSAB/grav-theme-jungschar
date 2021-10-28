@@ -1,0 +1,156 @@
+extends@: default
+
+form:
+  fields:
+    tabs:
+      fields:
+
+        event:
+          type: tab
+          title: Event
+          fields:
+
+            columns:
+              type: columns
+              fields:
+
+                column1:
+                  type: column
+                  fields:
+
+                    header_general:
+                      type: section
+                      title: Allgemein
+                      underline: true
+
+                    header.subtitle:
+                      label: Betreff
+                      type: text
+                      description: Titel des Anlasses
+                    
+                    header.description:
+                      label: Beschreibung
+                      type: textarea
+                      description: Wichtige Details
+
+                    header.image:
+                      label: Anzeigebild
+                      type: filepicker
+                      folder: 'self@'
+                      preview_images: true
+                      description: ansonsten gleich 1. erstes Bild, 2. Teaserbild des Theme
+                      accept:
+                        - .jpg
+                        - .png
+
+                    header.location:
+                      label: Ort
+                      type: text
+                      description: Adresse angeben
+
+                    header.flyer:
+                      label: Flyer
+                      type: filepicker
+                      folder: 'self@'
+                      accept:
+                        - .pdf
+
+                    header_start:
+                      type: section
+                      title: Start
+                      underline: true
+
+                    header.dtstart:
+                      label: Startdatum und -zeit
+                      type: datetime
+                      format: Y-m-d H:i
+                    
+                    header.locstart:
+                      label: Treffpunkt für Begrüssung
+                      type: text
+                      description: Adresse angeben
+
+                    header_end:
+                      type: section
+                      title: Ende
+                      underline: true
+
+                    header.dtend:
+                      label: Endatum und -zeit
+                      type: datetime
+                      format: Y-m-d H:i
+                    
+                    header.locend:
+                      label: Treffpunkt für Verabschiedung
+                      type: text
+                      description: Adresse angeben, ansonsten gleich Treffpunkt für Begrüssung
+
+                    header_cost:
+                      type: section
+                      title: Kosten
+                      underline: true
+                    
+                    header.cost.amount:
+                      label: Betrag
+                      type: number
+
+                    header.cost.note:
+                      label: Anmerkung
+                      type: text
+                      description: Angabe des Verwendungszweckes
+
+                    header_registration:
+                      type: section
+                      title: Anmeldung
+                      underline: true
+
+                    header.registration.email:
+                      label: Mail
+                      type: email
+
+                    header.registration.dtstart:
+                      label: Startdatum und -zeit
+                      type: datetime
+                      format: Y-m-d H:i
+
+                    header.registration.dtend:
+                      label: Enddatum und -zeit
+                      type: datetime
+                      format: Y-m-d H:i
+
+                column2:
+                  type: column
+                  fields:
+
+                    header_events:
+                      type: section
+                      title: Enthalten
+                      underline: true
+                    
+                    header.events:
+                      type: list
+                      label: Anlässe
+                      collapsed: true
+                      fields:
+                        .title:
+                          type: text
+                          label: Titel
+                        .location:
+                          type: text
+                          label: Veranstaltungsort
+                        .dtstart:
+                          type: datetime
+                          label: Start
+                          format: Y-m-d H:i
+                        .locstart:
+                          type: text
+                          label: Treffpunkt zur Begrüssung
+                          help: Geerbt, falls leer
+                        .dtend:
+                          type: datetime
+                          label: Start
+                          format: Y-m-d H:i
+                        .locend:
+                          type: text
+                          label: Treffpunkt zur Verabschiedung
+                          help: Geerbt, falls leer

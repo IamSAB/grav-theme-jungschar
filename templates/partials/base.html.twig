@@ -39,9 +39,7 @@
 
 			{% block header %}
 
-				{% set header_image = page.header.image ? page.media.images[page.header.image] : page.media.images|first %}
-
-				<header class="bg-neutral bg-blend-overlay bg-hero-topography">
+				<header class="bg-neutral {{ page.header.image ? 'bg-cover' : 'bg-hero-topography bg-blend-overlay'}}" {{ page.header.image ? 'style="background-image: url('~page.header.image.resize(2560,1440).url~');"'}}>
 
 					<div class="navbar mb-2 shadow-lg text-neutral-content">
 						<div class="px-2 mx-2 navbar-start">
@@ -75,13 +73,18 @@
 						</div>
 					{% endblock %}
 
+					{% if page.header.svg %}
+						<div class="flex justify-center -mt-24 mb-24 md:-mt-32 md:mb-32">
+							{{ svg('theme://svg/'~page.header.svg~'.svg','w-48 md:w-64 transform translate-y-1/2')|raw }}
+						</div>
+					{% endif %}
 				</header>
 
 			{% endblock %}
 
 			{% block body %}
 				<main id="body">
-					<div class="px-4 my-16">
+					<div class="px-4 py-16">
 						{% block content %}{% endblock %}
 					</div>
 				</main>
@@ -133,26 +136,14 @@
 		<div class="drawer-side">
 			<label for="menu-drawer" class="drawer-overlay"></label>
 			<div class="p-4 overflow-y-auto w-72 bg-base-200 text-base-content space-y-2">
-
+				{{ svg('theme://svg/jsek.svg','w-32 mx-auto mb-4')|raw }}
 				{% embed 'embeds/card-drawer.html.twig' %}
 					{% set title = 'Navigation' %}
 					{% block content %}
-						<ul class="menu compact">
-							{% for page in pages.children.ofOneOfTheseTypes(['sections','chronicle','group']) %}
-								{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
-								<li>
-									<a href="{{ page.url|e }}" class="{{ current_page|e }}">
-										{% if page.header.icon %}
-											{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-6 mr-1')|raw }}
-										{% endif %}
-										{{ page.menu|e }}
-									</a>
-								</li>
-							{% endfor %}
-						</ul>
+						{% include 'partials/menu-aside.html.twig' with { pages: pages.children.ofOneOfTheseTypes(['sections','chronicle','group']) } %}
 					{% endblock %}
 				{% endembed %}
-				{% block drawer_content %}{% endblock %}
+				{% block drawer %}{% endblock %}
 			</div>
 		</div>
 

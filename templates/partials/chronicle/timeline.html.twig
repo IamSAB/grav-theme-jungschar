@@ -1,0 +1,58 @@
+<div class="xl:py-10">
+	{% for item in collection %}
+		{% set isOdd = loop.index0 is odd %}
+		<div class="flex xl:-my-10">
+
+			<div class="xl:flex-1 {{ isOdd ? 'xl:order-3' : 'xl:order-1'}}"></div>
+
+			<div class="xl:order-2 indicator w-16 xl:ml-6 mr-6">
+				<div class="h-full bg-base-300 w-0.5 mx-auto"></div>
+				<div class="indicator-item indicator-middle indicator-center w-16 h-16 mask mask-diamond bg-primary text-primary-content flex flex-col items-center justify-center">
+					<div class="font-black leading-3">{{ item.header.dtend|date("d")}}</div>
+					<div class="text-xs font-light uppercase tracking-wide mt-0.5">{{ item.header.dtend|date("M")}}</div>
+				</div>
+			</div>
+
+			<div class="flex-1 flex items-center {{ isOdd ? 'xl:order-1 xl:flex-row-reverse' : 'xl:order-3'}} py-4">
+				{% set image = item.media.images|first %}
+				{{ image.cropZoom(200,200).html(item.title,'','mask mask-circle w-28 h-28 hidden sm:block mr-4')|raw }}
+				<div class="w-full">
+					<div class="text-sm opacity-40 uppercase tracking-wide font-semibold">{{ item.taxonomy.category|first }}</div>
+					<h3 class="text-xl font-bold leading-5">
+						<a href="{{ item.url }}">{{ item.title }}</a>
+					</h3>
+					<div class="opacity-80 leading-4 mt-1.5">{{ item.header.subtitle }}</div>
+					<ul class="flex flex-wrap text-sm font-light text-neutral mt-3">
+						{% if item.template == 'event' %}
+							<li class="flex mr-2">
+								{{ svg('theme://svg/icon/calendar-event.svg', 'icon w-4 mr-1')|raw }}
+								{{ item.header.dtstart|startEnd(item.header.dtend) }}
+							</li>
+							<li class="flex mr-2">
+								{{ svg('theme://svg/icon/map-pin.svg', 'icon w-4 mr-1')|raw }}
+								{{ item.header.location ?? '-'}}
+							</li>
+						{% elseif item.template == 'info' %}
+							<li class="flex mr-2">
+								{{ svg('theme://svg/icon/calendar.svg', 'icon w-4 mr-1')|raw }}
+								{{ item.header.dtend|date('d. M y') }}
+							</li>
+						{% endif %}
+						<li class="flex mr-2">
+							{{ svg('theme://svg/icon/circles.svg', 'icon w-4 mr-1 inline')|raw }}
+							{{ item.taxonomy.group ? item.taxonomy.group|join(' ') : '-' }}
+						</li>
+						<li class="flex mr-2">
+							{{ svg('theme://svg/icon/bookmarks.svg', 'icon w-4 mr-1')|raw }}
+							{{ item.taxonomy.tag ? item.taxonomy.tag|join(' ') : '-' }}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div class="text-center py-16 font-bold text-2xl text-base-300">
+			Keine Einträge gefunden.
+		</div>
+	{% endfor %}
+</div>
