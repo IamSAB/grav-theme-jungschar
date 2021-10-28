@@ -1,0 +1,11 @@
+{% set taxlist = children_only is defined ? taxonomylist.getChildPagesTags() : taxonomylist.get() %}
+
+{% if taxlist %}
+  {% for tax,value in taxlist[taxonomy] %}
+      {% set active = uri.param(taxonomy) == tax ? 'btn-active' : '' %}
+      <a class="{{ active }} btn btn-xs" href="{{ base_url }}/{{ taxonomy }}{{ config.system.param_sep }}{{ tax }}">
+        {{ svg('theme://svg/icon/'~icon~'.svg', 'icon w-4 mr-1')|raw }}
+        {{ tax }}
+      </a>
+  {% endfor %}
+{% endif %}

@@ -30,3 +30,17 @@ form:
                 0: PLUGIN_ADMIN.DISABLED
             validate:
                 type: bool
+        social:
+            type: list
+            label: Soziale Netzwerke
+            style: vertical
+            fields:
+              .icon: 
+                type: text
+                label: Icon
+              .url: 
+                type: url
+                label: URL
+              .name: 
+                type: text
+                label: Name

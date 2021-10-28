@@ -1,0 +1,21 @@
+{% if config.plugins.simplesearch.enabled %}
+	<div>
+		{% include 'partials/simplesearch_searchbox.html.twig' %}
+		<p class="text-gray">
+			{% if query %}
+				{% set count = search_results ? search_results.count : 0 %}
+				{% if count is same as( 1 ) %}
+					<span>Einen Eintrag gefunden.</span>
+				{% else %}
+					<span>{{ count }}
+						Einträge gefunden.</span>
+				{% endif %}
+				<a class="btn btn-link" href="{{page.url}}">Suche zurücksetzen</a>
+			{% else %}
+				<span>Starte Suche mit
+					<var>ENTER</var>
+				</span>
+			{% endif %}
+		</p>
+	</div>
+{% endif %}

@@ -1,0 +1,12 @@
+<div>
+	<span class="footer-title">{{ title }}</span>
+	{% for page in pages %}
+		{% set current_page = (page.active or page.activeChild) ? 'link-primary' : '' %}
+		<a href="{{ page.url|e }}" class="flex space-x-1 items-center link link-hover {{ current_page|e }}">
+			{% if page.header.icon %}
+				{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
+			{% endif %}
+			{{ page.menu|e }}
+		</a>
+	{% endfor %}
+</div>

@@ -1,0 +1,49 @@
+{% if config.plugins.taxonomylist.enabled %}
+
+	{% embed 'embeds/panel.html.twig' %}
+		{% set icon = 'folders' %}
+		{% set title = 'Tags' %}
+		{% block content %}
+			<div class="text-center space-x-1 space-y-1">
+				{% include 'partials/taxonomylist.html.twig' with {base_url: page.url, taxonomy:'category', icon: 'folder'} %}
+			</div>
+		{% endblock %}
+	{% endembed %}
+
+	{% embed 'embeds/panel.html.twig' %}
+		{% set icon = 'circles' %}
+		{% set title = 'Gruppen' %}
+		{% block content %}
+			<div class="text-center space-x-1 space-y-1">
+				{% include 'partials/taxonomylist.html.twig' with {base_url: page.url, taxonomy:'group', icon: 'circle-dotted'} %}
+			</div>
+		{% endblock %}
+	{% endembed %}
+
+	{% embed 'embeds/panel.html.twig' %}
+		{% set icon = 'bookmarks' %}
+		{% set title = 'Tags' %}
+		{% block content %}
+			<div class="text-center space-x-1 space-y-1">
+				{% include 'partials/taxonomylist.html.twig' with {base_url: page.url, taxonomy: 'tag', icon: 'bookmark'} %}
+			</div>
+		{% endblock %}
+	{% endembed %}
+
+{% endif %}
+
+{% if config.plugins.feed.enabled %}
+
+	{% embed 'embeds/panel.html.twig' %}
+		{% set icon = 'rss' %}
+		{% set title = 'Abonnieren' %}
+		{% block content %}
+			<a class="btn btn-link" href="{{ feed_url }}.atom">Atom 1.0</a>
+			<a class="btn btn-link" href="{{ feed_url }}.rss">RSS</a>
+			{% if config.plugins.feed.enable_json_feed %}
+				<a class="btn" href="{{ feed_url }}.json">JSON</a>
+			{% endif %}
+		{% endblock %}
+	{% endembed %}
+
+{% endif %}

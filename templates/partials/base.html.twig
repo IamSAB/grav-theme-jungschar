@@ -49,8 +49,8 @@
 								{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10')|raw }}
 							</a>
 						</div>
-						<nav class="hidden px-2 mx-2 navbar-center lg:flex">
-							<ul class="flex items-stretch space-x-2">
+						<nav class="px-2 mx-2 navbar-end">
+							<ul class="hidden lg:flex items-stretch flex-shrink-0 space-x-2">
 								{% for page in pages.children.visible %}
 									{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
 									<li>
@@ -63,13 +63,10 @@
 									</li>
 								{% endfor %}
 							</ul>
-						</nav>
-						<div class="navbar-end">
-							<label for="menu-drawer" class="btn btn-square btn-ghost drawer-button">
+							<label for="menu-drawer" class="btn btn-square btn-ghost drawer-button lg:hidden">
 								{{ svg('theme://svg/icon/menu-right.svg','icon w-8')|raw }}
 							</label>
-						</div>
-
+						</nav>
 					</div>
 
 					{% block header_content %}
@@ -77,10 +74,6 @@
 							<h1 class="text-6xl md:text-7xl font-black text-neutral-content">{{ page.title }}</h1>
 						</div>
 					{% endblock %}
-
-					<div class="container mx-auto mb-12">
-						{% include 'partials/breadcrumbs.html.twig' %}
-					</div>
 
 				</header>
 
@@ -97,100 +90,70 @@
 			{% block footer %}
 
 				<footer class="p-10 footer bg-base-200 text-base-content">
-					<div>
-						{{ svg('theme://svg/logo.svg', 'fill-current w-12 h-12 text-neutral-content')|raw }}
-						<p class="text-lg">{{ config.site.title}}</p>
-						<p>&copy;
-							{{ "now"|date("Y") }}</p>
+
+					<div class="max-w-xs prose-sm">
+						<blockquote>
+							Macht euch daher um nichts Sorgen! Wendet euch vielmehr in jeder Lage mit Bitten und Flehen und voll Dankbarkeit an Gott und bringt eure Anliegen vor ihn.
+							<br>
+							<em>Philipper 4,6 NGÜ</em>
+						</blockquote>
 					</div>
-					<div>
-						<span class="footer-title">Jungschar</span>
-						{% for page in pages.children.ofOneOfTheseTypes(['sections','chronicle']) %}
-							{% set current_page = (page.active or page.activeChild) ? 'link-primary' : '' %}
-							<a href="{{ page.url|e }}" class="flex space-x-1 items-center link link-hover {{ current_page|e }}">
-								{% if page.header.icon %}
-									{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
-								{% endif %}
-								{{ page.menu|e }}
-							</a>
-						{% endfor %}
+
+					{% include 'partials/menu-footer.html.twig'  with { title: 'Allgmein', pages: pages.children.ofOneOfTheseTypes(['sections','chronicle']) } %}
+					{% include 'partials/menu-footer.html.twig'  with { title: 'Gruppen', pages: pages.children.ofType('group') } %}
+					{% include 'partials/menu-footer.html.twig'  with { title: 'Sonstiges', pages: pages.children.ofType('page') } %}
+
+				</footer>
+
+				<footer class="px-10 py-4 border-t footer bg-base-200 text-base-content border-base-300">
+					<div class="items-center grid-flow-col">
+						{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10 text-neutral-content')|raw }}
+						<div class="ml-2">&copy;
+							{{ "now"|date("Y") }}
+							{{ config.site.title}}<br><span class="text-light">Aktivitäten für Kinder und Jugendliche</span>
+						</div>
 					</div>
-					<div>
-						<span class="footer-title">Gruppen</span>
-						{% for page in pages.children.ofType('group') %}
-							{% set current_page = (page.active or page.activeChild) ? 'link-primary' : '' %}
-							<a href="{{ page.url|e }}" class="flex space-x-1 items-center link link-hover {{ current_page|e }}">
-								{% if page.header.icon %}
-									{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
-								{% endif %}
-								{{ page.menu|e }}
-							</a>
-						{% endfor %}
-					</div>
-					<div>
-						<span class="footer-title">Sonstiges</span>
-						{% for page in pages.children.ofType('page') %}
-							{% set current_page = (page.active or page.activeChild) ? 'link-primary' : '' %}
-							<a href="{{ page.url|e }}" class="flex space-x-1 items-center link link-hover {{ current_page|e }}">
-								{% if page.header.icon %}
-									{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
-								{% endif %}
-								{{ page.menu|e }}
-							</a>
-						{% endfor %}
-					</div>
-					<div>
-						<span class="footer-title">Netzwerke</span>
+					<div class="md:place-self-center md:justify-self-end">
 						<div class="grid grid-flow-col gap-4">
-							<a>
-								{{ svg('theme://svg/icon/instagram.svg', 'icon w-8')|raw }}
-							</a>
-							<a>
-								{{ svg('theme://svg/icon/youtube.svg', 'icon w-8')|raw }}
-							</a>
+							{% if config.theme.social %}
+								{% for item in config.theme.social %}
+									<a href="{{ item.url }}" title="{{title}}">
+										{{ svg('theme://svg/icon/'~item.icon~'.svg', 'icon w-8')|raw }}
+									</a>
+								{% endfor %}
+							{% endif %}
 						</div>
 					</div>
 				</footer>
+
 			{% endblock %}
 
 		</div>
 
 		<div class="drawer-side">
 			<label for="menu-drawer" class="drawer-overlay"></label>
-			<ul class="menu p-4 overflow-y-auto w-80 bg-base-100 text-base-content space-y-2">
-				<li class="menu-title">
-					<span>
-						Allgemein
-					</span>
-				</li>
-				{% for page in pages.children.visible.ofOneOfTheseTypes(['sections','chronicle']) %}
-					{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
-					<li>
-						<a href="{{ page.url|e }}" class="{{ current_page|e }}">
-							{% if page.header.icon %}
-								{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-6 mr-1')|raw }}
-							{% endif %}
-							{{ page.menu|e }}
-						</a>
-					</li>
-				{% endfor %}
-				<li class="menu-title mt-6">
-					<span>
-						Gruppen
-					</span>
-				</li>
-				{% for page in pages.children.ofType('group') %}
-					{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
-					<li>
-						<a href="{{ page.url|e }}" class="{{ current_page|e }}">
-							{% if page.header.icon %}
-								{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-6 mr-1')|raw }}
-							{% endif %}
-							{{ page.menu|e }}
-						</a>
-					</li>
-				{% endfor %}
-			</ul>
+			<div class="p-4 overflow-y-auto w-72 bg-base-200 text-base-content space-y-2">
+
+				{% embed 'embeds/card-drawer.html.twig' %}
+					{% set title = 'Navigation' %}
+					{% block content %}
+						<ul class="menu compact">
+							{% for page in pages.children.ofOneOfTheseTypes(['sections','chronicle','group']) %}
+								{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
+								<li>
+									<a href="{{ page.url|e }}" class="{{ current_page|e }}">
+										{% if page.header.icon %}
+											{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-6 mr-1')|raw }}
+										{% endif %}
+										{{ page.menu|e }}
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% endblock %}
+				{% endembed %}
+				{% block drawer_content %}{% endblock %}
+			</div>
 		</div>
 
 		{% block bottom %}

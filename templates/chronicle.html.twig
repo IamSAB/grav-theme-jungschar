@@ -1,0 +1,23 @@
+{% extends 'partials/base.html.twig' %}
+
+{% set collection = search_results ?: page.collection %}
+
+{% block hero %}
+	{% include 'partials/hero.html.twig' %}
+{% endblock %}
+
+{% block content %}
+	<div class="container mx-auto flex">
+		<div class="flex-1">
+			{% include 'partials/chronicle/search.html.twig' %}
+			{% include 'partials/chronicle/timeline.html.twig' %}
+		</div>
+		<aside class="hidden lg:block w-72">
+			{% include 'partials/chronicle/sidebar.html.twig' %}
+		</aside>
+	</div>
+{% endblock %}
+
+{% block drawer %}
+	{% include 'partials/chronicle/drawer.html.twig' %}
+{% endblock %}
