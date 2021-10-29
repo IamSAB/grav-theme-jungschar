@@ -1,0 +1,2 @@
+{% set safe_email = email|safe_email %}
+<a class="link link-hover" href="mailto:{{safe_email|raw}}">{{ safe_email|raw }}</a>

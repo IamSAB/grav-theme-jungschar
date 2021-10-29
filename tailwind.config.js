@@ -24,7 +24,6 @@ module.exports = {
     ({ addComponents, theme }) => {
       addComponents({
         ".container": {
-          paddingInline: theme("spacing.4"),
           maxWidth: theme("screens.sm"),
           "@screen md": {
             maxWidth: theme("screens.md"),
@@ -36,7 +35,6 @@ module.exports = {
       }),
       addComponents({
         ".container-xl": {
-          paddingInline: theme("spacing.4"),
           maxWidth: theme("screens.sm"),
           "@screen md": {
             maxWidth: theme("screens.md"),

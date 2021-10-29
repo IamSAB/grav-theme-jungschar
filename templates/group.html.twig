@@ -8,28 +8,157 @@
 	</article>
 {% endblock %}
 
-{% set about %}
+{% set content_about %}
 <article class="prose mx-auto">
 	{{ page.content|raw }}
 </article>
 {% endset %}
 
-{% set semester %}
-test
+{% set semester = page.collection({
+  items: {
+    'taxonomy@': {
+      category: 'Semester',
+      group: page.title
+    }
+  },
+  order: {
+    by: 'header.dtend',
+    dir: 'asc'
+  },
+  dateRange: {
+    start: 'now',
+    field: 'header.dtend'
+  },
+  filter: {
+    published: true,
+    type: 'event'
+  }
+})|first %}
+
+{% set content_semester %}
+<div class="flex flex-col lg:flex-row items-center justify-center lg:items-stretch">
+	<div class="card bordered sm:w-2/3 lg:flex-1 lg:my-8">
+		<div class="card-body">
+			<div class="card-title text-center">Team</div>
+			<div class="badge badge-outline mx-auto mb-2">Teamleiter</div>
+			<div class="flex flex-wrap">
+				<div class="flex items-center mr-3">
+					{{ svg('theme://svg/icon/user.svg','icon w-4 mr-1 flex-none')|raw }}
+					<div>{{ semester.taxonomy.lead|first }}</div>
+				</div>
+				<div class="flex items-center mr-3">
+					{{ svg('theme://svg/icon/mail.svg','icon w-4 mr-1 flex-none')|raw }}
+					{% include 'partials/link-mail.html.twig' with {email: page.header.contact.email} %}
+				</div>
+				<div class="flex items-center">
+					{{ svg('theme://svg/icon/phone.svg','icon w-4 mr-1 flex-none')|raw }}
+					{% include 'partials/link-tel.html.twig' with {tel: page.header.contact.tel} %}
+				</div>
+			</div>
+			<div class="badge badge-outline mx-auto mt-3 mb-2">Team</div>
+			<div class="text-center">
+				{{ semester.taxonomy.team|join('  ') }}
+			</div>
+			<div class="badge badge-outline mx-auto mt-3 mb-2">Teambegleiter</div>
+			<div class="flex flex-wrap">
+				<div class="flex items-center mr-3">
+					{{ svg('theme://svg/icon/user.svg','icon w-4 mr-1 flex-none')|raw }}
+					<div>{{ page.header.coach.name }}</div>
+				</div>
+				<div class="flex items-center">
+					{{ svg('theme://svg/icon/phone.svg','icon w-4 mr-1 flex-none')|raw }}
+					{% include 'partials/link-tel.html.twig' with {tel: page.header.coach.tel} %}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="my-6 lg:my-0 lg:w-2/5 lg:mx-6">
+		{% include 'partials/event-upcoming.html.twig' with {event: semester} %}
+	</div>
+	<div class="card bordered sm:w-2/3 lg:flex-1 lg:my-8">
+		<div class="card-body text-center">
+			<div class="card-title">Infos</div>
+			<div class="badge badge-outline mx-auto mt-3 mb-2">Programm</div>
+			<h3 class="font-lg font-bold">{{ semester.header.title }}</h3>
+			<div class="font-light">{{ semester.header.subtitle }}</div>
+			<div class="mt-1 text-sm">{{ semester.header.description }}</div>
+			<div class="badge badge-outline mx-auto mt-3 mb-2">Was mitnehmen?</div>
+			<div class="prose prose-sm">
+				Gutes Schuhwerk und Kleidung der Witterung angepasst!<br>
+				Für Verpflegung ist gesorgt.<br>
+				<em>Versicherung ist Sache der Teilnehmer!</em>
+			</div>
+		</div>
+	</div>
+</div>
 {% endset %}
 
-{% set upcoming %}
-test
+{% set content_gallery %}
+{% include 'partials/gallery.html.twig' with { images: page.media.images ?? [] } %}
 {% endset %}
 
-{% set gallery %}
-  {% include 'partials/gallery.html.twig' with { images: page.media.images ?? [] } %}
+{% set content_outlook %}
+<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+	{% for event in page.collection({
+    items: {
+      'taxonomy@': {
+        group: page.title
+      }
+    },
+    order: {
+      by: 'header.dtstart',
+      dir: 'asc'
+    },
+    dateRange: {
+      start: 'now',
+      field: 'header.dtstart'
+    },
+    filter: {
+      published: true,
+      type: 'event'
+    }
+  })|slice(0,6)|reverse %}
+		{% include 'partials/event-upcoming.html.twig' %}
+	{% else %}
+		{% include 'partials/empty.html.twig' with {msg: 'Keine anstehende Anlässe.'} %}
+	{% endfor %}
+</div>
+{% endset %}
+
+{% set content_moments %}
+<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+	{% for event in page.collection({
+    items: {
+      'taxonomy@': {
+        group: page.title
+      }
+    },
+    order: {
+      by: 'header.dtstart',
+      dir: 'asc'
+    },
+    dateRange: {
+      end: 'now',
+      field: 'header.dtend'
+    },
+    filter: {
+      published: true,
+      type: 'event'
+    }
+  })|slice(0,6)|reverse %}
+
+		{% include 'partials/event-elapsed.html.twig' %}
+	{% else %}
+		{% include 'partials/empty.html.twig' with {msg: 'Keine vergangene Anlässe.'} %}
+	{% endfor %}
+</div>
 {% endset %}
 
 {% set sections = [
   {
     title: page.title,
-    content: about,
+    content: content_about,
     slug: 'ueber',
     header: {
       subtitle: page.header.slogan,
@@ -39,30 +168,39 @@ test
   {
     title: 'Semester',
     slug: 'semester',
-    content: semester,
+    content: content_semester,
     header: {
       subtitle: 'Nachmittage',
       icon: 'trees'
     }
   },
   {
-    title: 'Sonstiges',
-    slug: 'naechstens',
-    content: upcoming,
-    header: {
-      icon: 'calendar-event',
-      subtitle: 'In die Agenda eintragen'
-    }
-  },
-  {
-    title: 'Gallerie',
-    slug: 'gallerie',
-    content: gallery,
+    title: 'Galerie',
+    slug: 'galerie',
+    content: content_gallery,
     header: {
       icon: 'photo',
       subtitle: 'Impressionen'
     }
-  }
+  },
+  {
+    title: 'Ausblick',
+    slug: 'ausblick',
+    content: content_outlook,
+    header: {
+      icon: 'calendar',
+      subtitle: 'Lager und Spezial'
+    }
+  },
+  {
+    title: 'Rückblick',
+    slug: 'rueckblick',
+    content: content_moments,
+    header: {
+      icon: 'history',
+      subtitle: 'Bisherige Erlebnisse'
+    }
+  },
 ] %}
 
 {% use 'blocks/sections.html.twig' %}

@@ -1,12 +1,18 @@
-<ul class="menu compact">
-	{% for page in pages %}
-		{% set current_page = (page.active or page.activeChild) ? 'active' : '' %}
+{% set internal = internal|default(false) %}
+
+<ul class="menu compact rounded-box p-4 space-y-1">
+	<li class="menu-title">
+		<span>{{ title }}</span>
+	</li>
+	{% for item in items %}
+		{% set current_item = (item.active or item.activeChild) ? 'active' : '' %}
+		{% set url = internal ? '#'~item.slug : item.url %}
 		<li>
-			<a href="{{ page.url|e }}" class="{{ current_page|e }}">
-				{% if page.header.icon %}
-					{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
+			<a href="{{ url }}" class="{{ current_item }}">
+				{% if item.header.icon %}
+					{{ svg('theme://svg/icon/'~item.header.icon~'.svg', 'icon w-5 mr-2')|raw }}
 				{% endif %}
-				{{ page.title|e }}
+				{{ item.menu ?? item.title }}
 			</a>
 		</li>
 	{% endfor %}

@@ -43,32 +43,34 @@
 
 				{% set header_image = page.header.image ?? page.media.images|first %}
 
-				<header class="bg-neutral {{ header_image ? 'bg-cover bg-blend-overlay bg-center' : 'bg-hero-topography'}}" {% if header_image %}style="background-image: url('{{ header_image.cropResize(2560,1440).url }}')"{% endif %}>
+				<header class="bg-neutral {{ header_image ? 'bg-cover bg-blend-overlay bg-center' : 'bg-hero-topography'}}" {% if header_image %} style="background-image: url('{{ header_image.cropResize(2560,1440).url }}')" {% endif %}>
 
-					<div id="navbar" class="navbar z-10 text-neutral-content transition-all duration-300 w-full bg-blend-overlay shadow-lg">
-						<div class="px-2 mx-2 navbar-start">
-							<a href="/">
-								{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10')|raw }}
-							</a>
+					<div id="navbar" class="z-10 text-neutral-content transition-all duration-300 w-full bg-blend-overlay shadow-lg">
+						<div class="navbar container-xl mx-auto p-0">
+							<div class="px-2 mx-2 navbar-start">
+								<a href="/">
+									{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10')|raw }}
+								</a>
+							</div>
+							<nav class="px-2 mx-2 navbar-end">
+								<ul class="hidden lg:flex items-stretch flex-shrink-0 space-x-2">
+									{% for page in pages.children.visible %}
+										{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
+										<li>
+											<a href="{{ page.url|e }}" class="btn btn-ghost btn-sm rounded-btn {{ current_page|e }}">
+												{% if page.header.icon %}
+													{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
+												{% endif %}
+												<span>{{ page.menu|e }}</span>
+											</a>
+										</li>
+									{% endfor %}
+								</ul>
+								<label for="menu-drawer" class="drawer-button lg:hidden cursor-pointer hover:text-base-200">
+									{{ svg('theme://svg/icon/menu-right.svg','icon w-10')|raw }}
+								</label>
+							</nav>
 						</div>
-						<nav class="px-2 mx-2 navbar-end">
-							<ul class="hidden lg:flex items-stretch flex-shrink-0 space-x-2">
-								{% for page in pages.children.visible %}
-									{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
-									<li>
-										<a href="{{ page.url|e }}" class="btn btn-ghost btn-sm rounded-btn {{ current_page|e }}">
-											{% if page.header.icon %}
-												{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
-											{% endif %}
-											<span>{{ page.menu|e }}</span>
-										</a>
-									</li>
-								{% endfor %}
-							</ul>
-							<label for="menu-drawer" class="drawer-button lg:hidden cursor-pointer hover:text-base-200">
-								{{ svg('theme://svg/icon/menu-right.svg','icon w-10')|raw }}
-							</label>
-						</nav>
 					</div>
 
 					{% block hero %}
@@ -84,6 +86,7 @@
 							{{ svg('theme://svg/'~page.header.svg~'.svg','w-48 md:w-64 transform translate-y-1/2')|raw }}
 						</div>
 					{% endif %}
+
 				</header>
 
 			{% endblock %}
@@ -142,13 +145,8 @@
 		<div class="drawer-side">
 			<label for="menu-drawer" class="drawer-overlay"></label>
 			<div class="p-4 overflow-y-auto w-72 bg-base-200 text-base-content space-y-2">
-				{{ svg('theme://svg/jsek.svg','w-32 mx-auto mb-4')|raw }}
-				{% embed 'embeds/card-drawer.html.twig' %}
-					{% set title = 'Navigation' %}
-					{% block content %}
-						{% include 'partials/menu-aside.html.twig' with { pages: pages.children.ofOneOfTheseTypes(['sections','chronicle','group']) } %}
-					{% endblock %}
-				{% endembed %}
+				{{ svg('theme://svg/jsek.svg','w-32 mx-auto')|raw }}
+				{% include 'partials/menu-aside.html.twig' with {title: 'Hauptmenü', items: pages.children.ofOneOfTheseTypes(['sections','chronicle','group'])} %}
 				{% block drawer %}{% endblock %}
 			</div>
 		</div>

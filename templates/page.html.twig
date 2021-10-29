@@ -1,12 +1,7 @@
 {% extends 'partials/base.html.twig' %}
 
 {% set menu %}
-{% embed 'embeds/card-drawer.html.twig' %}
-	{% set title = 'Seiten' %}
-	{% block content %}
-		{% include 'partials/menu-aside.html.twig' with { pages: pages.children.ofType('page') } %}
-	{% endblock %}
-{% endembed %}
+		{% include 'partials/menu-aside.html.twig' with {title: 'Seiten', items: pages.children.ofType('page')} %}
 {% endset %}
 
 {% block content %}

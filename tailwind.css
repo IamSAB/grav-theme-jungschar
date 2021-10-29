@@ -12,7 +12,6 @@ svg.icon {
 }
 
 .scrolled {
-  min-height: 3rem;
   @apply fixed bg-primary bg-hero-texture shadow-sm;
 }
 
@@ -23,6 +22,10 @@ svg.icon {
 
 .scrolled .btn svg {
   @apply w-4;
+}
+
+.scrolled .navbar {
+  min-height: 3rem;
 }
 
 .scrolled .navbar-end label svg {

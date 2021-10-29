@@ -3,22 +3,9 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-
-	{% for item in page.collection %}
-
-		<a class="indicator mb-16" href="{{ item.url }}">
-				<div class="rounded-md overflow-hidden shadow-md">
-					{% set image = item.media.images|first %}
-					{{ image.cropZoom(600,400).html(item.title, item.subtitle, 'w-full h-full object-cover')|raw }}
-				</div>
-				<div class="indicator-item indicator-bottom indicator-center bg-primary text-primary-content rounded-2xl w-1/2 h-32 flex flex-col justify-center items-center text-center shadow-md">
-					<div class="badge badge-outline">{{ item.header.dtend|nicetime }}</div>
-					<h3 class="text-lg md:text-xl font-bold mt-2">{{ item.title }}</h3>
-					<div class="font-light text-sm">{{ item.header.subtitle }}</div>
-				</div>
-		</a>
-
+	{% for event in page.collection %}
+		{% include 'partials/event-elapsed.html.twig' %}
 	{% else %}
-		<div>Keine vergangene Anlässe gefunden.</div>
+		{% include 'partials/empty.html.twig' with {msg: 'Keine vergangene Anlässe.'} %}
 	{% endfor %}
 </div>

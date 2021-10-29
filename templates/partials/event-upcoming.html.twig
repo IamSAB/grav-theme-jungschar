@@ -1,0 +1,83 @@
+{% set hasEvents = event.header.events is defined %}
+{% set upcoming = hasEvents ? event.header.events|filter(i => date(i.dtend) >= date())|first : event.header %}
+
+<div class="card indicator overflow-visible mt-10 w-full bg-secondary text-secondary-content shadow-lg">
+	<div class="indicator-item indicator-center w-20 h-20 mask mask-squircle flex flex-col items-center justify-center bg-primary text-primary-content filter drop-shadow-md">
+		<div class="font-extrabold text-xl">{{ upcoming.dtstart|date('d')}}</div>
+		<div class="font-light -mt-1">{{ upcoming.dtstart|date('M')}}</div>
+	</div>
+	<div class="card-body mt-6">
+		<div class="text-center mb-5">
+			<h2 class="card-title mb-0 text-center">{{ upcoming.title }}</h2>
+			<div class="mt-2">
+				{% for group in event.taxonomy.group %}
+					<span class="badge badge-ghost">
+						{{ group }}
+					</span>
+				{% endfor %}
+				{% for category in event.taxonomy.category %}
+					<span class="badge badge-ghost">
+						{{ category }}
+					</span>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="space-y-1">
+			<div class="flex">
+				<div class="badge badge-outline mr-4">Start</div>
+				<div class="flex flex-wrap">
+					<div class="flex items-center mr-2">
+						{{ svg('theme://svg/icon/calendar-time.svg','icon w-5 mr-1 flex-none')|raw }}
+						<div>{{ upcoming.dtstart|date('d.m.y G:i') }}</div>
+					</div>
+					<div class="flex items-center font-light leading-4">
+						{{ svg('theme://svg/icon/map-pin.svg','icon w-5 mr-1 flex-none')|raw }}
+						<div>{{ upcoming.locstart ?? event.header.locstart ?? 'Keine Angabe.' }}</div>
+					</div>
+				</div>
+			</div>
+			<div class="flex">
+				<div class="badge badge-outline mr-4">Ende</div>
+				<div class="flex flex-wrap">
+					<div class="flex items-center mr-2">
+						{{ svg('theme://svg/icon/calendar-time.svg','icon w-5 mr-1 flex-none')|raw }}
+						<div>{{ upcoming.dtend|date('d.m.y G:i') }}</div>
+					</div>
+					<div class="flex font-light leading-4 items-center">
+						{{ svg('theme://svg/icon/map-pin.svg','icon w-5 mr-1 flex-none')|raw }}
+						<div>{{ upcoming.locend ?? upcoming.locstart ?? event.header.locend ?? event.header.locstart ?? 'Keine Angabe.' }}</div>
+					</div>
+				</div>
+			</div>
+			{% if upcoming.note %}
+				<div>
+					<span class="badge badge-ghost mr-4">Anmerkung</span>
+					{{ upcoming.note}}
+				</div>
+			{% endif %}
+			{% if upcoming.cost %}
+				<div>
+					<span class="badge badge-ghost mr-3">Kosten</span>
+					CHF
+					{{ upcoming.cost.amount }}
+					{{ upcoming.cost.note }}
+				</div>
+			{% endif %}
+		</div>
+		{% if event.header.events %}
+			<div class="font-light text-sm mt-2">
+				Anlass ist einer von
+				{{ event.header.events|count }}
+				Anlässen des
+				{{ event.taxonomy.category|first }}
+				"{{ event.title }}" der "{{ event.taxonomy.group|first }}" vom
+				{{ event.header.dtstart|date('d.m.y')}}
+				bis
+				{{ event.header.dtend|date('d.m.y')}}
+			</div>
+		{% endif %}
+		<div class="flex justify-center mt-2">
+			<a class="btn btn-ghost btn-sm" href="{{ event.url }}">Details</a>
+		</div>
+	</div>
+</div>

@@ -1,22 +1,13 @@
-{% block drawer %}
-	{% embed 'embeds/card-drawer.html.twig' %}
-		{% set title = 'Abschnitte' %}
-		{% block content %}
-			{% include 'partials/menu-aside.html.twig' with {pages: sections} %}
-		{% endblock %}
-	{% endembed %}
-{% endblock %}
-
 {% block content %}
 	<div class="flex">
 		<aside class="hidden md:flex flex-1 justify-end">
-			<nav id="sidenav" class="mr-4">
-				<ul class="sticky top-16 space-y-4">
+			<nav id="sidenav" class="mr-5 lg:mr:8">
+				<ul class="sticky top-16 space-y-3 lg:space-y-5">
 					{% for section in sections %}
 						<li class="hover:font-bold hover:text-primary">
 							<a href="#{{ section.slug }}" class="flex flex-col items-center">
-								{{ svg('theme://svg/icon/'~section.header.icon~'.svg', 'icon w-10')|raw }}
-								<div class="uppercase text-sm font-semibold mt-1">{{ section.title }}</div>
+								{{ svg('theme://svg/icon/'~section.header.icon~'.svg', 'icon w-8 lg:w-10')|raw }}
+								<div class="uppercase text-xs lg:text-sm font-semibold mt-1">{{ section.title }}</div>
 							</a>
 						</li>
 					{% endfor %}
@@ -39,6 +30,10 @@
 		</div>
 		<div class="flex-1"></div>
 	</div>
+{% endblock %}
+
+{% block drawer %}
+	{% include 'partials/menu-aside.html.twig' with {title: 'Abschnitte', items: sections, internal: true} %}
 {% endblock %}
 
 {# {% block javascripts %}

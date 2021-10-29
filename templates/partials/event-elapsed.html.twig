@@ -1,0 +1,13 @@
+<div>
+	<a class="indicator mb-16" href="{{ event.url }}">
+		<div class="rounded-md overflow-hidden shadow-md">
+			{% set image = event.media.images|first %}
+			{{ image.cropZoom(600,400).html(event.title, event.subtitle, 'w-full h-full object-cover')|raw }}
+		</div>
+		<div class="indicator-item indicator-bottom indicator-center bg-primary text-primary-content rounded-2xl w-1/2 h-32 flex flex-col justify-center items-center text-center shadow-md">
+			<div class="badge badge-outline">{{ event.header.dtend|nicetime }}</div>
+			<h3 class="text-lg md:text-xl font-bold mt-2">{{ event.title }}</h3>
+			<div class="font-light text-sm">{{ event.header.subtitle }}</div>
+		</div>
+	</a>
+</div>
