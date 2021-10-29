@@ -3,15 +3,15 @@
 
 {% if pagination|length > 1 %}
 
-	<ul class="flex space-x-1">
+	<ul class="flex space-x-1 py-2">
 		{% if pagination.hasPrev %}
 			{% set url =  (base_url ~ pagination.params ~ pagination.prevUrl)|replace({'//':'/'}) %}
 			<li>
-				<a class="btn btn-circle" rel="prev" href="{{ url }}">{{ svg('theme://svg/icon/chevrons-left.svg', 'icon w-6')|raw }}</a>
+				<a class="btn btn-circle btn-sm" rel="prev" href="{{ url }}">{{ svg('theme://svg/icon/chevrons-left.svg', 'icon w-6')|raw }}</a>
 			</li>
 		{% else %}
 			<li>
-				<span class="btn btn-circle btn-disabled">{{ svg('theme://svg/icon/chevrons-left.svg', 'icon w-6')|raw }}</span>
+				<span class="btn btn-circle btn-sm btn-disabled">{{ svg('theme://svg/icon/chevrons-left.svg', 'icon w-6')|raw }}</span>
 			</li>
 		{% endif %}
 
@@ -19,16 +19,16 @@
 
 			{% if paginate.isCurrent %}
 				<li>
-					<span class="btn btn-circle btn-active">{{ paginate.number }}</span>
+					<span class="btn btn-circle btn-sm btn-active">{{ paginate.number }}</span>
 				</li>
 			{% elseif paginate.isInDelta %}
 				{% set url = (base_url ~ pagination.params ~ paginate.url)|replace({'//':'/'}) %}
 				<li>
-					<a class="btn btn-circle" href="{{ url }}">{{ paginate.number }}</a>
+					<a class="btn btn-circle btn-sm" href="{{ url }}">{{ paginate.number }}</a>
 				</li>
 			{% elseif paginate.isDeltaBorder %}
 				<li>
-					<span class="btn btn-circle btn-disabled">{{ svg('theme://svg/icon/dots.svg', 'icon w-6')|raw }}</span>
+					<span class="btn btn-circle btn-sm btn-disabled">{{ svg('theme://svg/icon/dots.svg', 'icon w-6')|raw }}</span>
 				</li>
 			{% endif %}
 
@@ -36,11 +36,11 @@
 		{% if pagination.hasNext %}
 			{% set url = (base_url ~ pagination.params ~ pagination.nextUrl)|replace({'//':'/'}) %}
 			<li>
-				<a class="btn btn-circle" rel="next" href="{{ url }}">{{ svg('theme://svg/icon/chevrons-right.svg', 'icon w-6')|raw }}</a>
+				<a class="btn btn-circle btn-sm" rel="next" href="{{ url }}">{{ svg('theme://svg/icon/chevrons-right.svg', 'icon w-6')|raw }}</a>
 			</li>
 		{% else %}
 			<li>
-				<span class="btn btn-circle btn-disabled">{{ svg('theme://svg/icon/chevrons-right.svg', 'icon w-6')|raw }}</span>
+				<span class="btn btn-circle btn-sm btn-disabled">{{ svg('theme://svg/icon/chevrons-right.svg', 'icon w-6')|raw }}</span>
 			</li>
 		{% endif %}
 	</ul>

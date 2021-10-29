@@ -1,7 +1,44 @@
-<div class="xl:py-10">
+{% set pagination = page.collection.params.pagination %}
+
+<div class="flex flex-col">
+
+	<div class="flex justify-start xl:justify-center xl:pb-8">
+		<div class="flex flex-col items-center w-16">
+			{% if pagination.hasPrev() %}
+				{% set url = (page.url ~ pagination.params ~ pagination.nextUrl)|replace({'//':'/'}) %}
+				<a class="btn btn-xs mb-3" href="{{url}}">Vorherige</a>
+				{{ svg('theme://svg/icon/arrow-top-circle.svg', 'icon w-8 stroke-1 text-base-300 -mb-1')|raw }}
+			{% else %}
+				<div class="badge badge-lg badge-ghost text-neutral">Heute</div>
+			{% endif %}
+		</div>
+	</div>
+
+	{% set prev_year = "now"|date("Y") %}
+
+
 	{% for item in collection %}
+
+		{% set current_year  = item.header.dtend|date("Y") %}
+
+		{% if prev_year > current_year %}
+			{% set year_range = range(prev_year, current_year + 1) %}
+			<div class="flex flex-col items-start xl:items-center xl:py-8">
+				{% for y in year_range %}
+					<div class="flex flex-col items-center w-16">
+						{% if 0 < loop.index0 and loop.index0 < loop.length %}
+							<div class="h-4 bg-base-300 w-0.5"></div>
+						{% endif %}
+						<div class="badge badge-lg badge-ghost text-neutral">{{ y }}</div>
+					</div>
+				{% endfor %}
+			</div>
+			{% set prev_year = current_year %}
+		{% endif %}
+
 		{% set isOdd = loop.index0 is odd %}
-		<div class="flex xl:-my-10">
+
+		<div class="flex xl:-my-8">
 
 			<div class="xl:flex-1 {{ isOdd ? 'xl:order-3' : 'xl:order-1'}}"></div>
 
@@ -53,4 +90,17 @@
 	{% else %}
 		{% include 'partials/empty.html.twig' with { msg: 'Keine Einträge gefunden.' } %}
 	{% endfor %}
+
+	<div class="flex justify-start xl:justify-center xl:pt-8">
+		<div class="flex flex-col items-center w-16">
+			{% if pagination.hasNext %}
+				{{ svg('theme://svg/icon/arrow-bottom-circle.svg', 'icon w-8 stroke-1 text-base-300 -mt-1')|raw }}
+				{% set url = (page.url ~ pagination.params ~ pagination.nextUrl)|replace({'//':'/'}) %}
+				<a class="btn btn-xs mt-3" href="{{url}}">Nächste</a>
+			{% else %}
+				<div class="badge badge-lg badge-ghost">Ende</div>
+			{% endif %}
+		</div>
+	</div>
+
 </div>

@@ -1,4 +1,11 @@
-<div class="space-y-6">
+<div class="space-y-8 sticky top-16">
+
+	{% if config.plugins.pagination.enabled and collection.params.pagination and not search_results %}
+		<div class="flex justify-center">
+			{% include 'partials/pagination.html.twig' with { base_url: page.url, pagination: collection.params.pagination } %}
+		</div>
+	{% endif %}
+
 	{% if config.plugins.taxonomylist.enabled %}
 
 		{% set taxlist = children_only is defined ? taxonomylist.getChildPagesTags() : taxonomylist.get() %}
@@ -7,7 +14,7 @@
 
 			{% embed 'embeds/panel.html.twig' %}
 				{% set icon = 'folders' %}
-				{% set title = 'Tags' %}
+				{% set title = 'Kategorien' %}
 				{% block content %}
 					<div class="text-center space-x-1 space-y-1">
 						{% include 'partials/taxonomy.html.twig' with {list: taxlist.category|keys, name:'category', icon: 'folder'} %}

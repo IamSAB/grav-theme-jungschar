@@ -7,11 +7,6 @@
 		<div class="flex-1 flex flex-col space-y-8">
 			{% include 'partials/chronicle/search.html.twig' %}
 			{% include 'partials/chronicle/timeline.html.twig' %}
-			<div class="flex-1 flex justify-center items-end">
-				{% if config.plugins.pagination.enabled and collection.params.pagination and not search_results %}
-					{% include 'partials/pagination.html.twig' with { base_url: page.url, pagination: collection.params.pagination } %}
-				{% endif %}
-			</div>
 		</div>
 		<aside class="hidden lg:block w-64 ml-8">
 			{% include 'partials/chronicle/sidebar.html.twig' %}
