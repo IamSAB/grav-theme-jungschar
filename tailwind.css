@@ -39,6 +39,9 @@ svg.icon {
 .form-field {
   @apply form-control items-center
 }
+.form-data {
+  @apply w-full max-w-lg
+}
 .form-label {
   @apply label
 }
@@ -46,13 +49,13 @@ svg.icon {
   @apply label-text
 }
 input {
-  @apply input input-bordered
+  @apply input bg-base-200 w-full
 }
 select {
-  @apply select select-bordered
+  @apply select bg-base-200 w-full
 }
 textarea {
-  @apply textarea textarea-bordered
+  @apply textarea bg-base-200 w-full
 }
 form .buttons {
   @apply flex justify-center space-x-3 mt-3

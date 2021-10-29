@@ -1,25 +1,31 @@
 {% if config.plugins.taxonomylist.enabled %}
 
-	{% embed 'embeds/card-drawer.html.twig' %}
-		{% set title = 'Kategorien' %}
-		{% block content %}
-			{% include 'partials/taxonomylist.html.twig' with {base_url: page.url, taxonomy:'category', icon: 'folder'} %}
-		{% endblock %}
-	{% endembed %}
+	{% set taxlist = children_only is defined ? taxonomylist.getChildPagesTags() : taxonomylist.get() %}
 
-	{% embed 'embeds/card-drawer.html.twig' %}
-		{% set title = 'Gruppen' %}
-		{% block content %}
-			{% include 'partials/taxonomylist.html.twig' with {base_url: page.url, taxonomy:'group', icon: 'circle-dotted'} %}
-		{% endblock %}
-	{% endembed %}
+	{% if taxlist %}
 
-	{% embed 'embeds/card-drawer.html.twig' %}
-		{% set title = 'Tags' %}
-		{% block content %}
-			{% include 'partials/taxonomylist.html.twig' with {base_url: page.url, taxonomy: 'tag', icon: 'bookmark'} %}
-		{% endblock %}
-	{% endembed %}
+		{% embed 'embeds/card-drawer.html.twig' %}
+			{% set title = 'Kategorien' %}
+			{% block content %}
+				{% include 'partials/taxonomy.html.twig' with {list: taxlist.category|keys, name:'category', icon: 'folder'} %}
+			{% endblock %}
+		{% endembed %}
+
+		{% embed 'embeds/card-drawer.html.twig' %}
+			{% set title = 'Gruppen' %}
+			{% block content %}
+				{% include 'partials/taxonomy.html.twig' with {list: taxlist.group|keys, name:'group', icon: 'circle-dotted'} %}
+			{% endblock %}
+		{% endembed %}
+
+		{% embed 'embeds/card-drawer.html.twig' %}
+			{% set title = 'Tags' %}
+			{% block content %}
+				{% include 'partials/taxonomy.html.twig' with {list: taxlist.tag|keys, name: 'tag', icon: 'bookmark'} %}
+			{% endblock %}
+		{% endembed %}
+
+	{% endif %}
 
 {% endif %}
 

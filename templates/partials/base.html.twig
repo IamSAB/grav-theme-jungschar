@@ -1,7 +1,7 @@
 {% set extension = config.theme.production ? '.min' : '' %}
 
 <!DOCTYPE html>
-<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e }}" data-theme="{% block theme %}garden{% endblock %}">
+<html lang="{{ (grav.language.getActive ?: grav.config.site.default_lang)|e }}" data-theme="{% block theme %}jsek{% endblock %}">
 
 	<head>
 		{% block head %}
@@ -76,7 +76,7 @@
 					{% block hero %}
 						<article class="mx-auto text-center pt-16 pb-24 max-w-5xl">
 							<div class="text-2xl md:text-3xl uppercase font-extrabold tracking-wide text-base-200">{{ page.header.label }}</div>
-							<h1 class="text-6xl md:text-7xl font-black my-2 text-neutral-content">{{ page.title }}</h1>
+							<h1 class="text-6xl md:text-7xl font-black my-2 text-primary-content">{{ page.title }}</h1>
 							<div class="text-2xl md:text-3xl text-bold text-base-100">{{ page.header.subtitle }}</div>
 						</article>
 					{% endblock %}
@@ -144,7 +144,7 @@
 
 		<div class="drawer-side">
 			<label for="menu-drawer" class="drawer-overlay"></label>
-			<div class="p-4 overflow-y-auto w-72 bg-base-200 text-base-content space-y-2">
+			<div class="p-4 overflow-y-auto w-72 bg-base-100 text-base-content space-y-2 bg-hero-texture-80">
 				{{ svg('theme://svg/jsek.svg','w-32 mx-auto')|raw }}
 				{% include 'partials/menu-aside.html.twig' with {title: 'Hauptmenü', items: pages.children.ofOneOfTheseTypes(['sections','chronicle','group'])} %}
 				{% block drawer %}{% endblock %}

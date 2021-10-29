@@ -1,13 +1,24 @@
 <div>
-	<a class="indicator mb-16" href="{{ event.url }}">
-		<div class="rounded-md overflow-hidden shadow-md">
-			{% set image = event.media.images|first %}
-			{{ image.cropZoom(600,400).html(event.title, event.subtitle, 'w-full h-full object-cover')|raw }}
+	<a class="indicator w-full" href="{{ event.url }}">
+		<div class="indicator-item indicator-top indicator-center badge badge-lg z-10 overflow-visible whitespace-nowrap">
+			<span>{{ event.header.dtend|nicetime }}</span>
 		</div>
-		<div class="indicator-item indicator-bottom indicator-center bg-primary text-primary-content rounded-2xl w-1/2 h-32 flex flex-col justify-center items-center text-center shadow-md">
-			<div class="badge badge-outline">{{ event.header.dtend|nicetime }}</div>
-			<h3 class="text-lg md:text-xl font-bold mt-2">{{ event.title }}</h3>
-			<div class="font-light text-sm">{{ event.header.subtitle }}</div>
-		</div>
+		{% set image = event.media.images|first %}
+		{% if image %}
+			<div class="rounded-box overflow-hidden shadow-md">
+				{{ image.cropZoom(600,400).html(event.title, event.subtitle, 'w-full h-full object-cover')|raw }}
+			</div>
+		{% else %}
+			<div class="card indicator bg-base-300 bg-opacity-50" style="width: 100%; height: 0; padding: 0 0 75% 0;">
+				{{ svg('theme://svg/icon/photo.svg', 'icon w-24 text-base-300 indicator-item indicator-middle indicator-center')|raw }}
+			</div>
+		{% endif %}
 	</a>
+	<div class="card compact rounded-box bg-primary shadow-md text-primary-content -mt-8 mx-16 bg-hero-texture">
+		<div class="card-body text-center">
+			<div class="uppercase tracking-wider">{{ event.taxonomy.category|first }}</div>
+			<div class="card-title leading-5">{{ event.title }}</div>
+			<div class="font-light">{{ event.header.dtstart|startEnd(event.header.dtend) }}</div>
+		</div>
+	</div>
 </div>

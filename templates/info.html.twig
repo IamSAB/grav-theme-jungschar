@@ -1,0 +1,14 @@
+{% extends 'partials/base.html.twig' %}
+
+{% set content = page.content|slice(page.summary|length) %}
+
+{% block content %}
+	<div class="container mx-auto mb-16">
+		<em class="pr-6">Information vom {{ page.header.dtend|date('d. M y') }}</em>
+		{% include 'partials/taxonomy.html.twig' with {list: page.taxonomy.tag} %}
+	</div>
+	<div class="mx-auto prose">
+		{{ content|raw }}
+		<em>{{ page.header.taxonomy.author|join(' | ') }}</em>
+	</div>
+{% endblock %}
