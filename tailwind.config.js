@@ -1,24 +1,27 @@
-const base = {
-  "primary": "#5c7f67",
-  "primary-focus": "#48614f",
-  "primary-content": "#ffffff",
-  "secondary": "#8bb1dd",
-  "secondary-focus": "#6497d2",
-  "secondary-content": "#fff",
-  "accent": "#fae5e5",
-  "accent-focus": "#f4bebe",
-  "accent-content": "#322020",
-  "neutral": "#5d5656",
-  "neutral-focus": "#2a2727",
-  "neutral-content": "#e9e7e7",
-  "base-100": "#e9e7e7",
-  "base-200": "#d1cccc",
-  "base-300": "#b9b1b1",
-  "base-content": "#100f0f",
-  "info": "#2094f3",
-  "success": "#009485",
-  "warning": "#ff9900",
-  "error": "#ff5724",
+const colors = require('tailwindcss/colors')
+
+// commented colors from garden theme
+const jsek = {
+  'primary': colors.sky[800], //'#29588d',
+  'primary-focus': colors.sky[900], //'#214875',
+  'primary-content': colors.sky[50], //'#bdd3ec'
+  "secondary":  colors.blueGray[300], //"#8bb1dd",
+  "secondary-focus": colors.blueGray[400], // "#6497d2",
+  "secondary-content": colors.blueGray[900], //"#fff",
+  "accent": colors.violet[300], // "#fae5e5",
+  "accent-focus": colors.violet[500], //"#f4bebe",
+  "accent-content": colors.violet[50],//"#322020",
+  "neutral": colors.warmGray[600], //"#5d5656",
+  "neutral-focus": colors.warmGray[700], //"#2a2727",
+  "neutral-content": colors.warmGray[50], //"#e9e7e7",
+  "base-100": colors.warmGray[100], //"#e9e7e7",
+  "base-200": colors.warmGray[200], //"#d1cccc",
+  "base-300": colors.warmGray[300], //"#b9b1b1",
+  "base-content": colors.warmGray[800], //"#100f0f",
+  "info": colors.blue[400], //"#2094f3",
+  "success": colors.emerald[400], // "#009485",
+  "warning": colors.orange[400], //"#ff9900",
+  "error": colors.red[400], //"#ff5724",
   "--border-color": "var(--b3)",
   "--rounded-box": ".75rem",
   "--rounded-btn": ".5rem",
@@ -27,34 +30,28 @@ const base = {
   "--animation-input": ".2s",
   "--btn-text-case": "uppercase",
   "--btn-focus-scale": ".95",
-  "--navbar-padding": ".5rem",
+  "--navbar-padding": ".75rem",
   "--border-btn": "1px",
   "--tab-border": "1px",
-  "--tab-radius": "0.5rem"
-};
-
-const jsek = {
-  'primary': '#29588d',
-  'primary-focus': '#214875',
-  'primary-content': '#bdd3ec'
+  "--tab-radius": ".5rem"
 };
 
 const ameisli = {
-  primary: '#87a05c',
-  'primary-focus': '#607440',
-  'primary-content': '#B3BE9E'
+  'primary': colors.lime[800], // '#87a05c',
+  'primary-focus': colors.lime[900], //'#607440',
+  'primary-content': colors.lime[50] //'#B3BE9E'
 }
 
 const jungschi = {
-  primary: '#aa5060',
-  'primary-focus': '#8b3444',
-  'primary-content': '#c9a4ab'
+  'primary': colors.orange[800], // '#aa5060',
+  'primary-focus': colors.orange[900], // '#8b3444',
+  'primary-content': colors.orange[50] // '#c9a4ab'
 }
 
 const eagles = {
-  primary: '#DBA944',
-  'primary-focus': '#CD9425',
-  'primary-content': '#ECDEC3'
+  'primary': colors.yellow[700], // '#DBA944',
+  'primary-focus': colors.yellow[800], //'#CD9425',
+  'primary-content': colors.yellow[50] //'#ECDEC3'
 }
 
 module.exports = {
@@ -72,10 +69,10 @@ module.exports = {
   daisyui: {
     themes: [
       {
-        'jsek': {...base, ...jsek},
-        'ameisli': {...base, ...ameisli},
-        'jungschi': {...base, ...jungschi},
-        'eagles': {...base, ...eagles}
+        'jsek': jsek,
+        'ameisli': {...jsek, ...ameisli},
+        'jungschi': {...jsek, ...jungschi},
+        'eagles': {...jsek, ...eagles}
       }
     ],
   },
@@ -86,7 +83,7 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('daisyui'),
     require('tailwind-heropatterns')({
-      patterns: ['topography', 'brick-wall', 'texture'],
+      patterns: ['topography', 'brick-wall', 'texture', 'bubbles', 'rain', 'parkay-floor', 'bamboo'],
       colors: {
         'default': '#fff'
       },

@@ -2,10 +2,10 @@
 	<div class="flex">
 		<aside class="flex flex-1 justify-end">
 			<nav id="sidenav" class="hidden md:block mr-5 lg:mr-8">
-				<ul class="sticky top-16 space-y-3 lg:space-y-5">
+				<ul class="sticky top-16 space-y-3 lg:space-y-5" id="scrollspy-sections">
 					{% for section in sections %}
-						<li class="hover:font-bold hover:text-primary">
-							<a href="#{{ section.slug }}" class="flex flex-col items-center">
+						<li>
+							<a href="#{{ section.slug }}" class="flex flex-col items-center hover:font-bold hover:text-primary">
 								{{ svg('theme://svg/icon/'~section.header.icon~'.svg', 'icon w-8 lg:w-10')|raw }}
 								<div class="uppercase text-xs lg:text-sm font-semibold mt-1">{{ section.title }}</div>
 							</a>
@@ -30,23 +30,14 @@
 		</div>
 		<div class="flex-1"></div>
 	</div>
+	{% do assets.add('theme://js/scrollspy.js') %}
+	{% set scrollspy %}
+		scrollSpy('#scrollspy-sections');
+		scrollSpy('#scrollspy-sections-drawer');
+	{% endset %}
+	{% do assets.addInlineJs(scrollspy, {group: 'bottom'}) %}
 {% endblock %}
 
 {% block drawer %}
-	{% include 'partials/menu-aside.html.twig' with {title: 'Abschnitte', items: sections, internal: true} %}
+	{% include 'partials/menu-aside.html.twig' with {title: 'Abschnitte', items: sections, internal: true, id: 'scrollspy-sections-drawer'} %}
 {% endblock %}
-
-{# {% block javascripts %}
-	{% do assets.add('theme://js/scrollspy.min.js') %}
-	{{ parent() }}
-{% endblock %}
-
-
-{% block bottom %}
-	{{ parent() }}
-	<script>
-		const sidenav = document.querySelector('#sidenav');
-		const scrollspy = VanillaScrollspy(sidenav);
-		scrollspy.init();
-	</script>
-{% endblock %} #}

@@ -1,6 +1,6 @@
 {% set internal = internal|default(false) %}
 
-<ul class="menu compact rounded-box p-4 space-y-1">
+<ul class="menu compact rounded-box p-4 space-y-1" {{ id ? 'id='~id : ''}}>
 	<li class="menu-title">
 		<span>{{ title }}</span>
 	</li>

@@ -2,10 +2,10 @@ name: Jungschar
 slug: jungschar
 type: theme
 version: 0.1.0
-description: A theme featuring special layout for youthwork
+description: A theme featuring special layouts and page types for your youthwork
 icon: rebel
 author:
-  name: SAV
+  name: SAB
   email: simon@boesch.onl
 homepage: https://github.com/IamSAB/grav-theme-jungschar
 demo: http://demo.yoursite.com
@@ -15,32 +15,78 @@ readme: https://github.com/IamSAB/grav-theme-jungschar/blob/develop/README.md
 license: MIT
 
 dependencies:
-  - { name: grav, version: '>=1.6.0' }
+  - { name: grav, version: ">=1.6.0" }
 
 form:
-    validation: loose
-    fields:
-        production:
-            type: toggle
-            label: Production Mode
-            highlight: 1
-            default: 1
-            options:
+  validation: loose
+  fields:
+    section_general:
+        type: section
+        title: Allgemein
+        underline: true
+    columns_general:
+      type: columns
+      fields:
+        column1:
+          type: column
+          fields:
+            production:
+              type: toggle
+              label: Production Mode
+              highlight: 1
+              default: 1
+              options:
                 1: PLUGIN_ADMIN.ENABLED
                 0: PLUGIN_ADMIN.DISABLED
-            validate:
+              validate:
                 type: bool
-        social:
-            type: list
-            label: Soziale Netzwerke
-            style: vertical
-            fields:
-              .icon: 
-                type: text
-                label: Icon
-              .url: 
-                type: url
-                label: URL
-              .name: 
-                type: text
-                label: Name
+    section_footer:
+      type: section
+      title: Footer
+      underline: true
+    columns_footer_menu:
+      type: columns
+      fields:
+        column1:
+          type: column
+          fields:
+            footer.socials:
+              type: list
+              label: Soziale Netzwerke
+              fields:
+                .icon:
+                  type: filepicker
+                  folder: "theme://svg/icon"
+                  label: Icon
+                  preview_images: true
+                  accept:
+                    - .svg
+                .url:
+                  type: url
+                  label: URL
+                .title:
+                  type: text
+                  label: Titel
+        column2:
+          type: column
+          fields:
+            footer.links:
+              type: list
+              label: Weitere Links
+              fields:
+                .icon:
+                  type: filepicker
+                  folder: "theme://svg/icon"
+                  label: Icon
+                  preview_images: true
+                  accept:
+                    - .svg
+                .url:
+                  type: url
+                  label: URL
+                .title:
+                  type: text
+                  label: Titel
+    footer.content:
+      type: markdown
+      label: Inhalt

@@ -3,6 +3,15 @@
 @tailwind components;
 @tailwind utilities;
 
+#scroll {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
+#scrollspy-sections a.active {
+  @apply font-bold text-primary
+}
+
 svg.icon {
   @apply stroke-current;
   stroke-linejoin: round;
@@ -34,6 +43,10 @@ svg.icon {
 
 .scrolled .navbar-start svg {
   @apply w-6 h-6;
+}
+
+.prose ul li {
+  margin: 0;
 }
 
 .form-field {

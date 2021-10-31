@@ -1,7 +1,7 @@
 {% set hasEvents = event.header.events is defined %}
 {% set upcoming = hasEvents ? event.header.events|filter(i => date(i.dtend) >= date())|first : event.header %}
 
-<div class="card indicator overflow-visible mt-10 w-full bg-secondary text-secondary-content shadow-lg">
+<div class="card indicator overflow-visible mt-10 w-full bg-secondary text-secondary-content shadow-md">
 	<div class="indicator-item indicator-center w-20 h-20 mask mask-squircle flex flex-col items-center justify-center bg-secondary-focus text-secondary-content filter drop-shadow-md">
 		<div class="font-extrabold text-xl">{{ upcoming.dtstart|date('d')}}</div>
 		<div class="font-light -mt-1">{{ upcoming.dtstart|date('M')}}</div>

@@ -1,12 +1,15 @@
 <div>
 	<span class="footer-title">{{ title }}</span>
-	{% for page in pages %}
-		{% set current_page = (page.active or page.activeChild) ? 'link-primary' : '' %}
-		<a href="{{ page.url|e }}" class="flex space-x-1 items-center link link-hover {{ current_page|e }}">
-			{% if page.header.icon %}
-				{{ svg('theme://svg/icon/'~page.header.icon~'.svg', 'icon w-5 mr-1')|raw }}
+	{% for item in items %}
+		{% set current_item = (item.active or item.activeChild) ? 'link-primary' : '' %}
+		{% set url = item.link ?? item.url %}
+		<a href="{{ url|e }}" class="flex space-x-1 items-center link link-hover {{ current_item|e }}">
+		{% set icon = item.header.icon ?? item.icon %}
+			{% if icon %}
+				{{ svg('theme://svg/icon/'~icon~'.svg', 'icon w-5 mr-1')|raw }}
 			{% endif %}
-			{{ page.menu|e }}
+			{% set title = item.menu ?? item.title %}
+			{{ title|e }}
 		</a>
 	{% endfor %}
 </div>

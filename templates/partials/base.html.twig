@@ -43,7 +43,7 @@
 
 				{% set header_image = page.header.image ?? page.media.images|first %}
 
-				<header class="bg-neutral {{ header_image ? 'bg-cover bg-blend-overlay bg-center' : 'bg-hero-topography'}}" {% if header_image %} style="background-image: url('{{ header_image.cropResize(2560,1440).url }}')" {% endif %}>
+				<header class="bg-neutral {{ header_image ? 'bg-cover bg-blend-overlay bg-center' : 'bg-hero-texture'}}" {% if header_image %} style="background-image: url('{{ header_image.cropResize(2560,1440).url }}')" {% endif %}>
 
 					<div id="navbar" class="z-10 text-neutral-content transition-all duration-300 w-full bg-blend-overlay shadow-lg">
 						<div class="navbar container-xl mx-auto p-0">
@@ -100,46 +100,83 @@
 			{% endblock %}
 
 			{% block footer %}
-
-				<footer class="p-10 footer bg-neutral text-neutral-content bg-hero-topography">
+				<footer class="p-10 footer bg-neutral text-neutral-content bg-hero-texture">
 
 					<div class="max-w-xs prose-sm">
-						<blockquote>
-							Macht euch daher um nichts Sorgen! Wendet euch vielmehr in jeder Lage mit Bitten und Flehen und voll Dankbarkeit an Gott und bringt eure Anliegen vor ihn.
-							<br>
-							<em>Philipper 4,6 NGÜ</em>
-						</blockquote>
+						{{ config.theme.footer.content|markdown }}
 					</div>
 
-					{% include 'partials/menu-footer.html.twig'  with { title: 'Allgmein', pages: pages.children.ofOneOfTheseTypes(['sections','chronicle']) } %}
-					{% include 'partials/menu-footer.html.twig'  with { title: 'Gruppen', pages: pages.children.ofType('group') } %}
-					{% include 'partials/menu-footer.html.twig'  with { title: 'Sonstiges', pages: pages.children.ofType('page') } %}
+					<nav>
+						<span class="footer-title">Allgemein</span>
+						<ul>
+							{% for item in pages.children.ofOneOfTheseTypes(['sections','chronicle']) %}
+								<li>
+									<a class="link link-hover" href="{{item.url}}">{{item.menu}}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</nav>
+
+					<nav>
+						<span class="footer-title">Gruppen</span>
+						<ul>
+							{% for item in pages.children.ofType('group') %}
+								<li>
+									<a class="link link-hover" href="{{item.url}}">{{item.menu}}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</nav>
+
+					<nav>
+						<span class="footer-title">Netzwerk</span>
+						<ul>
+							{% for item in pages.collection({items:{'@page.modular':'/ueber-uns/_netzwerk'}}) %}
+								{% if item.header.link %}
+									<li>
+										<a class="link link-hover" title="{{ item.title }}" href="{{ item.header.link }}">{{ item.header.label ?? item.title }}</a>
+									</li>
+								{% endif %}
+							{% endfor %}
+						</ul>
+					</nav>
+
+					<div>
+						<span class="footer-title">Online</span>
+						<div class="grid grid-flow-col gap-4">
+							{% for item in config.theme.footer.socials %}
+								<a href="{{ item.url }}" title="{{ item.title }}">
+									{{ svg('theme://svg/icon/'~item.icon, 'icon w-8')|raw }}
+								</a>
+							{% endfor %}
+						</div>
+					</div>
 
 				</footer>
 
-				<footer class="px-10 py-4 border-t footer bg-neutral text-neutral-content border-neutral-focus bg-hero-brick-wall">
-					<div class="items-center grid-flow-col">
-						{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10')|raw }}
+				<footer class="p-10 footer footer-center bg-primary text-primary-content bg-hero-texture">
+
+					<nav>
+						<ul class="grid grid-flow-col gap-4">
+							{% for item in pages.children.ofType('page') %}
+								<li>
+									<a class="link link-hover" href="{{ item.url }}">{{ item.menu }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</nav>
+
+					<div class="flex flex-col">
+						{{ svg('theme://svg/logo.svg', 'fill-current w-8 h-8')|raw }}
 						<div class="ml-2">&copy;
 							{{ "now"|date("Y") }}
 							{{ config.site.title}}<br><span class="text-light">Aktivitäten für Kinder und Jugendliche</span>
 						</div>
 					</div>
-					<div class="md:place-self-center md:justify-self-end">
-						<div class="grid grid-flow-col gap-4">
-							{% if config.theme.social %}
-								{% for item in config.theme.social %}
-									<a href="{{ item.url }}" title="{{title}}">
-										{{ svg('theme://svg/icon/'~item.icon~'.svg', 'icon w-8')|raw }}
-									</a>
-								{% endfor %}
-							{% endif %}
-						</div>
-					</div>
+
+
 				</footer>
-
 			{% endblock %}
-
 		</div>
 
 		<div class="drawer-side">
