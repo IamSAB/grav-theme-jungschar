@@ -1,0 +1,8 @@
+form:
+  fields:
+    header.image:
+      label: Anzeigebild
+      type: filepicker
+      folder: 'self@'
+      preview_images: true
+      description: = erstes Bild, falls nicht definiert

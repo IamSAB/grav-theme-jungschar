@@ -1,20 +1,22 @@
-<article id="{{ page.menu|hyphenize }}" class="modular-article {{ page.header.article_classes }}">
+{% set id = page.slug|hyphenize %}
+{% set image = page.header.image ? page.media.images[page.header.image] : page.media.images|first %}
+
+<article id="{{ id }}">
 
 	<header class="text-center">
 		<div class="flex justify-center mb-3">
 			{% if page.header.svg %}
-				{{ svg('theme://svg/'~page.header.svg~'.svg', 'fill-current text-primary w-64')|raw }}
-			{% endif %}
-			{% for image in page.media.images %}
+				{{ svg('theme://svg/'~page.header.svg, 'fill-current text-primary w-64')|raw }}
+			{% elseif image %}
 				{{ image.cropZoom(200,200).html('','','mask mask-squircle')|raw }}
-			{% endfor %}
+			{% endif %}
 		</div>
 		<div class="uppercase text-neutral tracking-wide font-semibold">{{ page.header.label }}</div>
-		<h2 class="text-2xl font-bold">{{ page.title }}</h2>
+		<h2 class="text-2xl font-bold"><a href="#{{id}}">{{ page.title }}</a></h2>
 		<div class="text-md font-light">{{ page.header.subtitle }}</div>
 	</header>
 
-	<div class="prose mx-auto mt-4">
+	<div class="prose mx-auto mt-4 {{ page.header.centered ? 'text-center' : '' }}">
 		{{ page.content|raw }}
 	</div>
 
@@ -29,7 +31,7 @@
 
 	{% if page.header.link %}
 		<footer class="text-center">
-			<a href="{{ page.header.link }}" class="btn btn-default">Mehr</a>
+			<a href="{{ page.header.link }}" class="btn btn-primary">Mehr</a>
 		</footer>
 	{% endif %}
 

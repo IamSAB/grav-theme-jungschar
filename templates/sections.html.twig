@@ -1,5 +1,6 @@
 {% extends "partials/base.html.twig" %}
 
+{% set preface = page.content %}
 {% set sections = page.collection() %}
 
 {% use 'blocks/sections.html.twig' %}

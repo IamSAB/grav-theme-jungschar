@@ -6,11 +6,11 @@
 	</li>
 	{% for item in items %}
 		{% set current_item = (item.active or item.activeChild) ? 'active' : '' %}
-		{% set url = internal ? '#'~item.slug : item.url %}
+		{% set url = internal ? '#'~item.slug|hyphenize : item.url %}
 		<li>
 			<a href="{{ url }}" class="{{ current_item }}">
 				{% if item.header.icon %}
-					{{ svg('theme://svg/icon/'~item.header.icon~'.svg', 'icon w-5 mr-2')|raw }}
+					{{ svg('theme://svg/icon/'~item.header.icon, 'icon w-5 mr-2')|raw }}
 				{% endif %}
 				{{ item.menu ?? item.title }}
 			</a>

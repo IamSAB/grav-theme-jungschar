@@ -1,0 +1,9 @@
+form:
+  fields:
+    header.svg:
+      type: filepicker
+      folder: "theme://svg"
+      label: SVG
+      preview_images: true
+      accept:
+        - .svg

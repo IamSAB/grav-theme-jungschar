@@ -2,7 +2,7 @@
 	<div id="gallery" class="grid grid-cols-2 md:grid-cols-3 gap-2">
 		{% for name, img in images|sortByExifCreated %}
 			<a href="{{ img.url|e }}" data-size="{{ img|dataSize }}">
-				<img src="{{ img.cropZoom(400, 300).url|e }}" alt=""/>
+				<img class="rounded-box overflow-hidden" src="{{ img.cropZoom(400, 300).url|e }}" alt=""/>
 			</a>
 		{% endfor %}
 	</div>

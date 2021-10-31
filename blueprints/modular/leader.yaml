@@ -1,0 +1,39 @@
+extends@: default
+
+form:
+  fields:
+    tabs:
+      fields:
+        tile:
+          type: tab
+          title: Leiter
+          fields:
+            columns:
+              type: columns
+              fields:
+                column1:
+                  type: column
+                  fields:
+                    header.name:
+                      type: text
+                      label: Vor- und Nachname
+                    header.role:
+                      type: select
+                      label: Rolle
+                      options:
+                        Teamleiter: Teameleiter
+                        Leiter: Leiter
+                        Minileiter: Minileiter
+                        Anwärter: Anwärter
+                    header.status:
+                      type: select
+                      label: Status
+                      options:
+                        aktiv: aktiv
+                        teilzeit: teilzeit
+                        pause: pause
+                column2:
+                  type: column
+                  import@1:
+                    type: partials/image
+                    context: theme://blueprints

@@ -1,0 +1,12 @@
+form:
+  fields:
+    header.centered:
+      type: toggle
+      label: Text zentrieren?
+      highlight: 0
+      default: 0
+      options:
+        1: Ja
+        0: Nein
+      validate:
+        type: bool

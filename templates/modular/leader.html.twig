@@ -1,3 +1,5 @@
+{% set image = page.header.image ? page.media.images[page.header.image] : page.media.images|first %}
+
 {% switch page.header.status %}
 	{% case 'teilzeit' %}
 		{% set status = 'ring-warning' %}
@@ -6,9 +8,6 @@
 	{% default %}
 		{% set status = 'ring-success' %}
 {% endswitch %}
-
-{% set image = page.media.images|first %}
-{% set size = size|default('xxxl') %}
 
 <div class="flex flex-col items-center">
 	<div class="avatar">

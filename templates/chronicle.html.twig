@@ -3,7 +3,11 @@
 {% set collection = search_results ?: page.collection %}
 
 {% block content %}
-	<div class="container-xl mx-auto flex">
+	<div class="mx-auto prose prose-xl {{ page.header.centered ? 'text-center' : '' }}">
+		{{ page.content|raw }}
+	</div>
+
+	<div class="container-xl mx-auto flex mt-16">
 		<div class="flex-1 flex flex-col space-y-8">
 			{% include 'partials/chronicle/search.html.twig' %}
 			{% include 'partials/chronicle/timeline.html.twig' %}

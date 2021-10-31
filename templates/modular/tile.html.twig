@@ -1,11 +1,13 @@
-<div class="grid grid-flow-row auto-rows-max gap-4" style="grid-template-columns: minmax(8rem, 20%) 1fr 1fr;">
+{% set id = page.slug|hyphenize %}
+{% set image = page.header.image ? page.media.images[page.header.image] : page.media.images|first %}
+
+<div id="{{id}}" class="grid grid-flow-row auto-rows-max gap-4" style="grid-template-columns: minmax(8rem, 20%) 1fr 1fr;">
 	<div class="md:row-span-2 justify-self-center self-center md:self-start">
 		{% if page.header.svg %}
 			{{ svg('theme://svg/'~page.header.svg~'.svg', 'fill-current text-primary w-full')|raw }}
-		{% endif %}
-		{% for image in page.media.images %}
+		{% elseif image %}
 			{{ image.cropZoom(200,200).html('','','mask mask-squircle w-full')|raw }}
-		{% endfor %}
+		{% endif %}
 		<div class="text-center mt-2">
 			{% if page.header.link %}
 				<a href="{{ page.header.link }}" class="hidden md:inline btn btn-outline btn-sm mt-3">Mehr</a>
@@ -14,7 +16,7 @@
 	</div>
 	<div class="col-start-2 col-span-2 self-center">
 		<div class="text-sm uppercase tracking-wide font-semibold opacity-50">{{ page.header.label }}</div>
-		<h2 class="card-title m-0">{{ page.title }}</h2>
+		<h2 class="card-title m-0"><a href="#{{id}}">{{ page.title }}</a></h2>
 		<div>{{ page.header.subtitle }}</div>
 	</div>
 	<div class="col-start-1 col-span-3 md:col-start-2 md:col-span-2 prose">{{ page.content|raw }}</div>

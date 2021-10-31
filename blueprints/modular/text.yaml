@@ -1,0 +1,16 @@
+extends@: default
+
+form:
+  fields:
+    tabs:
+      fields:
+        modular:
+          type: tab
+          title: Modular
+          import@1:
+            type: partials/centered
+            context: theme://blueprints
+          import@2:
+            type: partials/section
+            context: theme://blueprints
+            

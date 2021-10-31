@@ -4,33 +4,14 @@ form:
   fields:
     tabs:
       fields:
-
         info:
           type: tab
           title: Info
           fields:
-
-            columns:
-              type: columns
-              fields:
-
-                column1:
-                  type: column
-                  fields:
-
-                    header_general:
-                      type: section
-                      title: Allgemein
-                      underline: true
-
-                    header.dtend:
-                      label: Datum und Zeit
-                      type: datetime
-                      format: Y-m-d H:i
-                    
-                    header.image:
-                      label: Anzeigebild
-                      type: filepicker
-                      folder: 'self@'
-                      preview_images: true
-                      description: = erstes Bild, falls nicht definiert
+            header.dtend:
+              label: Datum und Zeit
+              type: datetime
+              format: Y-m-d H:i
+          import@:
+            type: partials/image
+            context: theme://blueprints

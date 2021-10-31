@@ -1,0 +1,25 @@
+extends@: default
+
+form:
+  fields:
+    tabs:
+      fields:
+        modular:
+          type: tab
+          title: Modular
+          fields:
+            columns:
+              type: columns
+              fields:
+                column1:
+                  type: column
+                  fields:
+                    header.grid:
+                      type: textarea
+                      label: Grid Klassen
+                      description: Benutze `[sm,md,lg,xl]:grid-cols-[1-4]`und `gap-[1-10]`
+                column2:
+                  type: column
+                  import@:
+                    type: partials/section
+                    context: theme://blueprints

@@ -1,0 +1,15 @@
+extends@: default
+
+form:
+  fields:
+    tabs:
+      fields:
+        sections:
+          type: tab
+          title: Abschnitte
+          import@1:
+            type: partials/centered
+            context: theme://blueprints
+          import@:
+            type: partials/svg
+            context: theme://blueprints

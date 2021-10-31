@@ -1,0 +1,6 @@
+form:
+  fields:
+    header.grid:
+      type: textarea
+      label: Grid Klassen
+      description: Benutze `[sm,md,lg,xl]:col-span-[1-12]

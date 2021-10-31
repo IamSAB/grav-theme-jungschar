@@ -1,12 +1,19 @@
 {% block content %}
-	<div class="flex">
+
+	{% if preface %}
+		<div class="mx-auto prose prose-xl {{ page.header.centered ? 'text-center' : '' }}">
+			{{ preface|raw }}
+		</div>
+	{% endif %}
+
+	<div class="flex mt-16">
 		<aside class="flex flex-1 justify-end">
 			<nav id="sidenav" class="hidden md:block mr-5 lg:mr-8">
 				<ul class="sticky top-16 space-y-3 lg:space-y-5" id="scrollspy-sections">
 					{% for section in sections %}
 						<li>
-							<a href="#{{ section.slug }}" class="flex flex-col items-center hover:font-bold hover:text-primary">
-								{{ svg('theme://svg/icon/'~section.header.icon~'.svg', 'icon w-8 lg:w-10')|raw }}
+							<a href="#{{ section.slug|hyphenize }}" class="flex flex-col items-center hover:font-bold hover:text-primary">
+								{{ svg('theme://svg/icon/'~section.header.icon, 'icon w-8 lg:w-10')|raw }}
 								<div class="uppercase text-xs lg:text-sm font-semibold mt-1">{{ section.title }}</div>
 							</a>
 						</li>
@@ -14,12 +21,14 @@
 				</ul>
 			</nav>
 		</aside>
-		<div class="container">
+		<div class="container space-y-12">
 			{% for section in sections %}
-				<section id="{{ section.slug }}" class="mt-12">
+				<section id="{{ section.slug|hyphenize }}">
 					<header class="flex flex-col items-center mt-2 mb-8">
-						{{ svg('theme://svg/icon/'~section.header.icon~'.svg', 'icon w-16 text-neutral')|raw }}
-						<h2 class="uppercase tracking-wide font-black text-5xl md:text-7xl text-base-300">{{ section.title }}</h2>
+						{{ svg('theme://svg/icon/'~section.header.icon, 'icon w-16 text-neutral')|raw }}
+						<h2 class="uppercase tracking-wide font-black text-5xl md:text-7xl text-base-300">
+							<a href="#{{ section.slug|hyphenize }}">{{ section.title }}</a>
+						</h2>
 						<div class="text-xl md:text-2xl font-bold -mt-6 text-primary">{{ section.header.subtitle }}</div>
 					</header>
 					<div>
@@ -31,11 +40,7 @@
 		<div class="flex-1"></div>
 	</div>
 	{% do assets.add('theme://js/scrollspy.js') %}
-	{% set scrollspy %}
-		scrollSpy('#scrollspy-sections');
-		scrollSpy('#scrollspy-sections-drawer');
-	{% endset %}
-	{% do assets.addInlineJs(scrollspy, {group: 'bottom'}) %}
+	{% do assets.addInlineJs("scrollSpy('#scrollspy-sections'); scrollSpy('#scrollspy-sections-drawer');", {group: 'bottom'}) %}
 {% endblock %}
 
 {% block drawer %}
