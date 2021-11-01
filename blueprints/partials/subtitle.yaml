@@ -1,0 +1,5 @@
+form:
+  fields:
+    header.subtitle:
+      label: Untertitel
+      type: text

@@ -1,8 +1,11 @@
 form:
+  import@1:
+    type: partials/subtitle
+    context: theme://blueprints
+  import@2:
+    type: partials/centered
+    context: theme://blueprints
   fields:
-    header.subtitle:
-      type: text
-      label: Untertitel
     header.icon:
       type: filepicker
       folder: "theme://svg/icon"
@@ -10,6 +13,3 @@ form:
       preview_images: true
       accept:
         - .svg
-    import@1:
-      type: partials/centered
-      context: theme://blueprints

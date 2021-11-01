@@ -1,0 +1,6 @@
+form:
+  fields:
+    header.link:
+      label: Link
+      type: text
+      description: Interner oder externer Link

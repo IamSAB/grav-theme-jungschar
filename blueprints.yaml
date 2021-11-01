@@ -40,6 +40,13 @@ form:
                 0: PLUGIN_ADMIN.DISABLED
               validate:
                 type: bool
+    section_group:
+      type: section
+      title: Gruppen
+      underline: true
+    group.note:
+      type: markdown
+      label: Allgemeiner Hinweis
     section_footer:
       type: section
       title: Footer

@@ -4,7 +4,7 @@
 <div id="{{id}}" class="grid grid-flow-row auto-rows-max gap-4" style="grid-template-columns: minmax(8rem, 20%) 1fr 1fr;">
 	<div class="md:row-span-2 justify-self-center self-center md:self-start">
 		{% if page.header.svg %}
-			{{ svg('theme://svg/'~page.header.svg~'.svg', 'fill-current text-primary w-full')|raw }}
+			{{ svg('theme://svg/'~page.header.svg, 'fill-current text-primary w-full')|raw }}
 		{% elseif image %}
 			{{ image.cropZoom(200,200).html('','','mask mask-squircle w-full')|raw }}
 		{% endif %}

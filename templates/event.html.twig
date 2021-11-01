@@ -1,15 +1,13 @@
 {% extends 'partials/base.html.twig' %}
 
 {% block hero %}
-	<article class="mx-auto text-center pt-16 pb-24 max-w-5xl">
-		<div class="text-2xl md:text-3xl uppercase font-extrabold tracking-wide text-base-200">{{ page.header.dtstart|startEnd(page.header.dtend) }}</div>
-		<h1 class="text-6xl md:text-7xl font-black my-2 text-neutral-content">{{ page.header.title }}</h1>
-		<div class="text-2xl md:text-3xl text-bold text-base-100">{{ page.header.subtitle }}</div>
-	</article>
+	<div class="text-2xl md:text-3xl uppercase font-extrabold tracking-wide text-base-200">{{ page.header.dtstart|startEnd(page.header.dtend) }}</div>
+	<h1 class="text-6xl md:text-7xl font-black my-2 text-neutral-content">{{ page.header.title }}</h1>
+	<div class="text-2xl md:text-3xl text-bold text-base-100">{{ page.header.subtitle }}</div>
 {% endblock %}
 
 {% set infos %}
-  TODO
+TODO
 {% endset %}
 
 {% set article %}
@@ -19,7 +17,7 @@
 {% endset %}
 
 {% set gallery %}
-  {% include 'partials/gallery.html.twig' with { images: page.media.images ?? [] } %}
+{% include 'partials/gallery.html.twig' with { images: page.media.images ?? [] } %}
 {% endset %}
 
 {% set sections = [
@@ -29,7 +27,7 @@
     slug: 'infos',
     header: {
       subtitle: page.title,
-      icon: 'circle-dotted',
+      icon: 'calendar-event.svg',
     }
   },
   {
@@ -37,7 +35,7 @@
     slug: 'bericht',
     content: article,
     header: {
-      icon: 'news',
+      icon: 'news.svg',
       subtitle: 'Rückblick'
     }
   },
@@ -46,7 +44,7 @@
     slug: 'gallerie',
     content: gallery,
     header: {
-      icon: 'photo',
+      icon: 'photo.svg',
       subtitle: 'Impressionen'
     }
   }

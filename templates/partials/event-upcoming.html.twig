@@ -12,9 +12,9 @@
 			<h2 class="card-title mb-0 text-center">{{ upcoming.title }}</h2>
 			<div class="mt-2">
 				{% for group in event.taxonomy.group %}
-					<span class="badge badge-outline">
+					<a class="badge badge-outline" href="/{{group|lower}}">
 						{{ group }}
-					</span>
+					</a>
 				{% endfor %}
 			</div>
 		</div>

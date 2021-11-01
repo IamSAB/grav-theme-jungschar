@@ -4,9 +4,9 @@ form:
   fields:
     tabs:
       fields:
-        tile:
+        modular:
           type: tab
-          title: Tile
+          title: Modular
           fields:
             columns:
               type: columns
@@ -14,20 +14,13 @@ form:
                 column1:
                   type: column
                   import@1:
-                      type: partials/subtitle
-                      context: theme://blueprints
-                  fields:
-                    header.label:
-                      type: text
-                      label: Label
+                    type: partials/subtitle
+                    context: theme://blueprints
                 column2:
                   type: column
                   import@1:
-                    type: partials/link
+                    type: partials/centered
                     context: theme://blueprints
                   import@2:
-                    type: partials/image
-                    context: theme://blueprints
-                  import@3:
-                    type: partials/svg
+                    type: partials/link
                     context: theme://blueprints
