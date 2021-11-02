@@ -19,7 +19,6 @@ class Jungschar extends Theme
   public function onTwigInitialized()
   {
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEnd', [$this, 'startEnd']));
-
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('sortByExifCreated', [$this, 'sortByExifCreated']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('dataSize', [$this, 'dataSize']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('groupByYear', [$this, 'groupByYear']));
@@ -40,8 +39,6 @@ class Jungschar extends Theme
 
   public function getEventsAsICal()
   {
-    // TODO: use DESCRIPTION or COMMENT? include locstart and locend
-
     $events = $this->grav['page']->collection([
       'items' => [
         '@page.descendants' => '/chronik',
@@ -58,6 +55,7 @@ class Jungschar extends Theme
     ]);
 
     $vcalendar = new VObject\Component\VCalendar();
+    $tz = new \DateTimeZone("Europe/Zurich");
 
     foreach ($events as $event) {
       $header = (array) $event->header();
@@ -75,10 +73,10 @@ class Jungschar extends Theme
           if ($label = 'Semester') {
             $label = $taxonomy['group'][0] ?? '';
           }
-          $summary = strtoupper($label)." - ".$item['title'];
+          $summary = strtoupper($label) . " - " . $item['title'];
 
-          $dtstart = new DateTime($item['dtstart']);
-          $dtend = new DateTime($item['dtend']);
+          $dtstart = new DateTime($item['dtstart'], $tz);
+          $dtend = new DateTime($item['dtend'], $tz);
           $location = $item['location'] ?? $header['location'] ?? '';
 
           // resolve start and end location
@@ -106,11 +104,10 @@ class Jungschar extends Theme
             'CATEGORIES' => $categories
           ]);
         }
-      }
-      else {
-        $summary = strtoupper($label)." - ".$event->title();
-        $dtstart = new DateTime($header['dtstart']);
-        $dtend = new DateTime($header['dtend']);
+      } else {
+        $summary = strtoupper($label) . " - " . $event->title();
+        $dtstart = new DateTime($header['dtstart'], $tz);
+        $dtend = new DateTime($header['dtend'], $tz);
         $locstart = $header['locstart'] ?? '';
         $locend = $header['locend'] ?? $header['locstart'] ?? '';
         $location = $header['location'] ?? '';
@@ -149,28 +146,29 @@ class Jungschar extends Theme
     ]);
 
     $arr = [];
+    $tz = new \DateTimeZone("Europe/Zurich");
+
     // @see https://fullcalendar.io/docs/event-object
     foreach ($events as $event) {
       $header = (array) $event->header();
-      $start = new DateTime($header['dtstart']);
-      $end = new DateTime($header['dtend']);
+      $start = new DateTime($header['dtstart'], $tz);
+      $end = new DateTime($header['dtend'], $tz);
 
       if (($rangeStart < $start && $start < $rangeEnd) || ($rangeStart < $end && $end < $rangeEnd) || ($start < $rangeStart && $rangeEnd < $end)) {
-
         if (isset($header['events'])) {
           foreach ($header['events'] as $subevent) {
             $arr[] = [
               'title' => $subevent['title'],
-              'start' => (new DateTime($subevent['dtstart']))->format(DateTime::ISO8601),
-              'end' => (new DateTime($subevent['dtend']))->format(DateTime::ISO8601),
+              'start' => (new DateTime($subevent['dtstart'], $tz))->format(DateTime::ISO8601),
+              'end' => (new DateTime($subevent['dtend'], $tz))->format(DateTime::ISO8601),
               'url' => $event->url()
             ];
           }
         } else {
           $arr[] = [
             'title' => $event->title(),
-            'start' => (new DateTime($header['dtstart']))->format(DateTime::ISO8601),
-            'end' => (new DateTime($header['dtend']))->format(DateTime::ISO8601),
+            'start' => $start->format(DateTime::ISO8601),
+            'end' => $end->format(DateTime::ISO8601),
             'url' => $event->url()
           ];
         }
