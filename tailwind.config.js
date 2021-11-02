@@ -58,7 +58,8 @@ module.exports = {
   purge: {
     content: [
       'templates/**/*.twig',
-      '../../pages/**/*.md'
+      '../../pages/**/*.md',
+      'svg/*.svg',
     ],
     options: {
       safelist: [
