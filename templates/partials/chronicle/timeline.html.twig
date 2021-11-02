@@ -14,7 +14,8 @@
 		</div>
 	</div>
 
-	{% set prev_year = 0 %}
+	{% set first = collection|first %}
+	{% set prev_year = first.header.dtend|date("Y") %}
 
 	{% for item in collection %}
 
