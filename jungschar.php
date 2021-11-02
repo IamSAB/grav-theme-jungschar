@@ -22,12 +22,25 @@ class Jungschar extends Theme
 
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('sortByExifCreated', [$this, 'sortByExifCreated']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('dataSize', [$this, 'dataSize']));
+    $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('groupByYear', [$this, 'groupByYear']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventsInRange', [$this, 'getEventsInRange']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventsAsICal', [$this, 'getEventsAsICal']));
+  }
+
+  public function groupByYear($items, $key)
+  {
+    $arr = [];
+    foreach ($items as $item) {
+      $header = (array) $item->header();
+      $year = (new DateTime($header[$key]))->format('Y');
+      $arr[$year][] = $item;
+    }
+    return $arr;
   }
 
   public function getEventsAsICal()
   {
-    $arr = [];
+    // TODO: use DESCRIPTION or COMMENT? include locstart and locend
 
     $events = $this->grav['page']->collection([
       'items' => [
@@ -44,48 +57,84 @@ class Jungschar extends Theme
       ]
     ]);
 
-    // TODO: use DESCRIPTION or COMMENT? include locstart and locend
+    $vcalendar = new VObject\Component\VCalendar();
 
     foreach ($events as $event) {
       $header = (array) $event->header();
-      $categories = Utils::arrayFlatten($event->taxonomy());
+      $taxonomy = $event->taxonomy();
+      $categories = array_merge($taxonomy['category'] ?? [], $taxonomy['group'] ?? [], $taxonomy['tag'] ?? []);
+      $label = $taxonomy['category'][0] ?? '';
+      $format = 'd. M y G:i';
 
       if (isset($header['events'])) {
+        $count = count($header['events']);
+        $duration = $this->startEnd($header['dtstart'], $header['dtend']);
+
         foreach ($header['events'] as $item) {
-          $arr[] = [
-            'VEVENT' => [
-              'SUMMARY' => $item['title'],
-              'DTSTART' => new DateTime($item['dtstart']),
-              'DTEND' => new DateTime($item['dtend']),
-              'LOCATION' => $item['location'] ?? $header['location'] ?? '',
-              'DESCRIPTION' => $item['description'] ?? $header['description'] ?? '',
-              'CATEGORIES' => $categories,
-            ]
-          ];
+          // resolve summary
+          if ($label = 'Semester') {
+            $label = $taxonomy['group'][0] ?? '';
+          }
+          $summary = strtoupper($label)." - ".$item['title'];
+
+          $dtstart = new DateTime($item['dtstart']);
+          $dtend = new DateTime($item['dtend']);
+          $location = $item['location'] ?? $header['location'] ?? '';
+
+          // resolve start and end location
+          $locstart = $item['locstart'] ?? $header['locstart'] ?? '';
+          $locend = $item['locend'] ?? $item['locstart'] ?? $header['locend'] ?? $header['locstart'] ?? '';
+
+          // combine description of parent and child
+          $description = isset($header['description']) ? "{$header['description']}\n" : '';
+          $description .= $item['description'] ?? '';
+
+          // combine start, end and description
+          $content = "# Begrüssung\n> {$dtstart->format($format)} / $locstart\n\n";
+          $content .= "# Verabschiedung\n> {$dtend->format($format)} / $locend\n\n";
+          $content .= "# Anmerkung\n> $description\n\n";
+
+          // state parent relationship
+          $content .= "---\nTeilanlass von {$label} '{$event->title()}' und enthält $count Anlässe vom $duration";
+
+          $vcalendar->add('VEVENT', [
+            'SUMMARY' => $summary,
+            'DTSTART' => $dtstart,
+            'DTEND' => $dtend,
+            'LOCATION' => $location,
+            'DESCRIPTION' => $content,
+            'CATEGORIES' => $categories
+          ]);
         }
-      } else {
-        $arr[] = [
-          'VEVENT' => [
-            'SUMMARY' => $event->title(),
-            'DTSTART' => new DateTime($header['dtstart']),
-            'DTEND' => new DateTime($header['dtend']),
-            'LOCATION' => $header['location'] ?? '',
-            'DESCRIPTION' => $header['description'] ?? '',
-            'CATEGORIES' => $categories,
-          ]
-        ];
+      }
+      else {
+        $summary = strtoupper($label)." - ".$event->title();
+        $dtstart = new DateTime($header['dtstart']);
+        $dtend = new DateTime($header['dtend']);
+        $locstart = $header['locstart'] ?? '';
+        $locend = $header['locend'] ?? $header['locstart'] ?? '';
+        $location = $header['location'] ?? '';
+        $description = $header['description'] ?? '';
+        $content = "# Begrüssung\n> {$dtstart->format($format)} / $locstart\n\n";
+        $content .= "# Verabschiedung\n> {$dtend->format($format)} / $locend\n\n";
+        $content .= "# Anmerkung\n> $description\n\n";
+
+        $vcalendar->add('VEVENT', [
+          'SUMMARY' => $summary,
+          'DTSTART' => $dtstart,
+          'DTEND' => $dtend,
+          'LOCATION' => $header['location'] ?? '',
+          'DESCRIPTION' => $content,
+          'CATEGORIES' => $categories
+        ]);
       }
     }
-
-    $vcalendar = new VObject\Component\VCalendar($arr);
 
     return $vcalendar->serialize();
   }
 
   public function getEventsInRange($a, $b)
   {
-    // TODO: rather weird results, think due to caching of whole site
-    
     $rangeStart = new DateTime($a);
     $rangeEnd = new DateTime($b);
 

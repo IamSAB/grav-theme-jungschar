@@ -1,0 +1,5 @@
+types:
+  ics:
+    type: iCal
+    thumb: media/thumb-ics.png
+    mime: text/calendar

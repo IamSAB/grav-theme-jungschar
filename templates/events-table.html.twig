@@ -1,0 +1,66 @@
+{% extends 'partials/base.html.twig' %}
+
+{% set events = page.collection({
+  items: {
+    '@page.descendants': '/chronik',
+  },
+  filter: {
+    published: true,
+    type: 'event'
+  },
+  order: {
+    by: 'header.dtend',
+    dir: 'desc'
+  }
+}) %}
+
+{% block content %}
+	<div class="container-xl mx-auto overflow-x-auto">
+
+		{% for year, events in events|groupByYear('dtstart') %}
+			<h2 class="text-xl font-semibold mt-12 mb-6">{{ year }} ({{ events|length }})</h2>
+			<table class="table w-full table-compact">
+				<thead>
+					<tr>
+						<th>Datum</th>
+						<th>Titel</th>
+						<th>Ort</th>
+						<th class="hidden xl:table-cell">Gruppen</th>
+						<th class="hidden md:table-cell">Kategorien</th>
+						<th class="hidden xl:table-cell">Tags</th>
+						<th>Bericht</th>
+						<th>Fotos</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for event in events %}
+						<tr>
+							<td>{{ event.header.dtstart|startEnd(event.header.dtend) }}</td>
+							<td>{{ event.title }}</td>
+							<td>{{ event.header.location }}</td>
+							<td class="hidden xl:table-cell">{{ event.taxonomy.group|join(', ') }}</td>
+							<td class="hidden md:table-cell">{{ event.taxonomy.category|join(', ') }}</td>
+							<td class="hidden xl:table-cell">{{ event.taxonomy.tag|join(', ') }}</td>
+							<td>
+								{% if event.content %}
+									{{ svg('theme://svg/icon/check.svg','icon w-6 text-success')|raw }}
+								{% else %}
+									{{ svg('theme://svg/icon/x.svg','icon w-6 text-warning')|raw }}
+								{% endif %}
+							</td>
+							<td class="flex">
+								{% set imageCount = event.media.images|length %}
+								{% if imageCount > 1 %}
+									{{ svg('theme://svg/icon/check.svg','icon w-6 text-success')|raw }}
+									({{imageCount}})
+								{% else %}
+									{{ svg('theme://svg/icon/x.svg','icon w-6 text-warning')|raw }}
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endfor %}
+	</div>
+{% endblock %}
