@@ -154,9 +154,7 @@
 						<ul>
 							{% for item in config.theme.footer.links %}
 								<li>
-									<a href="{{ item.url }}" title="{{ item.title }}">
-										{{ svg('theme://svg/icon/'~item.icon, 'icon w-8')|raw }}
-									</a>
+									<a class="link link-hover" href="{{ item.url }}" title="{{ item.title }}">{{ item.title }}</a>
 								</li>
 							{% endfor %}
 						</ul>
