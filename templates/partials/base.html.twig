@@ -149,6 +149,19 @@
 						</ul>
 					</nav>
 
+					<nav>
+						<span class="footer-title">Empfehlung</span>
+						<ul>
+							{% for item in config.theme.footer.links %}
+								<li>
+									<a href="{{ item.url }}" title="{{ item.title }}">
+										{{ svg('theme://svg/icon/'~item.icon, 'icon w-8')|raw }}
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</nav>
+
 					<div>
 						<span class="footer-title">Online</span>
 						<div class="grid grid-flow-col gap-4">
