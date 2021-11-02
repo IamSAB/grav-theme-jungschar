@@ -1,7 +1,7 @@
 {% extends 'partials/base.html.twig' %}
 
 {% set menu %}
-		{% include 'partials/menu-aside.html.twig' with {title: 'Seiten', items: pages.children.ofType('page')} %}
+		{% include 'partials/menu-aside.html.twig' with {title: 'Seiten', items: pages.children.ofOneOfTheseTypes(['page','calendar'])} %}
 {% endset %}
 
 {% block content %}

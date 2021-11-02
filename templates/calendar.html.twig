@@ -1,0 +1,43 @@
+{% extends 'partials/base.html.twig' %}
+
+{% set script %}
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      events: {
+        url: '{{page.url}}.json',
+        method: 'GET',
+        failure: function() {
+          alert('there was an error while fetching events!');
+        },
+        color: 'grey'
+      }
+    });
+    calendar.render();
+  });
+{% endset %}
+
+{% do assets.addCss('https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css') %}
+{% do assets.addJs('https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.js') %}
+{% do assets.addInlineJs(script, {group: 'bottom'}) %}
+
+{% set menu %}
+		{% include 'partials/menu-aside.html.twig' with {title: 'Seiten', items: pages.children.ofOneOfTheseTypes(['page','calendar'])} %}
+{% endset %}
+
+{% block content %}
+	<div class="container mx-auto flex">
+		<div class="flex-1">
+      <article class="prose my-auto">{{ page.content|raw }}</article>
+      <div id="calendar" class="mt-8"></div>
+    </div>
+		<aside class="hidden lg:block ml-12">
+			{{ menu }}
+		</aside>
+	</div>
+{% endblock %}
+
+{% block drawer %}
+	{{ menu }}
+{% endblock %}

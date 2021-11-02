@@ -3,7 +3,9 @@
 namespace Grav\Theme;
 
 use Grav\Common\Theme;
+use Grav\Common\Utils;
 use DateTime;
+use Sabre\VObject;
 
 class Jungschar extends Theme
 {
@@ -20,6 +22,112 @@ class Jungschar extends Theme
 
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('sortByExifCreated', [$this, 'sortByExifCreated']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('dataSize', [$this, 'dataSize']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventsInRange', [$this, 'getEventsInRange']));
+  }
+
+  public function getEventsAsICal()
+  {
+    $arr = [];
+
+    $events = $this->grav['page']->collection([
+      'items' => [
+        '@page.descendants' => '/chronik',
+      ],
+      'filter' => [
+        'published' => true,
+        'type' => 'event'
+      ],
+      'dateRange' => [
+        'start' => '-6 month',
+        'end' => '+1 year',
+        'field' => 'header.dtstart'
+      ]
+    ]);
+
+    // TODO: use DESCRIPTION or COMMENT? include locstart and locend
+
+    foreach ($events as $event) {
+      $header = (array) $event->header();
+      $categories = Utils::arrayFlatten($event->taxonomy());
+
+      if (isset($header['events'])) {
+        foreach ($header['events'] as $item) {
+          $arr[] = [
+            'VEVENT' => [
+              'SUMMARY' => $item['title'],
+              'DTSTART' => new DateTime($item['dtstart']),
+              'DTEND' => new DateTime($item['dtend']),
+              'LOCATION' => $item['location'] ?? $header['location'] ?? '',
+              'DESCRIPTION' => $item['description'] ?? $header['description'] ?? '',
+              'CATEGORIES' => $categories,
+            ]
+          ];
+        }
+      } else {
+        $arr[] = [
+          'VEVENT' => [
+            'SUMMARY' => $event->title(),
+            'DTSTART' => new DateTime($header['dtstart']),
+            'DTEND' => new DateTime($header['dtend']),
+            'LOCATION' => $header['location'] ?? '',
+            'DESCRIPTION' => $header['description'] ?? '',
+            'CATEGORIES' => $categories,
+          ]
+        ];
+      }
+    }
+
+    $vcalendar = new VObject\Component\VCalendar($arr);
+
+    return $vcalendar->serialize();
+  }
+
+  public function getEventsInRange($a, $b)
+  {
+    // TODO: rather weird results, think due to caching of whole site
+    
+    $rangeStart = new DateTime($a);
+    $rangeEnd = new DateTime($b);
+
+    $events = $this->grav['page']->collection([
+      'items' => [
+        '@page.descendants' => '/chronik',
+      ],
+      'filter' => [
+        'published' => true,
+        'type' => 'event'
+      ]
+    ]);
+
+    $arr = [];
+    // @see https://fullcalendar.io/docs/event-object
+    foreach ($events as $event) {
+      $header = (array) $event->header();
+      $start = new DateTime($header['dtstart']);
+      $end = new DateTime($header['dtend']);
+
+      if (($rangeStart < $start && $start < $rangeEnd) || ($rangeStart < $end && $end < $rangeEnd) || ($start < $rangeStart && $rangeEnd < $end)) {
+
+        if (isset($header['events'])) {
+          foreach ($header['events'] as $subevent) {
+            $arr[] = [
+              'title' => $subevent['title'],
+              'start' => (new DateTime($subevent['dtstart']))->format(DateTime::ISO8601),
+              'end' => (new DateTime($subevent['dtend']))->format(DateTime::ISO8601),
+              'url' => $event->url()
+            ];
+          }
+        } else {
+          $arr[] = [
+            'title' => $event->title(),
+            'start' => (new DateTime($header['dtstart']))->format(DateTime::ISO8601),
+            'end' => (new DateTime($header['dtend']))->format(DateTime::ISO8601),
+            'url' => $event->url()
+          ];
+        }
+      }
+    }
+    return $arr;
   }
 
   public function startEnd($a, $b, $showTime = false)

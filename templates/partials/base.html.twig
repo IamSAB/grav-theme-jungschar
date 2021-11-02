@@ -168,7 +168,7 @@
 
 					<nav>
 						<ul class="grid grid-flow-col gap-4">
-							{% for item in pages.children.ofType('page') %}
+							{% for item in pages.children.ofOneOfTheseTypes(['page','calendar']) %}
 								<li>
 									<a class="link link-hover" href="{{ item.url }}">{{ item.menu }}</a>
 								</li>
