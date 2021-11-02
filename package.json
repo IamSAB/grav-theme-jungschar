@@ -6,7 +6,6 @@
   "devDependencies": {
     "daisyui": "latest",
     "tailwind-heropatterns": "^0.0.8",
-    "@tailwindcss/typography": "^0.4.1",
-    "tailwindcss-hero-patterns": "^0.0.1"
+    "@tailwindcss/typography": "^0.4.1"
   }
 }

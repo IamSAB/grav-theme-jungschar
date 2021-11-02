@@ -3,12 +3,17 @@
 namespace Grav\Theme;
 
 use Grav\Common\Theme;
-use Grav\Common\Utils;
+use Composer\Autoload\ClassLoader;
 use DateTime;
 use Sabre\VObject;
 
 class Jungschar extends Theme
 {
+  public function autoload(): ClassLoader
+  {
+    return require __DIR__ . '/vendor/autoload.php';
+  }
+
   public static function getSubscribedEvents()
   {
     return [
