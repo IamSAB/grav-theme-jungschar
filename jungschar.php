@@ -120,7 +120,8 @@ class Jungschar extends Theme
             'DTEND' => $dtend,
             'LOCATION' => $location,
             'DESCRIPTION' => $content,
-            'CATEGORIES' => $categories
+            'CATEGORIES' => $categories,
+            'URL' => $event->url(true)
           ]);
         }
       } else {
@@ -141,7 +142,8 @@ class Jungschar extends Theme
           'DTEND' => $dtend,
           'LOCATION' => $header['location'] ?? '',
           'DESCRIPTION' => $content,
-          'CATEGORIES' => $categories
+          'CATEGORIES' => $categories,
+          'URL' => $event->url(true)
         ]);
       }
     }

@@ -4,12 +4,15 @@
   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar: { center: 'dayGridMonth,listMonth' },
       initialView: 'dayGridMonth',
+      weekNumbers: true,
+      locale: 'de',
       events: {
         url: '{{page.url}}.json',
         method: 'GET',
         failure: function() {
-          alert('there was an error while fetching events!');
+          alert('Fehler beim Laden.');
         },
         color: 'grey'
       }
@@ -20,6 +23,7 @@
 
 {% do assets.addCss('https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css') %}
 {% do assets.addJs('https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.js') %}
+{% do assets.addJS('https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js') %}
 {% do assets.addInlineJs(script, {group: 'bottom'}) %}
 
 {% set menu %}
