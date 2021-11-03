@@ -12,10 +12,11 @@ function handleScroll(event) {
 document.addEventListener("DOMContentLoaded", function () {
   var scrollElement = document.getElementById("scroll");
   handleScroll({target: scrollElement});
-  // Scroll Events
-  if (!isTouch) {
-    scrollElement.addEventListener('scroll', handleScroll);
-  };
-  // Touch scroll
-  scrollElement.addEventListener("touchmove", handleScroll);
+  scrollElement.addEventListener('scroll', handleScroll);
+  // // Scroll Events
+  // if (!isTouch) {
+  //   scrollElement.addEventListener('scroll', handleScroll);
+  // };
+  // // Touch scroll
+  // scrollElement.addEventListener("touchmove", handleScroll);
 });
