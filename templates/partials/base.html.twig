@@ -35,192 +35,195 @@
 		{% endblock %}
 	</head>
 
-	<body class="drawer drawer-end {{ config.theme.production ?: 'debug-screens' }}">
-		<input id="menu-drawer" type="checkbox" class="drawer-toggle">
-		<div id="scroll" class="drawer-content bg-hero-texture-80">
-			<div id="top"></div>
+	<body>
+		<div class="drawer drawer-end {{ config.theme.production ?: 'debug-screens' }}">
+			<input id="menu-drawer" type="checkbox" class="drawer-toggle">
+			<div id="scroll" class="drawer-content bg-hero-texture-80">
+				<div id="top"></div>
+				{% block header %}
+					{% set header_image = page.media.images|first %}
+					<header class="bg-neutral {{ header_image ? 'bg-cover bg-blend-overlay bg-center' : 'bg-hero-texture'}}" {% if header_image %} style="background-image: url('{{ header_image.cropResize(2560,1440).url }}')" {% endif %}>
 
-			{% block header %}
+						<div id="navbar" class="z-10 text-neutral-content transition-all duration-300 w-full bg-blend-overlay shadow-lg">
+							<div class="navbar container-xl mx-auto p-0">
 
-				{% set header_image = page.media.images|first %}
+								<div class="px-2 mx-2 navbar-start">
+									<a href="/">
+										{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10')|raw }}
+									</a>
+								</div>
 
-				<header class="bg-neutral {{ header_image ? 'bg-cover bg-blend-overlay bg-center' : 'bg-hero-texture'}}" {% if header_image %} style="background-image: url('{{ header_image.cropResize(2560,1440).url }}')" {% endif %}>
-					<div id="navbar" class="z-10 text-neutral-content transition-all duration-300 w-full bg-blend-overlay shadow-lg">
-						<div class="navbar container-xl mx-auto p-0">
-							<div class="px-2 mx-2 navbar-start">
-								<a href="/">
-									{{ svg('theme://svg/logo.svg', 'fill-current w-10 h-10')|raw }}
-								</a>
+								<nav class="px-2 mx-2 navbar-end">
+									<ul class="hidden lg:flex items-stretch flex-shrink-0 space-x-2">
+										{% for page in pages.children.visible %}
+											{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
+											<li>
+												<a href="{{ page.url|e }}" class="btn btn-ghost btn-sm rounded-btn {{ current_page|e }}">
+													<span>{{ page.menu|e }}</span>
+												</a>
+											</li>
+										{% endfor %}
+										{% for item in config.theme.footer.socials %}
+											<li>
+												<a class="btn btn-ghost btn-sm" href="{{ item.url }}" title="{{ item.title }}">
+													{{ svg('theme://svg/icon/'~item.icon, 'icon w-5')|raw }}
+												</a>
+											</li>
+										{% endfor %}
+									</ul>
+									<label for="menu-drawer" class="drawer-button lg:hidden cursor-pointer hover:text-base-200">
+										{{ svg('theme://svg/icon/menu-right.svg','icon w-10')|raw }}
+									</label>
+								</nav>
+
 							</div>
-							<nav class="px-2 mx-2 navbar-end">
-								<ul class="hidden lg:flex items-stretch flex-shrink-0 space-x-2">
-									{% for page in pages.children.visible %}
-										{% set current_page = (page.active or page.activeChild) ? 'btn-active' : '' %}
-										<li>
-											<a href="{{ page.url|e }}" class="btn btn-ghost btn-sm rounded-btn {{ current_page|e }}">
-												<span>{{ page.menu|e }}</span>
-											</a>
-										</li>
-									{% endfor %}
-									{% for item in config.theme.footer.socials %}
-										<li>
-											<a class="btn btn-ghost btn-sm" href="{{ item.url }}" title="{{ item.title }}">
-												{{ svg('theme://svg/icon/'~item.icon, 'icon w-5')|raw }}
-											</a>
-										</li>
-									{% endfor %}
-								</ul>
-								<label for="menu-drawer" class="drawer-button lg:hidden cursor-pointer hover:text-base-200">
-									{{ svg('theme://svg/icon/menu-right.svg','icon w-10')|raw }}
-								</label>
-							</nav>
 						</div>
-					</div>
 
-					<article class="mx-auto text-center py-16 md:py-24 xl:py-32 max-w-5xl">
-						{% block hero %}
-							<div class="text-2xl md:text-3xl uppercase font-extrabold tracking-wide text-base-200">{{ page.header.label }}</div>
-							<h1 class="text-6xl md:text-7xl font-black my-2 text-primary-content">{{ page.title }}</h1>
-							<div class="text-2xl md:text-3xl text-bold text-base-100">{{ page.header.subtitle }}</div>
-						{% endblock %}
-						<div class="text-primary-content mt-8">
-							<a href="#body">{{ svg('theme://svg/icon/arrow-down.svg', 'icon w-8 animate-bounce inline')|raw }}</a>
+						<article class="mx-auto text-center py-16 md:py-24 xl:py-32 max-w-5xl">
+							{% block hero %}
+								<div class="text-2xl md:text-3xl uppercase font-extrabold tracking-wide text-base-200">{{ page.header.label }}</div>
+								<h1 class="text-6xl md:text-7xl font-black my-2 text-primary-content">{{ page.title }}</h1>
+								<div class="text-2xl md:text-3xl text-bold text-base-100">{{ page.header.subtitle }}</div>
+							{% endblock %}
+							<div class="text-primary-content mt-8">
+								<a href="#body">{{ svg('theme://svg/icon/arrow-down.svg', 'icon w-8 animate-bounce inline')|raw }}</a>
+							</div>
+						</article>
+
+						{% if page.header.svg %}
+							<div class="flex justify-center -mt-24 mb-24 md:-mt-32 md:mb-32">
+								{{ svg('theme://svg/'~page.header.svg,'w-48 md:w-64 transform translate-y-1/2')|raw }}
+							</div>
+						{% endif %}
+
+					</header>
+
+				{% endblock %}
+
+				{% block body %}
+					<main id="body">
+						<div class="px-4 py-16">
+							{% block content %}{% endblock %}
 						</div>
-					</article>
+					</main>
+				{% endblock %}
 
+				{% block footer %}
+					<footer class="p-10 footer bg-neutral text-neutral-content bg-hero-texture">
 
-					{% if page.header.svg %}
-						<div class="flex justify-center -mt-24 mb-24 md:-mt-32 md:mb-32">
-							{{ svg('theme://svg/'~page.header.svg,'w-48 md:w-64 transform translate-y-1/2')|raw }}
+						<div class="prose-sm max-w-xl">
+							{{ config.theme.footer.content|markdown }}
 						</div>
-					{% endif %}
 
-				</header>
-
-			{% endblock %}
-
-			{% block body %}
-				<main id="body">
-					<div class="px-4 py-16">
-						{% block content %}{% endblock %}
-					</div>
-				</main>
-			{% endblock %}
-
-			{% block footer %}
-				<footer class="p-10 footer bg-neutral text-neutral-content bg-hero-texture">
-
-					<div class="prose-sm max-w-xl">
-						{{ config.theme.footer.content|markdown }}
-					</div>
-
-					<nav>
-						<span class="footer-title">Allgemein</span>
-						<ul>
-							{% for item in pages.children.ofOneOfTheseTypes(['sections','chronicle']) %}
-								<li>
-									<a class="link link-hover" href="{{item.url}}">{{item.menu}}</a>
-								</li>
-							{% endfor %}
-						</ul>
-					</nav>
-
-					<nav>
-						<span class="footer-title">Gruppen</span>
-						<ul>
-							{% for item in pages.children.ofType('group') %}
-								<li>
-									<a class="link link-hover" href="{{item.url}}">{{item.menu}}</a>
-								</li>
-							{% endfor %}
-						</ul>
-					</nav>
-
-					<nav>
-						<span class="footer-title">Netzwerk</span>
-						<ul>
-							{% for item in pages.collection({items:{'@page.modular':'/ueber-uns/_netzwerk'}}) %}
-								{% if item.header.link %}
+						<nav>
+							<span class="footer-title">Allgemein</span>
+							<ul>
+								{% for item in pages.children.ofOneOfTheseTypes(['sections','chronicle']) %}
 									<li>
-										<a class="link link-hover" title="{{ item.title }}" href="{{ item.header.link }}">{{ item.header.label ?? item.title }}</a>
+										<a class="link link-hover" href="{{item.url}}">{{item.menu}}</a>
 									</li>
-								{% endif %}
-							{% endfor %}
-						</ul>
-					</nav>
+								{% endfor %}
+							</ul>
+						</nav>
 
-					<nav>
-						<span class="footer-title">Empfehlung</span>
-						<ul>
-							{% for item in config.theme.footer.links %}
-								<li>
-									<a class="link link-hover" href="{{ item.url }}" title="{{ item.title }}">{{ item.title }}</a>
-								</li>
-							{% endfor %}
-						</ul>
-					</nav>
+						<nav>
+							<span class="footer-title">Gruppen</span>
+							<ul>
+								{% for item in pages.children.ofType('group') %}
+									<li>
+										<a class="link link-hover" href="{{item.url}}">{{item.menu}}</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</nav>
 
+						<nav>
+							<span class="footer-title">Netzwerk</span>
+							<ul>
+								{% for item in pages.collection({items:{'@page.modular':'/ueber-uns/_netzwerk'}}) %}
+									{% if item.header.link %}
+										<li>
+											<a class="link link-hover" title="{{ item.title }}" href="{{ item.header.link }}">{{ item.header.label ?? item.title }}</a>
+										</li>
+									{% endif %}
+								{% endfor %}
+							</ul>
+						</nav>
+
+						<nav>
+							<span class="footer-title">Empfehlung</span>
+							<ul>
+								{% for item in config.theme.footer.links %}
+									<li>
+										<a class="link link-hover" href="{{ item.url }}" title="{{ item.title }}">{{ item.title }}</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</nav>
+
+						<div>
+							<span class="footer-title">Online</span>
+							<div class="grid grid-flow-col gap-4">
+								{% for item in config.theme.footer.socials %}
+									<a href="{{ item.url }}" title="{{ item.title }}">
+										{{ svg('theme://svg/icon/'~item.icon, 'icon w-8')|raw }}
+									</a>
+								{% endfor %}
+							</div>
+						</div>
+
+					</footer>
+
+					<footer class="p-10 footer footer-center bg-primary text-primary-content bg-hero-texture">
+
+						<a href="#top">{{ svg('theme://svg/icon/arrow-up.svg', 'icon w-8 animate-bounce')|raw }}</a>
+
+						<nav>
+							<ul class="grid grid-flow-col gap-4">
+								{% for item in pages.children.ofOneOfTheseTypes(['page','calendar']) %}
+									<li>
+										<a class="link link-hover" href="{{ item.url }}">{{ item.menu }}</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</nav>
+
+						<div class="flex flex-col">
+							{{ svg('theme://svg/logo.svg', 'fill-current w-8 h-8')|raw }}
+							<div class="ml-2">&copy;
+								{{ "now"|date("Y") }}
+								{{ config.site.title}}<br><span class="text-light">Aktivitäten für Kinder und Jugendliche</span>
+							</div>
+						</div>
+
+
+					</footer>
+				{% endblock %}
+			</div>
+
+			<div class="drawer-side">
+				<label for="menu-drawer" class="drawer-overlay"></label>
+				<div class="flex flex-col justify-between p-4 overflow-y-auto w-72 bg-base-100 text-base-content space-y-2 bg-hero-texture-80">
 					<div>
-						<span class="footer-title">Online</span>
-						<div class="grid grid-flow-col gap-4">
-							{% for item in config.theme.footer.socials %}
-								<a href="{{ item.url }}" title="{{ item.title }}">
-									{{ svg('theme://svg/icon/'~item.icon, 'icon w-8')|raw }}
-								</a>
-							{% endfor %}
-						</div>
+						{{ svg('theme://svg/jsek.svg','w-32 mx-auto')|raw }}
+						{% include 'partials/menu-aside.html.twig' with {title: 'Hauptmenü', items: pages.children.ofOneOfTheseTypes(['sections','chronicle','group'])} %}
+						{% block drawer %}{% endblock %}
 					</div>
-
-				</footer>
-
-				<footer class="p-10 footer footer-center bg-primary text-primary-content bg-hero-texture">
-
-					<a href="#top">{{ svg('theme://svg/icon/arrow-up.svg', 'icon w-8 animate-bounce')|raw }}</a>
-
-					<nav>
-						<ul class="grid grid-flow-col gap-4">
-							{% for item in pages.children.ofOneOfTheseTypes(['page','calendar']) %}
-								<li>
-									<a class="link link-hover" href="{{ item.url }}">{{ item.menu }}</a>
-								</li>
-							{% endfor %}
-						</ul>
-					</nav>
-
-					<div class="flex flex-col">
-						{{ svg('theme://svg/logo.svg', 'fill-current w-8 h-8')|raw }}
-						<div class="ml-2">&copy;
-							{{ "now"|date("Y") }}
-							{{ config.site.title}}<br><span class="text-light">Aktivitäten für Kinder und Jugendliche</span>
-						</div>
+					<div class="flex justify-center space-x-2">
+						{% for item in config.theme.footer.socials %}
+							<a href="{{ item.url }}" title="{{ item.title }}">
+								{{ svg('theme://svg/icon/'~item.icon, 'icon w-8')|raw }}
+							</a>
+						{% endfor %}
 					</div>
-
-
-				</footer>
-			{% endblock %}
-		</div>
-
-		<div class="drawer-side">
-			<label for="menu-drawer" class="drawer-overlay"></label>
-			<div class="flex flex-col justify-between p-4 overflow-y-auto w-72 bg-base-100 text-base-content space-y-2 bg-hero-texture-80">
-				<div>
-					{{ svg('theme://svg/jsek.svg','w-32 mx-auto')|raw }}
-					{% include 'partials/menu-aside.html.twig' with {title: 'Hauptmenü', items: pages.children.ofOneOfTheseTypes(['sections','chronicle','group'])} %}
-					{% block drawer %}{% endblock %}
-				</div>
-				<div class="flex justify-center space-x-2">
-					{% for item in config.theme.footer.socials %}
-						<a href="{{ item.url }}" title="{{ item.title }}">
-							{{ svg('theme://svg/icon/'~item.icon, 'icon w-8')|raw }}
-						</a>
-					{% endfor %}
 				</div>
 			</div>
+
+			{% block bottom %}
+				{{ assets.js('bottom')|raw }}
+			{% endblock %}
+
 		</div>
-
-		{% block bottom %}
-			{{ assets.js('bottom')|raw }}
-		{% endblock %}
-
 	</body>
+
 </html>
