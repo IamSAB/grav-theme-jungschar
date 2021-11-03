@@ -88,11 +88,7 @@ class Jungschar extends Theme
         $duration = $this->startEnd($header['dtstart'], $header['dtend']);
 
         foreach ($header['events'] as $item) {
-          // resolve summary
-          if ($label = 'Semester') {
-            $label = $taxonomy['group'][0] ?? '';
-          }
-          $summary = strtoupper($label) . " - " . $item['title'];
+          $summary = strtoupper($label == 'Semester' ? ($taxonomy['group'][0] ?? '') : $label) . " - " . $item['title'];
 
           $dtstart = new DateTime($item['dtstart'], $tz);
           $dtend = new DateTime($item['dtend'], $tz);
@@ -112,7 +108,7 @@ class Jungschar extends Theme
           $content .= "# Anmerkung\n> $description\n\n";
 
           // state parent relationship
-          $content .= "---\nTeilanlass von {$label} '{$event->title()}' und enthält $count Anlässe vom $duration";
+          $content .= "---\nTeil von {$label} '{$event->title()}' / $count Anlässe vom $duration";
 
           $vcalendar->add('VEVENT', [
             'SUMMARY' => $summary,
