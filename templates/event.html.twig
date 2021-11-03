@@ -8,7 +8,7 @@
 
 {% set infos %}
 <div class="space-y-12">
-	<div class="flex justify-center">
+	<div class="flex flex-wrap justify-center">
 		{% for group in page.taxonomy.group %}
 			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/{{group}}">
 				{{ svg('theme://svg/icon/circles.svg', 'icon w-4 mr-1')|raw }}
