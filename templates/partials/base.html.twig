@@ -140,7 +140,7 @@
 						<nav>
 							<span class="footer-title">Netzwerk</span>
 							<ul>
-								{% for item in pages.collection({items:{'@page.modular':'/ueber-uns/_netzwerk'}}) %}
+								{% for item in pages.collection({items:{'@page.modular':'/handbuch/_netzwerk'}}) %}
 									{% if item.header.link %}
 										<li>
 											<a class="link link-hover" title="{{ item.title }}" href="{{ item.header.link }}">{{ item.header.label ?? item.title }}</a>

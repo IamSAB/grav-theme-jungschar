@@ -16,9 +16,7 @@ function scrollSpy(selector) {
           : link.classList.remove('active');
       });
     }
-
-    var isTouch = window.DocumentTouch && document instanceof DocumentTouch;
-    if (!isTouch) scrollElement.addEventListener('scroll', menuControl);
-    scrollElement.addEventListener("touchmove", menuControl);
+    
+    scrollElement.addEventListener("scroll", menuControl);
   })
 }
