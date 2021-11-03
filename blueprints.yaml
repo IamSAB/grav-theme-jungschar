@@ -20,6 +20,7 @@ dependencies:
 form:
   validation: loose
   fields:
+  
     section_general:
         type: section
         title: Allgemein
@@ -40,6 +41,15 @@ form:
                 0: PLUGIN_ADMIN.DISABLED
               validate:
                 type: bool
+
+    section_anlaesse:
+      type: section
+      title: Anlässe
+      underline: true
+    event.location:
+      type: text
+      label: Offizieller Treffpunkt
+
     section_group:
       type: section
       title: Gruppen
@@ -47,6 +57,7 @@ form:
     group.note:
       type: markdown
       label: Allgemeiner Hinweis
+
     section_footer:
       type: section
       title: Footer

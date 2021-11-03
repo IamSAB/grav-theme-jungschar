@@ -7,13 +7,143 @@
 {% endblock %}
 
 {% set infos %}
-TODO
+<div class="space-y-12">
+	<div class="flex justify-center">
+		{% for group in page.taxonomy.group %}
+			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/{{group}}">
+				{{ svg('theme://svg/icon/circles.svg', 'icon w-4 mr-1')|raw }}
+				{{ group }}
+			</a>
+		{% endfor %}
+		{% for category in page.taxonomy.category %}
+			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/chronik/category:{{category}}">
+				{{ svg('theme://svg/icon/folder.svg', 'icon w-4 mr-1')|raw }}
+				{{ category }}
+			</a>
+		{% endfor %}
+		{% for tag in page.taxonomy.tag %}
+			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/chronik/tag:{{tag}}">
+				{{ svg('theme://svg/icon/bookmark.svg', 'icon w-4 mr-1')|raw }}
+				{{ tag }}
+			</a>
+		{% endfor %}
+	</div>
+	<div class="grid lg:grid-cols-2 gap-8">
+
+		<div class="card bordered">
+			<div class="card-body">
+				<div class="card-title">{{ page.header.subtitle }}</div>
+				<dl>
+					<dt>Beschreibung</dt>
+					<dd>{{ page.header.description }}</dd>
+
+					<dt>Dauer</dt>
+					<dd>{{ page.header.dtdstart|startEnd(page.header.dtend) }}</dd>
+
+					<dt>Ort</dt>
+					<dd>{{ page.header.location ?? 'Keine Angabe' }}</dd>
+
+					<dt>Begrüssung</dt>
+					<dd>
+						<div>{{ page.header.dtstart|date('d. M Y G:i') }}</div>
+						<div class="font-light">{{ page.header.locstart }}</div>
+					</dd>
+
+					<dt>Verabschiedung</dt>
+					<dd>
+						<div>{{ page.header.dtend|date('d. M Y G:i') }}</div>
+						<div class="font-light">{{ page.header.locend ?? page.header.locstart }}</div>
+					</dd>
+
+					<dt>Team</dt>
+					<dd>
+						{% for lead in page.taxonomy.lead %}
+							<a class="badge badge-primary shadow-sm mr-1 mb-1" href="/chronik/lead:{{lead}}">
+								{{ lead }}
+							</a>
+						{% endfor %}
+						{% for user in page.taxonomy.team %}
+							<a class="badge badge-secondary shadow-sm mr-1 mb-1" href="/chronik/team:{{user}}">
+								{{ user }}
+							</a>
+						{% endfor %}
+					</dd>
+
+					{% if page.header.cost %}
+						<dt>Kosten</dt>
+						<dd>
+							CHF
+							<b>{{ page.header.cost.amount }}</b>
+							<em>
+								{{ page.header.cost.note }}</em>
+						</dd>
+					{% endif %}
+
+					{% if page.header.registration %}
+						<dt>Anmeldung</dt>
+						<dd>
+              {% if date(page.header.registration.dtstart) > date() %}
+                {{ page.header.registration.dtstart|nicetime }}
+              {% elseif date() < date(page.header.registration.dtend) %}
+                <div class="font-light">Anmeldung schliesst am {{ page.header.registration.dtend|date('d. M y G:i') }}.</div>
+                <div>{{ page.header.registration.description|markdown }}</div>
+              {% else %}
+              {% endif %}
+            </dd>
+					{% endif %}
+				</dl>
+			</div>
+		</div>
+
+		<div class="rounded-box overflow-hidden">
+			<iframe class="w-full h-96 lg:h-full" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q={{ page.header.location ? page.header.location|url_encode : config.theme.event.location|url_encode }}&key=AIzaSyDlV1W8Jpzjj15k4amxG56xnb34SKR0Qps" allowfullscreen></iframe>
+		</div>
+
+	</div>
+
+	{% if page.header.events %}
+		<div class="lg:col-span-2 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+			{% for event in page.header.events %}
+				<div class="card compact bordered">
+					<div class="card-body">
+						<div class="flex">
+							<div class="uppercase text-sm font-semibold text-neutral">{{ event.dtstart|startEnd(event.dtend) }}
+							</div>
+							<div class="font-light ml-2">{{ event.location ?? page.header.location }}</div>
+						</div>
+						<h4 class="text-lg font-bold mt-1 mb-3">{{ event.title }}</h4>
+						<div>
+							<div>
+								<span class="badge badge-ghost">Start</span>
+								<b>{{ event.dtstart|startEndTime(event.dtend) }}</b>
+							</div>
+							<div class="font-light">{{ event.locstart ?? page.header.locstart ?? '' }}</div>
+						</div>
+						<div class="mt-2">
+							<div>
+								<span class="badge badge-ghost">Ende</span>
+								<b>{{ event.dtend|startEndTime(event.dtstart) }}</b>
+							</div>
+							<div class="font-light">{{ event.locend ?? event.locstart ?? page.header.locend ?? page.header.locstart ?? '' }}</div>
+						</div>
+						<div class="text-sm mt-3">{{ event.description }}</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>
+
 {% endset %}
 
 {% set article %}
-<article class="prose mx-auto">
-	{{ page.content|raw }}
-</article>
+{% if page.content %}
+	<article class="prose mx-auto">
+		{{ page.content|raw }}
+	</article>
+{% else %}
+	{% include 'partials/empty.html.twig'  with {msg: 'Kein Bericht vorhanden'} %}
+{% endif %}
 {% endset %}
 
 {% set gallery %}

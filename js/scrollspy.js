@@ -4,7 +4,6 @@ function scrollSpy(selector) {
 
     var menu = document.querySelector(selector);
     var scrollElement = document.getElementById("scroll");
-    console.log(selector);
 
     function menuControl(e) {
       var links = menu.querySelectorAll('a[href^="#"]');

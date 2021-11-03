@@ -104,9 +104,9 @@ form:
                       title: Anmeldung
                       underline: true
 
-                    header.registration.email:
-                      label: Mail
-                      type: email
+                    header.registration.description:
+                      label: Beschreibung
+                      type: markdown
 
                     header.registration.dtstart:
                       label: Startdatum und -zeit
@@ -124,7 +124,7 @@ form:
 
                     header_events:
                       type: section
-                      title: Enthalten
+                      title: Teilanlässe
                       underline: true
                     
                     header.events:
@@ -145,7 +145,6 @@ form:
                         .locstart:
                           type: text
                           label: Treffpunkt zur Begrüssung
-                          help: Geerbt, falls leer
                         .dtend:
                           type: datetime
                           label: Start
@@ -153,4 +152,6 @@ form:
                         .locend:
                           type: text
                           label: Treffpunkt zur Verabschiedung
-                          help: Geerbt, falls leer
+                        .description:
+                          type: text
+                          label: Anmerkung

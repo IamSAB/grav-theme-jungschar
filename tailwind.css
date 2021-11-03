@@ -79,3 +79,7 @@ form .buttons button[type='submit'] {
 form .buttons button[type='reset'] {
   @apply btn btn-sm btn-outline
 }
+
+dl > dt {
+  @apply uppercase text-neutral mt-3 tracking-wide font-semibold text-sm
+}

@@ -1,4 +1,4 @@
-{% set image = page.header.image ? page.media.images[page.header.image] : page.media.images|first %}
+{% set image = page.media.images|first %}
 
 {% switch page.header.status %}
 	{% case 'teilzeit' %}

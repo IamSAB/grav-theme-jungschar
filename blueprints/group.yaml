@@ -64,9 +64,6 @@ form:
                 column2:
                   type: column
                   import@1:
-                    type: partials/image
-                    context: theme://blueprints
-                  import@2:
                     type: partials/svg
                     context: theme://blueprints
 

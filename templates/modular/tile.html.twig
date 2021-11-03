@@ -1,5 +1,5 @@
 {% set id = page.slug|hyphenize %}
-{% set image = page.header.image ? page.media.images[page.header.image] : page.media.images|first %}
+{% set image = page.media.images|first %}
 
 <div id="{{id}}" class="grid grid-flow-row auto-rows-max gap-4" style="grid-template-columns: minmax(8rem, 20%) 1fr 1fr;">
 	<div class="md:row-span-2 justify-self-center self-center md:self-start">

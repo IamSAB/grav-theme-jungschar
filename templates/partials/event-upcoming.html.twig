@@ -9,7 +9,7 @@
 	<div class="card-body mt-6">
 		<div class="text-center mb-5">
 			<div class="uppercase font-semibold tracking-wider text-sm">{{ event.taxonomy.category|first }}</div>
-			<h2 class="card-title mb-0 text-center">{{ upcoming.title }}</h2>
+			<h2 class="card-title mb-0 text-center"><a href="{{event.url}}">{{ upcoming.title }}</a></h2>
 			<div class="mt-2">
 				{% for group in event.taxonomy.group %}
 					<a class="badge badge-outline" href="/{{group|lower}}">

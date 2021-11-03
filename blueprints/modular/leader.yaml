@@ -25,6 +25,9 @@ form:
                         Leiter: Leiter
                         Minileiter: Minileiter
                         Anwärter: Anwärter
+                column2:
+                  type: column
+                  fields:
                     header.status:
                       type: select
                       label: Status
@@ -32,8 +35,3 @@ form:
                         aktiv: aktiv
                         teilzeit: teilzeit
                         pause: pause
-                column2:
-                  type: column
-                  import@1:
-                    type: partials/image
-                    context: theme://blueprints

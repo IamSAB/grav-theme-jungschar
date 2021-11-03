@@ -42,7 +42,7 @@
 
 			{% block header %}
 
-				{% set header_image = page.header.image ? page.media.images[page.header.image] : page.media.images|first %}
+				{% set header_image = page.media.images|first %}
 
 				<header class="bg-neutral {{ header_image ? 'bg-cover bg-blend-overlay bg-center' : 'bg-hero-texture'}}" {% if header_image %} style="background-image: url('{{ header_image.cropResize(2560,1440).url }}')" {% endif %}>
 					<div id="navbar" class="z-10 text-neutral-content transition-all duration-300 w-full bg-blend-overlay shadow-lg">

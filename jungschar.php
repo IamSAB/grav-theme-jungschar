@@ -29,6 +29,20 @@ class Jungschar extends Theme
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('groupByYear', [$this, 'groupByYear']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventsInRange', [$this, 'getEventsInRange']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventsAsICal', [$this, 'getEventsAsICal']));
+    $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEndTime', [$this, 'startEndTime']));
+  }
+
+  public function startEndTime($a, $b, $date = 'd. M y', $time = 'G:i')
+  {
+    $tz = new \DateTimeZone("Europe/Zurich");
+    $dt1 = new DateTime($a, $tz);
+    $dt2 = new DateTime($b, $tz);
+
+    if ($dt1->format('d.m.y') == $dt2->format('d.m.y')) {
+      return $dt1->format($time);
+    } else {
+      return $dt1->format("$date $time");
+    }
   }
 
   public function groupByYear($items, $key)

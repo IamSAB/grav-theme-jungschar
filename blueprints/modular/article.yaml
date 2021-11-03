@@ -28,8 +28,5 @@ form:
                     type: partials/grid-item
                     context: theme://blueprints
                   import@4:
-                    type: partials/image
-                    context: theme://blueprints
-                  import@5:
                     type: partials/svg
                     context: theme://blueprints

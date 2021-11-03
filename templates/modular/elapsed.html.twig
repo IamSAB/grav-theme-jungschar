@@ -2,7 +2,7 @@
 	{{ page.content|raw }}
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mt-6">
 	{% for event in page.collection %}
 		{% include 'partials/event-elapsed.html.twig' %}
 	{% else %}

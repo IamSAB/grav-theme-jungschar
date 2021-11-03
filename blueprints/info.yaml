@@ -12,6 +12,3 @@ form:
               label: Datum und Zeit
               type: datetime
               format: Y-m-d H:i
-          import@:
-            type: partials/image
-            context: theme://blueprints
