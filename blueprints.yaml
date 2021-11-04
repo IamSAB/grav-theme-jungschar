@@ -3,13 +3,13 @@ slug: jungschar
 type: theme
 version: 0.1.0
 description: A theme featuring special layouts and page types for your youthwork
-icon: rebel
+icon: cloud-sun
 author:
   name: SAB
   email: simon@boesch.onl
 homepage: https://github.com/IamSAB/grav-theme-jungschar
-demo: http://demo.yoursite.com
-keywords: grav, theme, etc
+demo: http://www.jsek.ch
+keywords: grav, theme, jungschar
 bugs: https://github.com/IamSAB/grav-theme-jungschar/issues
 readme: https://github.com/IamSAB/grav-theme-jungschar/blob/develop/README.md
 license: MIT
