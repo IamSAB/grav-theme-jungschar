@@ -2,9 +2,9 @@
 
 <div class="flex flex-col">
 
-	<div class="flex justify-start xl:justify-center xl:pb-8">
-		<div class="flex flex-col items-center w-16">
-			{% if pagination.hasPrev() %}
+	<div class="flex justify-start xl:justify-center xl:pb-6">
+		<div class="flex flex-col items-center w-20">
+			{% if not search_results and pagination.hasPrev %}
 				{% set url = (page.url ~ pagination.params ~ pagination.nextUrl)|replace({'//':'/'}) %}
 				<a class="btn btn-xs mb-3" href="{{url}}">Vorherige</a>
 				{{ svg('theme://svg/icon/arrow-top-circle.svg', 'icon w-8 stroke-1 text-base-300 -mb-1')|raw }}
@@ -25,7 +25,7 @@
 			{% set year_range = range(prev_year, current_year + 1) %}
 			<div class="flex flex-col items-start xl:items-center xl:py-8">
 				{% for y in year_range %}
-					<div class="flex flex-col items-center w-16">
+					<div class="flex flex-col items-center w-20">
 						{% if 0 < loop.index0 and loop.index0 < loop.length %}
 							<div class="h-4 bg-base-300 w-0.5"></div>
 						{% endif %}
@@ -38,23 +38,29 @@
 
 		{% set isOdd = loop.index0 is odd %}
 
-		<div class="flex xl:-my-8">
+		<div class="flex xl:-my-6">
 
 			<div class="xl:flex-1 {{ isOdd ? 'xl:order-3' : 'xl:order-1'}}"></div>
 
-			<div class="xl:order-2 indicator w-16 xl:ml-6 mr-6">
+			<div class="xl:order-2 indicator w-20 xl:ml-6 mr-6">
 				<div class="h-full bg-base-300 w-0.5 mx-auto"></div>
-				<div class="indicator-item indicator-middle indicator-center w-16 h-16 mask mask-diamond bg-primary text-primary-content flex flex-col items-center justify-center filter drop-shadow-md">
-					<div class="font-black leading-3">{{ item.header.dtend|date("d")}}</div>
+				<div class="indicator-item indicator-middle indicator-center w-20 h-20 mask mask-diamond bg-primary text-primary-content flex flex-col items-center justify-center filter drop-shadow-md">
+					<div class="font-black leading-3">{{ item.header.dtend|date("j")}}</div>
 					<div class="text-xs font-light uppercase tracking-wide mt-0.5">{{ item.header.dtend|date("M")}}</div>
 				</div>
 			</div>
 
 			<div class="flex-1 flex items-center {{ isOdd ? 'xl:order-1 xl:flex-row-reverse' : 'xl:order-3'}} py-4">
 				{% set image = item.media.images|first %}
-				{{ image.cropZoom(200,200).html(item.title,'','mask mask-circle w-28 h-28 hidden sm:block mr-4 shadow')|raw }}
+				{% if image %}
+					{{ image.cropZoom(200,200).html(item.title,'','rounded-full w-28 h-28 hidden sm:block mr-4 shadow')|raw }}
+				{% else %}
+					<div class="flex-shrink-0 hidden sm:flex justify-center items-center rounded-full w-28 h-28 mr-4 shadow bg-base-300 bg-opacity-50">
+						{{ svg('theme://svg/icon/photo.svg', 'icon text-base-300 w-10' )|raw }}
+					</div>
+				{% endif %}
 				<div class="w-full">
-					<div class="text-sm opacity-40 uppercase tracking-wide font-semibold">{{ item.taxonomy.category|first }}</div>
+					<div class="text-sm text-neutral opacity-80 uppercase tracking-wide font-semibold">{{ item.taxonomy.category|first }}</div>
 					<h3 class="text-xl font-bold leading-5">
 						<a href="{{ item.url }}">{{ item.title }}</a>
 					</h3>
@@ -91,9 +97,9 @@
 		{% include 'partials/empty.html.twig' with { msg: 'Keine Einträge gefunden.' } %}
 	{% endfor %}
 
-	<div class="flex justify-start xl:justify-center xl:pt-8">
-		<div class="flex flex-col items-center w-16">
-			{% if pagination.hasNext %}
+	<div class="flex justify-start xl:justify-center xl:pt-6">
+		<div class="flex flex-col items-center w-20">
+			{% if not search_results and pagination.hasNext %}
 				{{ svg('theme://svg/icon/arrow-bottom-circle.svg', 'icon w-8 stroke-1 text-base-300 -mt-1')|raw }}
 				{% set url = (page.url ~ pagination.params ~ pagination.nextUrl)|replace({'//':'/'}) %}
 				<a class="btn btn-xs mt-3" href="{{url}}">Nächste</a>

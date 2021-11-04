@@ -82,6 +82,7 @@ class Jungschar extends Theme
       $categories = array_merge($taxonomy['category'] ?? [], $taxonomy['group'] ?? [], $taxonomy['tag'] ?? []);
       $label = $taxonomy['category'][0] ?? '';
       $format = 'd. M y G:i';
+      $url = $event->url(true);
 
       if (isset($header['events'])) {
         $count = count($header['events']);
@@ -108,7 +109,8 @@ class Jungschar extends Theme
           $content .= "# Anmerkung\n> $description\n\n";
 
           // state parent relationship
-          $content .= "---\nTeil von {$label} '{$event->title()}' / $count Anlässe vom $duration";
+          $content .= "---\nTeil von {$label} '{$event->title()}' / $count Anlässe vom $duration \n\n> ";
+          $content .= $url;
 
           $vcalendar->add('VEVENT', [
             'SUMMARY' => $summary,
@@ -117,7 +119,7 @@ class Jungschar extends Theme
             'LOCATION' => $location,
             'DESCRIPTION' => $content,
             'CATEGORIES' => $categories,
-            'URL' => $event->url(true)
+            'URL' => $url
           ]);
         }
       } else {
@@ -131,6 +133,7 @@ class Jungschar extends Theme
         $content = "# Begrüssung\n> {$dtstart->format($format)} / $locstart\n\n";
         $content .= "# Verabschiedung\n> {$dtend->format($format)} / $locend\n\n";
         $content .= "# Anmerkung\n> $description\n\n";
+        $content .= "---\n>$url";
 
         $vcalendar->add('VEVENT', [
           'SUMMARY' => $summary,
@@ -139,7 +142,7 @@ class Jungschar extends Theme
           'LOCATION' => $header['location'] ?? '',
           'DESCRIPTION' => $content,
           'CATEGORIES' => $categories,
-          'URL' => $event->url(true)
+          'URL' => $url
         ]);
       }
     }
