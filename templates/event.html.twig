@@ -38,7 +38,7 @@
 					<dd>{{ page.header.description }}</dd>
 
 					<dt>Dauer</dt>
-					<dd>{{ page.header.dtstart|startEnd(page.header.dtend) }}</dd>
+					<dd>{{ page.header.dtstart|startEnd(page.header.dtend, true) }}</dd>
 
 					<dt>Ort</dt>
 					<dd>{{ page.header.location ?? 'Keine Angabe' }}</dd>
