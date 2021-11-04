@@ -23,7 +23,7 @@
 
 		{% if prev_year > current_year %}
 			{% set year_range = range(prev_year, current_year + 1) %}
-			<div class="flex flex-col items-start xl:items-center xl:py-8">
+			<div class="flex flex-col items-start xl:items-center xl:py-6">
 				{% for y in year_range %}
 					<div class="flex flex-col items-center w-20">
 						{% if 0 < loop.index0 and loop.index0 < loop.length %}
@@ -40,7 +40,7 @@
 
 		<div class="flex xl:-my-6">
 
-			<div class="xl:flex-1 {{ isOdd ? 'xl:order-3' : 'xl:order-1'}}"></div>
+			<div class="xl:flex-1 {{ isOdd ? 'xl:order-3' : 'xl:order-1'}} z-0"></div>
 
 			<div class="xl:order-2 indicator w-20 xl:ml-6 mr-6">
 				<div class="h-full bg-base-300 w-0.5 mx-auto"></div>
