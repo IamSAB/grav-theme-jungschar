@@ -1,10 +1,8 @@
 {% extends 'partials/base.html.twig' %}
 
-{% set searching = search_results is defined %}
 {% set collection = search_results ?: page.collection %}
 
 {% block content %}
-{{ searching ? 'searching' : 'not searching' }}
 	<div class="mx-auto prose prose-xl {{ page.header.centered ? 'text-center' : '' }}">
 		{{ page.content|raw }}
 	</div>
