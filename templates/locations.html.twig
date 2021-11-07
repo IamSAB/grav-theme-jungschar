@@ -1,0 +1,12 @@
+{% extends 'partials/base.html.twig' %}
+
+{% set locations = getEventLocations() %}
+
+{% do assets.addInlineJs("var locations = "~locations|json_encode, {group: 'bottom'}) %}
+{% do assets.addJs('theme://js/locations.js') %}
+{% do assets.addJs('https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js') %}
+{% do assets.addJs('https://maps.googleapis.com/maps/api/js?callback=initMap&key='~getGoogleMapsApiKey(), {loading: 'async'}) %}
+
+{% block content %}
+	<div class="container-xl mx-auto" id="map" style="height: 80vh; min-height: 500px;"></div>
+{% endblock %}

@@ -4,7 +4,7 @@ namespace Grav\Theme;
 
 use Grav\Common\Theme;
 use Composer\Autoload\ClassLoader;
-// use GuzzleHttp\Client;
+use GuzzleHttp\Client;
 use DateTime;
 use Sabre\VObject;
 
@@ -32,43 +32,81 @@ class Jungschar extends Theme
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventsAsICal', [$this, 'getEventsAsICal']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('staticMap', [$this, 'staticMap']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('embedMap', [$this, 'embedMap']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getGoogleMapsApiKey', [$this, 'getGoogleMapsApiKey']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventLocations', [$this, 'getEventLocations']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEndTime', [$this, 'startEndTime']));
   }
 
-  // private function latLngFromAddress($address)
-  // {
-  //   $config = $this->grav['theme']->config();
-  //   $apiKey = $config['google_maps_api_key'];
+  private function geocode(string $address)
+  {
+    $key = $this->getGoogleMapsApiKey();
+    $address = urlencode($address);
 
-  //   $client = new Client();
-  //   $url = "https://maps.googleapis.com/maps/api/geocode/json?address=$address";
-  //   $request = $client->request('GET', $url);
+    $client = new Client();
+    $url = "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$key";
+    $request = $client->request('GET', $url);
 
-  //   $response = $request->getBody()->getContents();
-  //   $response = json_decode($response);
-  //   $lat = $response->results[0]->geometry->location->lat;
-  //   $lnt = $response->results[0]->geometry->location->lng;
+    $response = $request->getBody()->getContents();
+    $response = json_decode($response);
 
-  //   return compact('lat', 'lng');
-  // }
+    $lat = $response->results[0]->geometry->location->lat;
+    $lng = $response->results[0]->geometry->location->lng;
 
-  // private function geocode(string $address)
-  // {
-  //   $cache = $this->grav['cache'];
+    return compact('lat', 'lng');
+  }
 
-  //   $hash = md5($address);
-  //   $latLng = $cache->fetch($hash);
+  private function findLatLnt(string $address)
+  {
+    $cache = $this->grav['cache'];
+    $hash = md5($address);
+    $latLng = $cache->fetch($hash);
 
-  //   if (!$latLng) {
-  //     $latLng = $this->latLngFromAddress($address);
-  //     $cache->save($hash, $latLng);
-  //     $coordinates[] = $latLng;
-  //   }
+    if (!$latLng) {
+      $latLng = $this->geocode($address);
+      $cache->save($hash, $latLng);
+    }
 
-  //   return $latLng;
-  // }
+    return $latLng;
+  }
 
-  private function getGoogleMapsApiKey()
+  public function getEventLocations()
+  {
+    $events = $this->grav['page']->collection([
+      'items' => [
+        '@page.descendants' => '/chronik',
+      ],
+      'filter' => [
+        'published' => true,
+        'type' => 'event'
+      ]
+    ]);
+
+    $locations = [];
+
+    foreach ($events as $event) {
+      $header = (array) $event->header();
+      
+      if (isset($header['location'])) {
+        $loc = $header['location'];
+
+        if (!isset($locations[$loc])) {
+          $locations[$loc] = $this->findLatLnt($loc);
+          $locations[$loc]['events'] = [];
+        }
+
+        $locations[$loc]['events'][] = [
+          'title' => $event->title(),
+          'url' => $event->url(),
+          'category' => $event->taxonomy()['category'][0],
+          'date' => $this->startEnd($header['dtstart'], $header['dtend'])
+        ];
+      }
+    }
+
+    return $locations;
+  }
+
+  public function getGoogleMapsApiKey()
   {
     $config = $this->grav['theme']->config();
     return $config['google_maps_api_key'];

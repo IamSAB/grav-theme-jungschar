@@ -1,5 +1,6 @@
 {
     "require": {
-        "sabre/vobject": "~4.1"
+        "sabre/vobject": "~4.1",
+        "guzzlehttp/guzzle": "^7.4"
     }
 }
