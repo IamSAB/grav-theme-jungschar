@@ -26,12 +26,10 @@ form:
                     header.subtitle:
                       label: Untertitel
                       type: text
-                      description: Kurzbeschreib
                     
                     header.description:
                       label: Beschreibung
-                      type: textarea
-                      description: Ausführliche Beschreibung
+                      type: markdown
 
                     header.location:
                       label: Ort

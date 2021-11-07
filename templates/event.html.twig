@@ -28,15 +28,13 @@
 			</a>
 		{% endfor %}
 	</div>
-	<div class="grid lg:grid-cols-2 gap-8">
+	<div class="grid lg:grid-cols-2 xl:grid-cols-5 gap-8">
 
-		<div class="card bordered">
+		<div class="card bordered xl:col-span-3">
 			<div class="card-body">
 				<div class="card-title">{{ page.header.subtitle }}</div>
-				<dl>
-					<dt>Beschreibung</dt>
-					<dd>{{ page.header.description }}</dd>
-
+				<div class="prose prose-sm">{{ page.header.description|markdown }}</div>
+				<dl class="mt-4">
 					<dt>Dauer</dt>
 					<dd>{{ page.header.dtdstart|startEnd(page.header.dtend) }}</dd>
 
@@ -46,13 +44,13 @@
 					<dt>Begrüssung</dt>
 					<dd>
 						<div>{{ page.header.dtstart|date('d. M Y G:i') }}</div>
-						<div class="font-light">{{ page.header.locstart }}</div>
+						<div class="font-light">{{ page.header.locstart ?? config.theme.event.location }}</div>
 					</dd>
 
 					<dt>Verabschiedung</dt>
 					<dd>
 						<div>{{ page.header.dtend|date('d. M Y G:i') }}</div>
-						<div class="font-light">{{ page.header.locend ?? page.header.locstart }}</div>
+						<div class="font-light">{{ page.header.locend ?? page.header.locstart ?? config.theme.event.location }}</div>
 					</dd>
 
 					<dt>Team</dt>
@@ -68,6 +66,14 @@
 							</a>
 						{% endfor %}
 					</dd>
+
+					{% if page.header.flyer %}
+						<dt>Flyer</dt>
+						<dd class="flex items-center">
+							{{ svg('theme://svg/icon/file-text.svg', 'icon w-5 inline')|raw }} <span>PDF</span>
+							<a class="ml-2 link link-hover" href="{{page.header.flyer}}">Herunterladen</a>
+						</dd>
+					{% endif %}
 
 					{% if page.header.cost %}
 						<dt>Kosten</dt>
@@ -95,7 +101,7 @@
 			</div>
 		</div>
 
-		<div class="rounded-box overflow-hidden">
+		<div class="rounded-box overflow-hidden xl:col-span-2">
 			<iframe class="w-full h-96 lg:h-full" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q={{ page.header.location ? page.header.location|url_encode : config.theme.event.location|url_encode }}&key=AIzaSyDlV1W8Jpzjj15k4amxG56xnb34SKR0Qps" allowfullscreen></iframe>
 		</div>
 
@@ -117,14 +123,14 @@
 								<span class="badge badge-ghost">Start</span>
 								<b>{{ event.dtstart|startEndTime(event.dtend) }}</b>
 							</div>
-							<div class="font-light">{{ event.locstart ?? page.header.locstart ?? '' }}</div>
+							<div class="font-light">{{ event.locstart ?? page.header.locstart ?? config.theme.event.location }}</div>
 						</div>
 						<div class="mt-2">
 							<div>
 								<span class="badge badge-ghost">Ende</span>
 								<b>{{ event.dtend|startEndTime(event.dtstart) }}</b>
 							</div>
-							<div class="font-light">{{ event.locend ?? event.locstart ?? page.header.locend ?? page.header.locstart ?? '' }}</div>
+							<div class="font-light">{{ event.locend ?? event.locstart ?? page.header.locend ?? page.header.locstart ?? config.theme.event.location }}</div>
 						</div>
 						<div class="text-sm mt-3">{{ event.description }}</div>
 					</div>

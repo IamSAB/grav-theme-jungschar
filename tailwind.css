@@ -81,5 +81,5 @@ form .buttons button[type='reset'] {
 }
 
 dl > dt {
-  @apply uppercase text-neutral mt-3 tracking-wide font-semibold text-sm
+  @apply uppercase text-neutral mt-3 tracking-wide font-semibold text-xs opacity-80
 }
