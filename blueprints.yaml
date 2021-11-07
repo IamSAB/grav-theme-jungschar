@@ -41,6 +41,12 @@ form:
                 0: PLUGIN_ADMIN.DISABLED
               validate:
                 type: bool
+        column2:
+          type: column
+          fields:
+            google_maps_api_key:
+              type: text
+              label: Google Maps API Key
 
     section_anlaesse:
       type: section

@@ -30,7 +30,7 @@
 	</div>
 	<div class="grid lg:grid-cols-2 xl:grid-cols-5 gap-8">
 
-		<div class="card bordered xl:col-span-3">
+		<div class="card bordered shadow-sm xl:col-span-3">
 			<div class="card-body">
 				<div class="card-title">{{ page.header.subtitle }}</div>
 				<div class="prose prose-sm">{{ page.header.description|markdown }}</div>
@@ -68,10 +68,12 @@
 					</dd>
 
 					{% if page.header.flyer %}
+						{% set flyer = page.media[page.header.flyer] %}
 						<dt>Flyer</dt>
 						<dd class="flex items-center">
-							{{ svg('theme://svg/icon/file-text.svg', 'icon w-5 inline')|raw }} <span>PDF</span>
-							<a class="ml-2 link link-hover" href="{{page.header.flyer}}">Herunterladen</a>
+							{{ svg('theme://svg/icon/file-text.svg', 'icon w-5 inline')|raw }}
+							<span>PDF</span>
+							<a class="ml-2 link link-hover" href="{{flyer.url}}">Herunterladen</a>
 						</dd>
 					{% endif %}
 
@@ -88,21 +90,44 @@
 					{% if page.header.registration %}
 						<dt>Anmeldung</dt>
 						<dd>
-              {% if date(page.header.registration.dtstart) > date() %}
-                {{ page.header.registration.dtstart|nicetime }}
-              {% elseif date() < date(page.header.registration.dtend) %}
-                <div class="font-light">Anmeldung schliesst am {{ page.header.registration.dtend|date('d. M y G:i') }}.</div>
-                <div>{{ page.header.registration.description|markdown }}</div>
-              {% else %}
-              {% endif %}
-            </dd>
+							{% if date(page.header.registration.dtstart) > date() %}
+								{{ page.header.registration.dtstart|nicetime }}
+							{% elseif date() < date(page.header.registration.dtend) %}
+								<div class="font-light">Anmeldung schliesst am
+									{{ page.header.registration.dtend|date('d. M y G:i') }}.</div>
+								<div>{{ page.header.registration.description|markdown }}</div>
+								{% else %}
+							{% endif %}
+						</dd>
 					{% endif %}
 				</dl>
 			</div>
 		</div>
 
-		<div class="rounded-box overflow-hidden xl:col-span-2">
-			<iframe class="w-full h-96 lg:h-full" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q={{ page.header.location ? page.header.location|url_encode : config.theme.event.location|url_encode }}&key=AIzaSyDlV1W8Jpzjj15k4amxG56xnb34SKR0Qps" allowfullscreen></iframe>
+		<div class="xl:col-span-2 grid grid-rows-2 gap-4">
+			{% set locstart = page.header.locstart ?? config.theme.event.location %}
+			{% set locend = page.header.locend ?? locstart %}
+			<div class="indicator justify-self-center">
+				<div class="indicator-item indicator-center indicator-top badge">Treffpunkt</div>
+				<div class="rounded-box overflow-hidden shadow-sm">
+					{% if locstart == locend %}
+						{{ staticMap({
+								T: locstart
+							})|raw }}
+					{% else %}
+						{{ staticMap({
+								B: locstart,
+								V: locend,
+							})|raw }}
+					{% endif %}
+				</div>
+			</div>
+			<div class="indicator w-full h-full">
+				<div class="indicator-item indicator-center indicator-top badge">Ort</div>
+				<div class="rounded-box overflow-hidden shadow-sm w-full h-full">
+					{{ embedMap(page.header.location)|raw }}
+				</div>
+			</div>
 		</div>
 
 	</div>

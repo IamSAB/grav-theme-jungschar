@@ -4,6 +4,7 @@ namespace Grav\Theme;
 
 use Grav\Common\Theme;
 use Composer\Autoload\ClassLoader;
+// use GuzzleHttp\Client;
 use DateTime;
 use Sabre\VObject;
 
@@ -29,7 +30,73 @@ class Jungschar extends Theme
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('groupByYear', [$this, 'groupByYear']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventsInRange', [$this, 'getEventsInRange']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventsAsICal', [$this, 'getEventsAsICal']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('staticMap', [$this, 'staticMap']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('embedMap', [$this, 'embedMap']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEndTime', [$this, 'startEndTime']));
+  }
+
+  // private function latLngFromAddress($address)
+  // {
+  //   $config = $this->grav['theme']->config();
+  //   $apiKey = $config['google_maps_api_key'];
+
+  //   $client = new Client();
+  //   $url = "https://maps.googleapis.com/maps/api/geocode/json?address=$address";
+  //   $request = $client->request('GET', $url);
+
+  //   $response = $request->getBody()->getContents();
+  //   $response = json_decode($response);
+  //   $lat = $response->results[0]->geometry->location->lat;
+  //   $lnt = $response->results[0]->geometry->location->lng;
+
+  //   return compact('lat', 'lng');
+  // }
+
+  // private function geocode(string $address)
+  // {
+  //   $cache = $this->grav['cache'];
+
+  //   $hash = md5($address);
+  //   $latLng = $cache->fetch($hash);
+
+  //   if (!$latLng) {
+  //     $latLng = $this->latLngFromAddress($address);
+  //     $cache->save($hash, $latLng);
+  //     $coordinates[] = $latLng;
+  //   }
+
+  //   return $latLng;
+  // }
+
+  private function getGoogleMapsApiKey()
+  {
+    $config = $this->grav['theme']->config();
+    return $config['google_maps_api_key'];
+  }
+
+  public function staticMap(array $markers, $size = '400x400')
+  {
+    $url = 'https://maps.googleapis.com/maps/api/staticmap';
+
+    foreach ($markers as $label => $address) {
+      $params[] = "markers=color:gray|label:$label|" . urlencode($address);
+    }
+
+    $params[] = "size=$size";
+    // $params[] = 'zoom=13';
+    $params[] = 'key=' . $this->getGoogleMapsApiKey();
+    $query = join('&', $params);
+
+    return "<img src='$url?$query' style='width:100%;'/>";
+  }
+
+  public function embedMap(string $location)
+  {
+    $url = "https://www.google.com/maps/embed/v1/place";
+    $key = $this->getGoogleMapsApiKey();
+    $q = urlencode($location);
+
+    return "<iframe class='w-full h-full' frameborder='0' style='border:0' src='$url?q=$q&key=$key' allowfullscreen></iframe>";
   }
 
   public function startEndTime($a, $b, $date = 'd. M y', $time = 'G:i')
@@ -56,7 +123,7 @@ class Jungschar extends Theme
     return $arr;
   }
 
-  public function getEventsAsICal()
+  public function getEventsAsICal($start = '-6 month', $end = '+1 year')
   {
     $events = $this->grav['page']->collection([
       'items' => [
@@ -67,8 +134,8 @@ class Jungschar extends Theme
         'type' => 'event'
       ],
       'dateRange' => [
-        'start' => '-6 month',
-        'end' => '+1 year',
+        'start' => $start,
+        'end' => $end,
         'field' => 'header.dtstart'
       ]
     ]);
@@ -173,7 +240,8 @@ class Jungschar extends Theme
       $header = (array) $event->header();
       $start = new DateTime($header['dtstart'], $tz);
       $end = new DateTime($header['dtend'], $tz);
-
+      
+      // TODO: colorcode according to category and group
       if (($rangeStart < $start && $start < $rangeEnd) || ($rangeStart < $end && $end < $rangeEnd) || ($start < $rangeStart && $rangeEnd < $end)) {
         if (isset($header['events'])) {
           foreach ($header['events'] as $subevent) {
