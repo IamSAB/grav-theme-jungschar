@@ -36,7 +36,7 @@
 				<div class="prose prose-sm">{{ page.header.description|markdown }}</div>
 				<dl class="mt-4">
 					<dt>Dauer</dt>
-					<dd>{{ page.header.dtdstart|startEnd(page.header.dtend) }}</dd>
+					<dd>{{ page.header.dtstart|startEnd(page.header.dtend, true) }}</dd>
 
 					<dt>Ort</dt>
 					<dd>{{ page.header.location ?? 'Keine Angabe' }}</dd>

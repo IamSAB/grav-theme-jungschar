@@ -116,7 +116,7 @@
       published: true,
       type: 'event'
     }
-  })|slice(0,6)|reverse %}
+  })|slice(0,6) %}
 		{% include 'partials/event-upcoming.html.twig' %}
 	{% else %}
 		{% include 'partials/empty.html.twig' with {msg: 'Keine anstehende Anlässe.'} %}
