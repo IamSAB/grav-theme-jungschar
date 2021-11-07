@@ -17,8 +17,11 @@
 {% block content %}
 	<div class="container-xl mx-auto overflow-x-auto">
 
+		<article class="prose prose-lg lg:prose-xl mx-auto">{{ page.content|raw }}</article>
+
 		{% for year, events in events|groupByYear('dtstart') %}
-			<h2 class="text-xl font-semibold mt-12 mb-6">{{ year }} ({{ events|length }})</h2>
+			<h2 class="text-xl font-semibold mt-12 mb-6">{{ year }}
+				({{ events|length }})</h2>
 			<table class="table w-full table-compact">
 				<thead>
 					<tr>
