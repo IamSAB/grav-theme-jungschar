@@ -8,5 +8,8 @@
 {% do assets.addJs('https://maps.googleapis.com/maps/api/js?callback=initMap&key='~getGoogleMapsApiKey(), {loading: 'async'}) %}
 
 {% block content %}
-	<div class="container-xl mx-auto" id="map" style="height: 80vh; min-height: 500px;"></div>
+	<div class="container-xl mx-auto">
+		<article class="prose-lg mx-auto">{{ page.content|raw }}</article>
+		<div class="mt-12" id="map" style="height: 80vh; min-height: 500px;"></div>
+	</div>
 {% endblock %}
