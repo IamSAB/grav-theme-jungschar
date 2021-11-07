@@ -97,7 +97,7 @@ class Jungschar extends Theme
         $locations[$loc]['events'][] = [
           'title' => $event->title(),
           'url' => $event->url(),
-          'category' => $event->taxonomy()['category'][0],
+          'category' => $event->taxonomy()['category'][0] ?? '',
           'date' => $this->startEnd($header['dtstart'], $header['dtend'])
         ];
       }
