@@ -142,22 +142,24 @@
 							</div>
 							<div class="font-light ml-2">{{ event.location ?? page.header.location }}</div>
 						</div>
-						<h4 class="text-lg font-bold mt-1 mb-3">{{ event.title }}</h4>
-						<div>
-							<div>
-								<span class="badge badge-ghost">Start</span>
-								<b>{{ event.dtstart|startEndTime(event.dtend) }}</b>
-							</div>
-							<div class="font-light">{{ event.locstart ?? page.header.locstart ?? config.theme.event.location }}</div>
-						</div>
-						<div class="mt-2">
-							<div>
-								<span class="badge badge-ghost">Ende</span>
-								<b>{{ event.dtend|startEndTime(event.dtstart) }}</b>
-							</div>
-							<div class="font-light">{{ event.locend ?? event.locstart ?? page.header.locend ?? page.header.locstart ?? config.theme.event.location }}</div>
-						</div>
+						<h4 class="text-lg font-bold mt-1">{{ event.title }}</h4>
+
+						<dl>
+							<dt>Begrüssung</dt>
+							<dl class="flex flex-wrap">
+								<div class="font-medium mr-2">{{ event.dtstart|startEndTime(event.dtend) }}</div>
+								<div class="font-light">{{ event.locstart ?? page.header.locstart ?? config.theme.event.location  }}</div>
+							</dl>
+
+							<dt>Verabschiedung</dt>
+							<dl class="flex flex-wrap">
+								<div class="font-medium mr-2">{{ event.dtend|startEndTime(event.dtstart) }}</div>
+								<div class="font-light">{{ event.locend ?? event.locstart ?? page.header.locend ?? page.header.locstart ?? config.theme.event.location }}</div>
+							</dl>
+						</dl>
+
 						<div class="text-sm mt-3">{{ event.description }}</div>
+
 					</div>
 				</div>
 			{% endfor %}
