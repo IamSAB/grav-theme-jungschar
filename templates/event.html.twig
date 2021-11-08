@@ -107,6 +107,7 @@
 		<div class="xl:col-span-2 grid grid-rows-2 gap-4">
 			{% set locstart = page.header.locstart ?? config.theme.event.location %}
 			{% set locend = page.header.locend ?? locstart %}
+			{% if locstart or locend %}
 			<div class="indicator justify-self-center">
 				<div class="indicator-item indicator-center indicator-top badge">Treffpunkt</div>
 				<div class="rounded-box overflow-hidden shadow-sm">
@@ -122,12 +123,15 @@
 					{% endif %}
 				</div>
 			</div>
+			{% endif %}
+			{% if page.header.location %}
 			<div class="indicator w-full h-full">
 				<div class="indicator-item indicator-center indicator-top badge">Ort</div>
 				<div class="rounded-box overflow-hidden shadow-sm w-full h-full">
 					{{ embedMap(page.header.location)|raw }}
 				</div>
 			</div>
+			{% endif %}
 		</div>
 
 	</div>
