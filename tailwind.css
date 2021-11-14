@@ -80,6 +80,23 @@ form .buttons button[type='reset'] {
   @apply btn btn-sm btn-outline
 }
 
+.prose a.btn {
+  text-decoration: inherit;
+  font-weight: 600;
+}
+
+.prose a.btn {
+  color: hsla(var(--nc)/var(--tw-text-opacity,1)) !important;
+}
+
+.prose a.btn-secondary {
+  color: hsla(var(--sc)/var(--tw-text-opacity,1)) !important;
+}
+
+.prose a.btn-primary {
+  color: hsla(var(--pc)/var(--tw-text-opacity,1)) !important;
+}
+
 dl > dt {
   @apply uppercase text-neutral mt-3 tracking-wide font-semibold text-xs opacity-80
 }

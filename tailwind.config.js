@@ -67,6 +67,25 @@ module.exports = {
       ]
     },
   },
+  theme: {
+    extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            a: {
+              'text-decoration': 'none',
+              'font-weight': 'inherit',
+              color: 'hsla(var(--p)) !important',
+              '&:hover': {
+                'text-decoration': 'underline',
+                color: 'hsla(var(--pf)) !important',
+              },
+            },
+          },
+        },
+      },
+    }
+  },
   daisyui: {
     themes: [
       {

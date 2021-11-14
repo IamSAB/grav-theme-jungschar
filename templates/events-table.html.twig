@@ -39,7 +39,7 @@
 					{% for event in events %}
 						<tr>
 							<td>{{ event.header.dtstart|startEnd(event.header.dtend) }}</td>
-							<td>{{ event.title }}</td>
+							<td><a href="{{page.url}}">{{ event.title }}</a></td>
 							<td>{{ event.header.location }}</td>
 							<td class="hidden xl:table-cell">{{ event.taxonomy.group|join(', ') }}</td>
 							<td class="hidden md:table-cell">{{ event.taxonomy.category|join(', ') }}</td>

@@ -2,6 +2,7 @@
 
 namespace Grav\Theme;
 
+use Grav;
 use Grav\Common\Theme;
 use Composer\Autoload\ClassLoader;
 use GuzzleHttp\Client;
@@ -34,6 +35,7 @@ class Jungschar extends Theme
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('embedMap', [$this, 'embedMap']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getGoogleMapsApiKey', [$this, 'getGoogleMapsApiKey']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventLocations', [$this, 'getEventLocations']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getUpcomingEvents', [$this, 'getUpcomingEvents']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEndTime', [$this, 'startEndTime']));
   }
 
@@ -69,6 +71,69 @@ class Jungschar extends Theme
     return $latLng;
   }
 
+  public function getUpcomingEvents()
+  {
+    $events = $this->grav['page']->collection([
+      'items' => [
+        '@page.descendants' => '/chronik',
+      ],
+      'filter' => [
+        'published' => true,
+        'type' => 'event'
+      ],
+      'dateRange' => [
+        'start' => 'now',
+        'field' => 'header.dtend'
+      ]
+    ]);
+
+    $upcoming = [];
+    $now = strtotime('now');
+
+    foreach ($events as $event) {
+      $header = (array) $event->header();
+      $title = $event->title();
+      $taxonomy = $event->taxonomy();
+      $image = array_values($event->media()->images())[0] ?? null;
+      $url = $event->url();
+      $parent = null;
+      $dtstart = $header['dtstart'];
+      $dtend = $header['dtend'];
+      $subevents = $header['events'] ?? null;
+
+      if ($subevents) {
+        $total = count($subevents);
+
+        usort($subevents, function ($a, $b) {
+          return strtotime($a['dtstart']) > strtotime($b['dtstart']);
+        });
+
+        foreach ($subevents as $index => $subevent) {
+          if (strtotime($subevent['dtstart']) > $now) {
+            $parent = compact('index', 'title', 'total', 'dtstart', 'dtend');
+            $title = $subevent['title'];
+            $dtstart = $subevent['dtstart'];
+            $dtend = $subevent['dtend'];
+            break;
+          }
+        }
+      }
+
+      $upcoming[] = compact('title', 'url', 'dtstart', 'dtend', 'parent', 'taxonomy', 'image');
+    }
+
+    usort($upcoming, function ($a, $b) {
+      return strtotime($a['dtstart']) > strtotime($b['dtstart']);
+    });
+
+    foreach ($upcoming as $i => $v) {
+      $this->grav['log']->debug('> ', [$i => strtotime($v['dtstart'])]);
+    }
+
+
+    return $upcoming;
+  }
+
   public function getEventLocations()
   {
     $events = $this->grav['page']->collection([
@@ -85,7 +150,7 @@ class Jungschar extends Theme
 
     foreach ($events as $event) {
       $header = (array) $event->header();
-      
+
       if (isset($header['location'])) {
         $loc = $header['location'];
 
@@ -278,7 +343,7 @@ class Jungschar extends Theme
       $header = (array) $event->header();
       $start = new DateTime($header['dtstart'], $tz);
       $end = new DateTime($header['dtend'], $tz);
-      
+
       // TODO: colorcode according to category and group
       if (($rangeStart < $start && $start < $rangeEnd) || ($rangeStart < $end && $end < $rangeEnd) || ($start < $rangeStart && $rangeEnd < $end)) {
         if (isset($header['events'])) {

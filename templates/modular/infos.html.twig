@@ -3,7 +3,7 @@
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-start mt-6">
 	{% for item in page.collection %}
-		<div class="card indicator mt-16 overflow-visible shadow-md bg-secondary text-secondary-content">
+		<div class="card indicator mt-16 overflow-visible shadow bg-neutral-content">
 			{% set image = item.media.images|first %}
 			{% if image %}
 				<div class="indicator-item indicator-center indicator-top h-32 w-32 filter drop-shadow-md">
@@ -20,12 +20,12 @@
 					<h2 class="card-title mt-2 mb-0">{{ item.title }}</h2>
 					<div class="font-light">{{ item.header.subtitle }}</div>
 				</div>
-				<div class="font-semibold text-xs uppercase tracking-wide mt-3 text-neutral">{{ item.header.dtend|date('d. M y')}}</div>
+				<div class="font-semibold text-xs uppercase tracking-wide mt-3 text-primary opacity-80">{{ item.header.dtend|date('d. M y')}}</div>
 				<div class="prose prose-sm">
 					{{ item.summary|raw }}
 				</div>
 				<div class="flex justify-end mt-1">
-					<a class="btn btn-ghost btn-sm" href="{{ item.url }}">Weiterlesen</a>
+					<a class="btn btn-outline btn-xs" href="{{ item.url }}">Weiterlesen</a>
 				</div>
 			</div>
 		</div>
