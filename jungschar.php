@@ -36,39 +36,8 @@ class Jungschar extends Theme
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getGoogleMapsApiKey', [$this, 'getGoogleMapsApiKey']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventLocations', [$this, 'getEventLocations']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getUpcomingEvents', [$this, 'getUpcomingEvents']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getLocationAndVenues', [$this, 'getLocationAndVenues']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEndTime', [$this, 'startEndTime']));
-  }
-
-  private function geocode(string $address)
-  {
-    $key = $this->getGoogleMapsApiKey();
-    $address = urlencode($address);
-
-    $client = new Client();
-    $url = "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$key";
-    $request = $client->request('GET', $url);
-
-    $response = $request->getBody()->getContents();
-    $response = json_decode($response);
-
-    $lat = $response->results[0]->geometry->location->lat;
-    $lng = $response->results[0]->geometry->location->lng;
-
-    return compact('lat', 'lng');
-  }
-
-  private function findLatLnt(string $address)
-  {
-    $cache = $this->grav['cache'];
-    $hash = md5($address);
-    $latLng = $cache->fetch($hash);
-
-    if (!$latLng) {
-      $latLng = $this->geocode($address);
-      $cache->save($hash, $latLng);
-    }
-
-    return $latLng;
   }
 
   public function getUpcomingEvents()
@@ -134,6 +103,79 @@ class Jungschar extends Theme
     return $upcoming;
   }
 
+  private function geocode(string $address)
+  {
+    $key = $this->getGoogleMapsApiKey();
+    $address = urlencode($address);
+
+    $client = new Client();
+    $url = "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$key";
+    $request = $client->request('GET', $url);
+
+    $response = $request->getBody()->getContents();
+    $response = json_decode($response);
+
+    $lat = $response->results[0]->geometry->location->lat;
+    $lng = $response->results[0]->geometry->location->lng;
+
+    return compact('lat', 'lng');
+  }
+
+  public function getLocationAndVenues($event)
+  {
+    $header = (array) $event->header();
+
+    $this->grav['log']->debug('header', $header);
+    
+
+    $markers = [];
+    $locstart = $header['locstart'] ?? null;
+    $locend = $header['locend'] ?? $locstart;
+    $location = $header['location'] ?? null;
+    
+    $this->grav['log']->debug('markers', compact('locstart', 'locend', 'location'));
+
+    if ($locstart == $locend && $locstart) {
+      $markers[$locstart] = array_merge([
+        'title' => 'Treffpunkt',
+        'date' => $this->startEnd($header['dtstart'], $header['dtend'])
+      ], $this->findLatLng($locend));
+    } else {
+      if ($locstart) {
+        $markers[$locstart] = array_merge([
+          'title' => 'Begrüssung',
+          'date' => (new DateTime($header['dtstart']))->format('j. M y G:i')
+        ], $this->findLatLng($locstart));
+      } else if ($locend) {
+        $markers[$locend] = array_merge([
+          'title' => 'Verabschiedung',
+          'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
+        ], $this->findLatLng($locend));
+      }
+    }
+
+    if (isset($location) && $location) {
+      $markers[$location] = array_merge([
+        'title' => 'Veranstaltungsort'
+      ], $this->findLatLng($location));
+    }
+
+    return $markers;
+  }
+
+  private function findLatLng(string $address)
+  {
+    $cache = $this->grav['cache'];
+    $hash = md5($address);
+
+    if (!$latLng = $cache->fetch($hash)) {
+      $latLng = $this->geocode($address);
+      $cache->save($hash, $latLng);
+    }
+
+    return $latLng;
+  }
+
   public function getEventLocations()
   {
     $events = $this->grav['page']->collection([
@@ -146,7 +188,7 @@ class Jungschar extends Theme
       ]
     ]);
 
-    $locations = [];
+    $markers = [];
 
     foreach ($events as $event) {
       $header = (array) $event->header();
@@ -154,12 +196,12 @@ class Jungschar extends Theme
       if (isset($header['location'])) {
         $loc = $header['location'];
 
-        if (!isset($locations[$loc])) {
-          $locations[$loc] = $this->findLatLnt($loc);
-          $locations[$loc]['events'] = [];
+        if (!isset($markers[$loc])) {
+          $markers[$loc] = $this->findLatLng($loc);
+          $markers[$loc]['events'] = [];
         }
 
-        $locations[$loc]['events'][] = [
+        $markers[$loc]['events'][] = [
           'title' => $event->title(),
           'url' => $event->url(),
           'category' => $event->taxonomy()['category'][0] ?? '',
@@ -168,7 +210,7 @@ class Jungschar extends Theme
       }
     }
 
-    return $locations;
+    return $markers;
   }
 
   public function getGoogleMapsApiKey()

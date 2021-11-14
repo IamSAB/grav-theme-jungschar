@@ -43,7 +43,7 @@
 					<div class="text-center font-medim text-lg">{{ event.dtstart|startEnd(event.dtend, true) }}</div>
 
 					<div class="flex justify-center mt-4">
-						<a class="btn btn-outline btn-xs" href="{{ event.url }} {{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
+						<a class="btn btn-outline btn-xs" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
 					</div>
 
 					{% if event.parent %}

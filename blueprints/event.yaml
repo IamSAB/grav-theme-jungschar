@@ -92,19 +92,25 @@ form:
                       title: Anmeldung
                       underline: true
 
+                    header.registration.required:
+                      type: toggle
+                      label: Anmeldung nötig?
+                      highlight: 0
+                      default: 0
+                      options:
+                        1: Ja
+                        0: Nein
+                      validate:
+                        type: bool
+
+                    header.registration.dtend:
+                      label: Anmeldeschluss
+                      type: datetime
+                      format: Y-m-d H:i
+
                     header.registration.description:
                       label: Beschreibung
                       type: markdown
-
-                    header.registration.dtstart:
-                      label: Startdatum und -zeit
-                      type: datetime
-                      format: Y-m-d H:i
-
-                    header.registration.dtend:
-                      label: Enddatum und -zeit
-                      type: datetime
-                      format: Y-m-d H:i
 
                 column2:
                   type: column
