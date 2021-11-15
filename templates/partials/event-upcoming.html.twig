@@ -1,52 +1,57 @@
-{% set hasEvents = event.header.events is defined %}
-{% set upcoming = hasEvents ? event.header.events|filter(i => date(i.dtend) >= date())|first : event.header %}
+<div class="indicator mt-10 w-full">
 
-<div class="card indicator overflow-visible mt-10 w-full bg-base-200 shadow-md">
 	<div class="indicator-item indicator-center w-20 h-20 filter drop-shadow-md">
 		<div class="mask mask-squircle flex flex-col items-center justify-center bg-primary text-primary-content w-full h-full">
-			<div class="font-extrabold text-xl">{{ upcoming.dtstart|date('d')}}</div>
-			<div class="font-light -mt-1">{{ upcoming.dtstart|date('M')}}</div>
+			<div class="font-extrabold text-xl">{{ event.dtstart|date('j')}}</div>
+			<div class="font-light -mt-1">{{ event.dtstart|date('M')}}</div>
 		</div>
 	</div>
-	<div class="card-body mt-6">
-		<div class="text-center mb-5">
-			<div class="uppercase font-semibold tracking-wider text-sm text-primary opacity-80">{{ event.taxonomy.category|first }}</div>
-			<h2 class="card-title mb-0 text-center"><a href="{{event.url}}">{{ event.title }}</a></h2>
-			<div class="mt-2">
-				{% for group in event.taxonomy.group %}
-					<a class="badge badge-secondary" href="/{{group|lower}}">
-						{{ group }}
-					</a>
-				{% endfor %}
-			</div>
-		</div>
 
-		<div class="text-center text-lg font-medium">
-			{{ hasEvents ? upcoming.title : event.header.subtitle }}
-		</div>
+	<div class="card compact w-full bg-neutral-content shadow">
 
-		<dl>
-			<dt>Begrüssung</dt>
-			<dl class="flex flex-wrap">
-				<div class="font-medium mr-2">{{ upcoming.dtstart|startEndTime(upcoming.dtend) }}</div>
-				<div class="font-light">{{ upcoming.locstart ?? event.header.locstart ?? config.theme.event.location }}</div>
-			</dl>
-
-			<dt>Verabschiedung</dt>
-			<dl class="flex flex-wrap">
-				<div class="font-medium mr-2">{{ upcoming.dtend|startEndTime(upcoming.dtstart) }}</div>
-				<div class="font-light">{{ upcoming.locend ?? upcoming.locstart ?? event.header.locend ?? event.header.locstart ?? config.theme.event.location }}</div>
-			</dl>
-		</dl>
-		
-		<div class="flex justify-center mt-4">
-			<a class="link link-hover" href="{{ event.url }}">Details</a>
-		</div>
-		{% if event.header.events %}
-			<div class="font-light text-sm mt-4 text-center">
-				{{ event.taxonomy.category|first }} "{{ event.title }}" enthält {{ event.header.events|count }} Anlässe vom
-				{{ event.header.dtstart|startEnd(event.header.dtend) }}
-			</div>
+		{% if event.image %}
+			<figure>
+				{{ event.image.cropZoom(600, 300).html|raw }}
+			</figure>
+		{% else %}
+			<div class="mt-10"></div>
 		{% endif %}
+
+		<div class="card-body">
+
+			<header class="text-center mb-5">
+				<div class="uppercase font-semibold tracking-wider text-sm text-primary-focus opacity-80">{{ event.taxonomy.category|first }}</div>
+				<h2 class="card-title mb-0 text-center">
+					<a href="{{event.url}}">{{ event.title }}</a>
+				</h2>
+				<div class="mt-2">
+					{% for group in event.taxonomy.group|sort %}
+						<a class="badge badge-secondary" href="/{{group|lower}}">
+							{{ group }}
+						</a>
+					{% endfor %}
+				</div>
+			</header>
+
+			<div class="text-center font-medim text-lg">{{ event.dtstart|startEnd(event.dtend, true) }}</div>
+
+			<div class="flex justify-center mt-4">
+				<a class="btn btn-outline btn-xs" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
+			</div>
+
+			{% if event.parent %}
+				<div class="font-light text-sm mt-4 text-center">
+					Anlass
+					{{ event.parent.index + 1}}
+					von
+					{{ event.parent.total }}
+					des
+					{{ event.taxonomy.category|first }}
+					<a class="link link-hover text-primary" href="{{ event.url }}">{{ event.parent.title }}</a>
+					vom
+					{{ event.parent.dtstart|startEnd(event.parent.dtend) }}
+				</div>
+			{% endif %}
+		</div>
 	</div>
 </div>

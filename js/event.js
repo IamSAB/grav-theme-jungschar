@@ -22,14 +22,13 @@ function initMap() {
   // Add some markers to the map.
   const markers = Object.entries(locations).map(([adr, loc]) => {
 
-    console.log(loc);
-
     // coordinates
     var latLng = new google.maps.LatLng(loc.lat, loc.lng);
 
     // marker itself
     const marker = new google.maps.Marker({
       position: latLng,
+      label: loc.title[0],
       title: adr,
       map: map
     });

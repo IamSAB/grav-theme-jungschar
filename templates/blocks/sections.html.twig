@@ -21,10 +21,10 @@
 				</ul>
 			</nav>
 		</aside>
-		<div class="container space-y-12">
+		<div class="container space-y-20">
 			{% for section in sections %}
 				<section id="{{ section.slug|hyphenize }}">
-					<header class="flex flex-col items-center mt-2 mb-8">
+					<header class="flex flex-col items-center mb-12">
 						{{ svg('theme://svg/icon/'~section.header.icon, 'icon w-16 text-neutral')|raw }}
 						<h2 class="uppercase tracking-wide font-black text-5xl md:text-7xl text-base-300">
 							<a href="#{{ section.slug|hyphenize }}">{{ section.title }}</a>

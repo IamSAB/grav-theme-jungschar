@@ -36,69 +36,72 @@ class Jungschar extends Theme
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getGoogleMapsApiKey', [$this, 'getGoogleMapsApiKey']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventLocations', [$this, 'getEventLocations']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getUpcomingEvents', [$this, 'getUpcomingEvents']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getUpcomingEvent', [$this, 'getUpcomingEvent']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getLocationAndVenues', [$this, 'getLocationAndVenues']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEndTime', [$this, 'startEndTime']));
   }
 
-  public function getUpcomingEvents()
+  public function getUpcomingEvent($event)
+  {
+    $header = (array) $event->header();
+    $now = strtotime('now');
+
+    $title = $event->title();
+    $taxonomy = $event->taxonomy();
+    $image = array_values($event->media()->images())[0] ?? null;
+    $url = $event->url();
+    $parent = null;
+    $dtstart = $header['dtstart'];
+    $dtend = $header['dtend'];
+    $location = $header['location'] ?? '';
+    $description = $header['description'] ?? '';
+
+    $subevents = $header['events'] ?? null;
+
+    if ($subevents) {
+      $total = count($subevents);
+
+      usort($subevents, function ($a, $b) {
+        return strtotime($a['dtstart']) > strtotime($b['dtstart']);
+      });
+
+      foreach ($subevents as $index => $subevent) {
+        if (strtotime($subevent['dtstart']) > $now) {
+          $parent = compact('index', 'title', 'total', 'dtstart', 'dtend', 'description');
+          $title = $subevent['title'];
+          $dtstart = $subevent['dtstart'];
+          $dtend = $subevent['dtend'];
+          $description = $subevent['description'] ?? '';
+          break;
+        }
+      }
+    }
+
+    return compact('title', 'url', 'dtstart', 'dtend', 'parent', 'taxonomy', 'image', 'description', 'location');
+  }
+
+  public function getUpcomingEvents($items = '@root.descendants', $field = 'header.dtend')
   {
     $events = $this->grav['page']->collection([
-      'items' => [
-        '@page.descendants' => '/chronik',
-      ],
+      'items' => $items,
       'filter' => [
         'published' => true,
         'type' => 'event'
       ],
       'dateRange' => [
         'start' => 'now',
-        'field' => 'header.dtend'
+        'field' => $field
       ]
     ]);
 
     $upcoming = [];
-    $now = strtotime('now');
-
     foreach ($events as $event) {
-      $header = (array) $event->header();
-      $title = $event->title();
-      $taxonomy = $event->taxonomy();
-      $image = array_values($event->media()->images())[0] ?? null;
-      $url = $event->url();
-      $parent = null;
-      $dtstart = $header['dtstart'];
-      $dtend = $header['dtend'];
-      $subevents = $header['events'] ?? null;
-
-      if ($subevents) {
-        $total = count($subevents);
-
-        usort($subevents, function ($a, $b) {
-          return strtotime($a['dtstart']) > strtotime($b['dtstart']);
-        });
-
-        foreach ($subevents as $index => $subevent) {
-          if (strtotime($subevent['dtstart']) > $now) {
-            $parent = compact('index', 'title', 'total', 'dtstart', 'dtend');
-            $title = $subevent['title'];
-            $dtstart = $subevent['dtstart'];
-            $dtend = $subevent['dtend'];
-            break;
-          }
-        }
-      }
-
-      $upcoming[] = compact('title', 'url', 'dtstart', 'dtend', 'parent', 'taxonomy', 'image');
+      $upcoming[] = $this->getUpcomingEvent($event);
     }
 
     usort($upcoming, function ($a, $b) {
       return strtotime($a['dtstart']) > strtotime($b['dtstart']);
     });
-
-    foreach ($upcoming as $i => $v) {
-      $this->grav['log']->debug('> ', [$i => strtotime($v['dtstart'])]);
-    }
-
 
     return $upcoming;
   }
@@ -126,38 +129,68 @@ class Jungschar extends Theme
     $header = (array) $event->header();
 
     $this->grav['log']->debug('header', $header);
-    
+
 
     $markers = [];
     $locstart = $header['locstart'] ?? null;
     $locend = $header['locend'] ?? $locstart;
     $location = $header['location'] ?? null;
-    
+
     $this->grav['log']->debug('markers', compact('locstart', 'locend', 'location'));
 
-    if ($locstart == $locend && $locstart) {
-      $markers[$locstart] = array_merge([
-        'title' => 'Treffpunkt',
-        'date' => $this->startEnd($header['dtstart'], $header['dtend'])
-      ], $this->findLatLng($locend));
-    } else {
-      if ($locstart) {
+    if (!$locend) {
+      $locend = $locstart;
+    }
+
+    if ($locstart != $location) {
+      if ($locstart == $locend) {
+        $markers[$locstart] = array_merge([
+          'title' => 'Treffpunkt',
+          'date' => $this->startEnd($header['dtstart'], $header['dtend'], true)
+        ], $this->findLatLng($locstart));
+        $markers[$location] = array_merge([
+          'title' => 'Ort',
+        ], $this->findLatLng($location));
+      }
+      else if ($location == $locend) {
+        $markers[$location] = array_merge([
+          'title' => 'Begrüssung',
+          'date' => (new DateTime($header['dtstart']))->format('j. M y G:i')
+        ], $this->findLatLng($location));
+        $markers[$locend] = array_merge([
+          'title' => 'Ort & Verabschiedung',
+          'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
+        ], $this->findLatLng($locend));
+      }
+      else {
         $markers[$locstart] = array_merge([
           'title' => 'Begrüssung',
           'date' => (new DateTime($header['dtstart']))->format('j. M y G:i')
         ], $this->findLatLng($locstart));
-      } else if ($locend) {
+        $markers[$location] = array_merge([
+          'title' => 'Ort'
+        ], $this->findLatLng($location));
         $markers[$locend] = array_merge([
           'title' => 'Verabschiedung',
           'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
         ], $this->findLatLng($locend));
       }
-    }
-
-    if (isset($location) && $location) {
-      $markers[$location] = array_merge([
-        'title' => 'Veranstaltungsort'
+    } 
+    else if ($location == $locend) {
+      $markers[$locend] = array_merge([
+        'title' => 'Treffpunkt & Ort',
+        'date' => $this->startEnd($header['dtstart'], $header['dtend'], true)
+      ], $this->findLatLng($locstart));
+    } 
+    else {
+      $markers[$locstart] = array_merge([
+        'title' => 'Ort & Begrüssung',
+        'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
       ], $this->findLatLng($location));
+      $markers[$locend] = array_merge([
+        'title' => 'Verabschiedung',
+        'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
+      ], $this->findLatLng($locend));
     }
 
     return $markers;

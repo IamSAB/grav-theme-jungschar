@@ -130,7 +130,7 @@
 
 			{% for event in page.header.events %}
 
-				<div id="{{ event.title|hyphenize }}" class="card compact bg-neutral-content shadow bordered">
+				<div id="{{ event.title|hyphenize }}" class="card compact bg-neutral-content shadow-sm bordered">
 					<div class="card-body">
 						<div class="flex">
 							<div class="uppercase text-sm font-semibold text-primary opacity-80">{{ event.dtstart|startEnd(event.dtend) }}
