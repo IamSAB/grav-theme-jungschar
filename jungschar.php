@@ -471,7 +471,7 @@ class Jungschar extends Theme
             $item['title'] = "$title [{$nr}/$total]: {$subevent['title']}";
             $item['start'] = (new DateTime($subevent['dtstart'], $tz))->format(DateTime::ISO8601);
             $item['end'] = (new DateTime($subevent['dtend'], $tz))->format(DateTime::ISO8601);
-            $item['extendedProps']['duration'] = $this->startEnd($start, $end, true);
+            $item['extendedProps']['duration'] = $this->startEnd($subevent['dtstart'], $subevent['dtend'], true);
             $item['extendedProps']['parent'] = "Anlass {$nr}/$total des {$categories[0]} '$title' vom $duration";
             $items[] = $item;
           }
