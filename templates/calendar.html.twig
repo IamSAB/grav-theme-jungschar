@@ -1,30 +1,9 @@
 {% extends 'partials/base.html.twig' %}
 
-{% set script %}
-  document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      headerToolbar: { center: 'dayGridMonth,listMonth' },
-      initialView: 'dayGridMonth',
-      weekNumbers: true,
-      locale: 'de',
-      events: {
-        url: '{{page.url}}.json',
-        method: 'GET',
-        failure: function() {
-          alert('Fehler beim Laden.');
-        },
-        color: 'grey'
-      }
-    });
-    calendar.render();
-  });
-{% endset %}
-
 {% do assets.addCss('https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css') %}
 {% do assets.addJs('https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.js') %}
 {% do assets.addJS('https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js') %}
-{% do assets.addInlineJs(script, {group: 'bottom'}) %}
+{% do assets.addJs('theme://js/calendar.js', {group: 'bottom'}) %}
 
 {% set menu %}
 		{% include 'partials/menu-aside.html.twig' with {title: 'Seiten', items: pages.children.ofOneOfTheseTypes(['page','calendar'])} %}

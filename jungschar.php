@@ -128,9 +128,6 @@ class Jungschar extends Theme
   {
     $header = (array) $event->header();
 
-    $this->grav['log']->debug('header', $header);
-
-
     $markers = [];
     $locstart = $header['locstart'] ?? null;
     $locend = $header['locend'] ?? $locstart;
@@ -144,53 +141,69 @@ class Jungschar extends Theme
 
     if ($locstart != $location) {
       if ($locstart == $locend) {
-        $markers[$locstart] = array_merge([
-          'title' => 'Treffpunkt',
+        if ($locstart) {
+          $markers[$locstart] = array_merge([
+            'title' => 'Treffpunkt',
+            'date' => $this->startEnd($header['dtstart'], $header['dtend'], true)
+          ], $this->findLatLng($locstart));
+        }
+        if ($location) {
+          $markers[$location] = array_merge([
+            'title' => 'Ort',
+          ], $this->findLatLng($location));
+        }
+      } else if ($location == $locend) {
+        if ($location) {
+          $markers[$location] = array_merge([
+            'title' => 'Begrüssung',
+            'date' => (new DateTime($header['dtstart']))->format('j. M y G:i')
+          ], $this->findLatLng($location));
+        }
+        if ($locend) {
+          $markers[$locend] = array_merge([
+            'title' => 'Ort & Verabschiedung',
+            'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
+          ], $this->findLatLng($locend));
+        }
+      } else {
+        if ($locstart) {
+          $markers[$locstart] = array_merge([
+            'title' => 'Begrüssung',
+            'date' => (new DateTime($header['dtstart']))->format('j. M y G:i')
+          ], $this->findLatLng($locstart));
+        }
+        if ($location) {
+          $markers[$location] = array_merge([
+            'title' => 'Ort'
+          ], $this->findLatLng($location));
+        }
+        if ($locend) {
+          $markers[$locend] = array_merge([
+            'title' => 'Verabschiedung',
+            'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
+          ], $this->findLatLng($locend));
+        }
+      }
+    } else if ($location == $locend) {
+      if ($location) {
+        $markers[$location] = array_merge([
+          'title' => 'Treffpunkt & Ort',
           'date' => $this->startEnd($header['dtstart'], $header['dtend'], true)
         ], $this->findLatLng($locstart));
-        $markers[$location] = array_merge([
-          'title' => 'Ort',
-        ], $this->findLatLng($location));
       }
-      else if ($location == $locend) {
-        $markers[$location] = array_merge([
-          'title' => 'Begrüssung',
-          'date' => (new DateTime($header['dtstart']))->format('j. M y G:i')
-        ], $this->findLatLng($location));
-        $markers[$locend] = array_merge([
-          'title' => 'Ort & Verabschiedung',
-          'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
-        ], $this->findLatLng($locend));
-      }
-      else {
+    } else {
+      if ($locstart) {
         $markers[$locstart] = array_merge([
-          'title' => 'Begrüssung',
-          'date' => (new DateTime($header['dtstart']))->format('j. M y G:i')
-        ], $this->findLatLng($locstart));
-        $markers[$location] = array_merge([
-          'title' => 'Ort'
+          'title' => 'Ort & Begrüssung',
+          'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
         ], $this->findLatLng($location));
+      }
+      if ($locend) {
         $markers[$locend] = array_merge([
           'title' => 'Verabschiedung',
           'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
         ], $this->findLatLng($locend));
       }
-    } 
-    else if ($location == $locend) {
-      $markers[$locend] = array_merge([
-        'title' => 'Treffpunkt & Ort',
-        'date' => $this->startEnd($header['dtstart'], $header['dtend'], true)
-      ], $this->findLatLng($locstart));
-    } 
-    else {
-      $markers[$locstart] = array_merge([
-        'title' => 'Ort & Begrüssung',
-        'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
-      ], $this->findLatLng($location));
-      $markers[$locend] = array_merge([
-        'title' => 'Verabschiedung',
-        'date' => (new DateTime($header['dtend']))->format('j. M y G:i')
-      ], $this->findLatLng($locend));
     }
 
     return $markers;
@@ -395,6 +408,16 @@ class Jungschar extends Theme
     return $vcalendar->serialize();
   }
 
+  protected function getHslFromString(string $str, $saturation = 100, $lightness = 30)
+  {
+    $chars = str_split($str);
+    $n = array_reduce($chars, function ($acc, $char) {
+      return ord($char) + (($acc << 5) - $acc);
+    }, 0);
+    $hue = $n % 360;
+    return "hsl($hue, $saturation%, $lightness%)";
+  }
+
   public function getEventsInRange($a, $b)
   {
     $rangeStart = new DateTime($a);
@@ -410,37 +433,54 @@ class Jungschar extends Theme
       ]
     ]);
 
-    $arr = [];
+    $items = [];
+    $parent = null;
     $tz = new \DateTimeZone("Europe/Zurich");
 
     // @see https://fullcalendar.io/docs/event-object
     foreach ($events as $event) {
       $header = (array) $event->header();
-      $start = new DateTime($header['dtstart'], $tz);
-      $end = new DateTime($header['dtend'], $tz);
 
-      // TODO: colorcode according to category and group
-      if (($rangeStart < $start && $start < $rangeEnd) || ($rangeStart < $end && $end < $rangeEnd) || ($start < $rangeStart && $rangeEnd < $end)) {
-        if (isset($header['events'])) {
-          foreach ($header['events'] as $subevent) {
-            $arr[] = [
-              'title' => $subevent['title'],
-              'start' => (new DateTime($subevent['dtstart'], $tz))->format(DateTime::ISO8601),
-              'end' => (new DateTime($subevent['dtend'], $tz))->format(DateTime::ISO8601),
-              'url' => $event->url()
-            ];
+      $dtstart = new DateTime($header['dtstart'], $tz);
+      $dtend = new DateTime($header['dtend'], $tz);
+
+      if (($rangeStart < $dtstart && $dtstart < $rangeEnd) || ($rangeStart < $dtend && $dtend < $rangeEnd) || ($dtstart < $rangeStart && $rangeEnd < $dtend)) {
+
+        $start = $dtstart->format(DateTime::ISO8601);
+        $end = $dtend->format(DateTime::ISO8601);
+
+        $groups = $event->taxonomy()['group'] ?? [];
+        $categories = $event->taxonomy()['category'] ?? [];
+        $subevents = $header['events'] ?? [];
+        $total = count($subevents);
+
+        // start with event item
+        $title = $event->title();
+        $url = $event->url();
+        $color = $this->getHslFromString(implode('', $groups));
+        $extendedProps = [
+          'duration' => $this->startEnd($start, $end, true),
+          'parent' => null
+        ];
+
+        if ($total > 0) {
+          $duration = $this->startEnd($start, $end);
+          foreach ($subevents as $i => $subevent) {
+            $item = compact('title', 'url', 'color', 'extendedProps');
+            $nr = $i + 1;
+            $item['title'] = "$title [{$nr}/$total]: {$subevent['title']}";
+            $item['start'] = (new DateTime($subevent['dtstart'], $tz))->format(DateTime::ISO8601);
+            $item['end'] = (new DateTime($subevent['dtend'], $tz))->format(DateTime::ISO8601);
+            $item['extendedProps']['duration'] = $this->startEnd($start, $end, true);
+            $item['extendedProps']['parent'] = "Anlass {$nr}/$total des {$categories[0]} '$title' vom $duration";
+            $items[] = $item;
           }
         } else {
-          $arr[] = [
-            'title' => $event->title(),
-            'start' => $start->format(DateTime::ISO8601),
-            'end' => $end->format(DateTime::ISO8601),
-            'url' => $event->url()
-          ];
+          $items[] = compact('title', 'url', 'start', 'end', 'extendedProps');
         }
       }
     }
-    return $arr;
+    return $items;
   }
 
   public function startEnd($a, $b, $showTime = false)
