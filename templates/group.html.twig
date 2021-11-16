@@ -184,7 +184,7 @@
     },
     order: {
       by: 'header.dtstart',
-      dir: 'asc'
+      dir: 'desc'
     },
     dateRange: {
       end: 'now',
@@ -194,7 +194,7 @@
       published: true,
       type: 'event'
     }
-  })|slice(0,6)|reverse %}
+  })|slice(0,6) %}
 
 		{% include 'partials/event-elapsed.html.twig' %}
 	{% else %}
