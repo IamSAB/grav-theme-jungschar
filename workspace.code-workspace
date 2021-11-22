@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"intelephense.environment.includePaths": [
+			"../../../system/src",
+			"../../../vendor"
+		]
+	}
+}

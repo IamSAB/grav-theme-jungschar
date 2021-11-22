@@ -53,6 +53,8 @@ class Jungschar extends Theme
     $parent = null;
     $dtstart = $header['dtstart'];
     $dtend = $header['dtend'];
+    $locstart = $header['locstart'] ?? '';
+    $locend = $header['locend'] ?? $locstart;
     $location = $header['location'] ?? '';
     $description = $header['description'] ?? '';
 
@@ -71,13 +73,15 @@ class Jungschar extends Theme
           $title = $subevent['title'];
           $dtstart = $subevent['dtstart'];
           $dtend = $subevent['dtend'];
+          $locstart = $subevent['locstart'] ?? $locstart;
+          $locend = $subevent['locend'] ?? $locstart;
           $description = $subevent['description'] ?? '';
           break;
         }
       }
     }
 
-    return compact('title', 'url', 'dtstart', 'dtend', 'parent', 'taxonomy', 'image', 'description', 'location');
+    return compact('title', 'url', 'dtstart', 'dtend', 'parent', 'taxonomy', 'image', 'description', 'location', 'locstart', 'locend');
   }
 
   public function getUpcomingEvents($items = '@root.descendants', $field = 'header.dtend')
