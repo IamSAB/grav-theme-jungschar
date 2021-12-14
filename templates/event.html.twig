@@ -41,16 +41,16 @@
 					<dt>Team</dt>
 					<dd>
 						{% for lead in page.taxonomy.lead %}
-							<a class="badge badge-primary shadow-sm mr-1 mb-1" href="/chronik/lead:{{lead}}">
+							<span class="badge badge-primary shadow-sm mr-1 mb-1">
 								{{ lead }}
-							</a>
+							</span>
 						{% endfor %}
 						{% for user in page.taxonomy.team|default([])|sort %}
-							<a class="badge badge-secondary shadow-sm mr-1 mb-1" href="/chronik/team:{{user}}">
+							<span class="badge badge-secondary shadow-sm mr-1 mb-1">
 								{{ user }}
-							</a>
+							</span>
 						{% endfor %}
-						{% if not page.taxonomy.lead and not page.taxonomy.team %}Keine Angabe.
+							{% if not page.taxonomy.lead and not page.taxonomy.team %}Keine Angabe.
 						{% endif %}
 					</dd>
 					<dt>Anmeldung</dt>
