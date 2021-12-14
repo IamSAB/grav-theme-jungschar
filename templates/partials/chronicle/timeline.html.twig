@@ -1,12 +1,11 @@
 {% set pagination = page.collection.params.pagination %}
 
 <div class="flex flex-col">
-
 	<div class="flex justify-start xl:justify-center xl:pb-6">
 		<div class="flex flex-col items-center w-20">
 			{% if not search_results and pagination.hasPrev %}
 				{% set url = (page.url ~ pagination.params ~ pagination.nextUrl)|replace({'//':'/'}) %}
-				<a class="btn btn-xs mb-3" href="{{url}}">Vorherige</a>
+				<a class="btn btn-xs mb-3" href="{{url}}#body">Vorherige</a>
 				{{ svg('theme://svg/icon/arrow-top-circle.svg', 'icon w-8 stroke-1 text-base-300 -mb-1')|raw }}
 			{% else %}
 				<div class="badge badge-lg badge-ghost text-neutral">Heute</div>
@@ -93,8 +92,6 @@
 				</div>
 			</div>
 		</div>
-	{% else %}
-		{% include 'partials/empty.html.twig' with { msg: 'Keine Einträge gefunden.' } %}
 	{% endfor %}
 
 	<div class="flex justify-start xl:justify-center xl:pt-6">
@@ -102,7 +99,7 @@
 			{% if not search_results and pagination.hasNext %}
 				{{ svg('theme://svg/icon/arrow-bottom-circle.svg', 'icon w-8 stroke-1 text-base-300 -mt-1')|raw }}
 				{% set url = (page.url ~ pagination.params ~ pagination.nextUrl)|replace({'//':'/'}) %}
-				<a class="btn btn-xs mt-3" href="{{url}}">Nächste</a>
+				<a class="btn btn-xs mt-3" href="{{url}}#body">Nächste</a>
 			{% else %}
 				<div class="badge badge-lg badge-ghost">Beginn</div>
 			{% endif %}

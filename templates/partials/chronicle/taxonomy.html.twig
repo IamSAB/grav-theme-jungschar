@@ -1,0 +1,9 @@
+{% for tax in list %}
+    {% set isActive = uri.param(name) == tax %}
+    {% set cls = isActive ? '' : 'badge-ghost' %}
+    {% set params = isActive ? params|filter((t, n) => n != name) : params|merge({(name): tax}) %}
+    <a class="badge {{ cls }}" href="{{uri.url(false)}}{{uri.buildParams(params)}}#body">
+      {{ tax }}
+      {% if isActive %}{{ svg('theme://svg/icon/x.svg', 'icon w-4 ml-1')|raw }}{% endif %}
+    </a>
+{% endfor %}

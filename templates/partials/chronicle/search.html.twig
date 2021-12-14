@@ -2,12 +2,17 @@
 	<div class="flex flex-col space-y-1">
 		{% set min_chars = config.get('plugins.simplesearch.min_query_length', 3) %}
 		<form name="search" data-simplesearch-form>
-			<input class="w-full border-none bg-base-200 text-base-content" name="searchfield" aria-label="search" type="search" {% if min_chars > 0 %} data-min="{{- min_chars -}}" {% endif %} required placeholder="{{"PLUGIN_SIMPLESEARCH.SEARCH_PLACEHOLDER"|t}}" value="{{ query|e }}" data-search-invalid="{{ "PLUGIN_SIMPLESEARCH.SEARCH_FIELD_MINIMUM_CHARACTERS"|t(min_chars)|raw }}" data-search-separator="{{ config.system.param_sep }}" data-search-input="{{ base_url }}{{ config.plugins.simplesearch.route == '@self' ? '' : (config.plugins.simplesearch.route == '/' ? '' : config.plugins.simplesearch.route) }}/query"/>
-			{% if config.plugins.simplesearch.display_button %}
-				<button type="submit" class="search-submit">
-					<img src="{{ url('plugin://simplesearch/assets/search.svg') }}"/>
-				</button>
-			{% endif %}
+			<input 
+				class="w-full border-none bg-base-200 text-base-content" 
+				name="searchfield" 
+				aria-label="search"
+				type="search"
+				{% if min_chars > 0 %} data-min="{{- min_chars -}}" {% endif %} 
+				required placeholder="{{"PLUGIN_SIMPLESEARCH.SEARCH_PLACEHOLDER"|t}}" 
+				value="{{ query|e }}"
+				data-search-invalid="{{ "PLUGIN_SIMPLESEARCH.SEARCH_FIELD_MINIMUM_CHARACTERS"|t(min_chars)|raw }}" 
+				data-search-separator="{{ config.system.param_sep }}" 
+				data-search-input="{{uri.uri(false)}}/query"/>
 		</form>
 		<div class="text-light text-sm text-base-300">
 			{% if query %}
@@ -15,10 +20,8 @@
 				{% if count is same as(1) %}
 					<span>Einen Eintrag gefunden.</span>
 				{% else %}
-					<span>{{ count }}
-						Einträge gefunden.</span>
+					<span>{{ count }} Einträge gefunden.</span>
 				{% endif %}
-				<a class="link link-hover text-neutral ml-2" href="{{page.url}}">Suche zurücksetzen</a>
 			{% else %}
 				Starte Suche mit
 				<kbd class"kbd">ENTER</kbd>
