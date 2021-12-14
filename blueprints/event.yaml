@@ -23,6 +23,18 @@ form:
                       title: Allgemein
                       underline: true
 
+                    header.tbd:
+                      type: toggle
+                      label: Infos folgen
+                      description: Infos zum Anlass sind noch nicht komplett. Es wird nur Titel, Start- und Enddatum angezeigt.
+                      highlight: 1
+                      default: 1
+                      options:
+                        1: Ja
+                        0: Nein
+                      validate:
+                        type: bool
+
                     header.subtitle:
                       label: Untertitel
                       type: text
