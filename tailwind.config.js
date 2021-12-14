@@ -5,19 +5,19 @@ const jsek = {
   'primary': colors.sky[800], //'#29588d',
   'primary-focus': colors.sky[900], //'#214875',
   'primary-content': colors.sky[50], //'#bdd3ec'
-  "secondary":  colors.blueGray[300], //"#8bb1dd",
-  "secondary-focus": colors.blueGray[400], // "#6497d2",
-  "secondary-content": colors.blueGray[900], //"#fff",
+  "secondary":  colors.slate[300], //"#8bb1dd",
+  "secondary-focus": colors.slate[400], // "#6497d2",
+  "secondary-content": colors.slate[900], //"#fff",
   "accent": colors.violet[300], // "#fae5e5",
   "accent-focus": colors.violet[500], //"#f4bebe",
   "accent-content": colors.violet[50],//"#322020",
-  "neutral": colors.warmGray[600], //"#5d5656",
-  "neutral-focus": colors.warmGray[700], //"#2a2727",
-  "neutral-content": colors.warmGray[50], //"#e9e7e7",
-  "base-100": colors.warmGray[100], //"#e9e7e7",
-  "base-200": colors.warmGray[200], //"#d1cccc",
-  "base-300": colors.warmGray[300], //"#b9b1b1",
-  "base-content": colors.warmGray[800], //"#100f0f",
+  "neutral": colors.stone[600], //"#5d5656",
+  "neutral-focus": colors.stone[700], //"#2a2727",
+  "neutral-content": colors.stone[50], //"#e9e7e7",
+  "base-100": colors.stone[100], //"#e9e7e7",
+  "base-200": colors.stone[200], //"#d1cccc",
+  "base-300": colors.stone[300], //"#b9b1b1",
+  "base-content": colors.stone[800], //"#100f0f",
   "info": colors.blue[400], //"#2094f3",
   "success": colors.emerald[400], // "#009485",
   "warning": colors.orange[400], //"#ff9900",
@@ -55,18 +55,11 @@ const eagles = {
 }
 
 module.exports = {
-  purge: {
-    content: [
-      'templates/**/*.twig',
-      '../../pages/**/*.md',
-      'svg/*.svg',
-    ],
-    options: {
-      safelist: [
-        /data-theme$/,
-      ]
-    },
-  },
+  content: [
+    'templates/**/*.twig',
+    '../../pages/**/*.md',
+    'svg/*.svg',
+  ],
   theme: {
     extend: {
       typography: {
