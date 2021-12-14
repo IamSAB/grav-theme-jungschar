@@ -40,7 +40,7 @@
 		<div class="flex-1"></div>
 	</div>
 	{% do assets.add('theme://js/scrollspy.js') %}
-	{% do assets.addInlineJs("scrollSpy('#scrollspy-sections'); scrollSpy('#scrollspy-sections-drawer');", {group: 'bottom'}) %}
+	{% do assets.add('theme://js/sections.js') %}
 {% endblock %}
 
 {% block drawer %}
