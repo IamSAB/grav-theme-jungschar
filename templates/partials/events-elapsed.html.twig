@@ -1,0 +1,11 @@
+{% set events = page.collection(content)|slice(0,count|default(6)) %}
+
+{% if events|length %}
+	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mt-6">
+		{% for event in  events %}
+			{% include 'partials/event-elapsed.html.twig' %}
+		{% endfor %}
+	</div>
+{% else %}
+		{% include 'partials/empty.html.twig' with {msg: 'Keine vergangene Anlässe.'} %}
+{% endif %}

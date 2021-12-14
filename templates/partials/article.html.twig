@@ -1,0 +1,7 @@
+{% if content %}
+	<article class="prose mx-auto">
+		{{ content|raw }}
+	</article>
+{% else %}
+	{% include 'partials/empty.html.twig'  with {msg: 'Inhalt nicht vorhanden.'} %}
+{% endif %}

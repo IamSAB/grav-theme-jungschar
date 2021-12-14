@@ -1,0 +1,166 @@
+<div class="space-y-12">
+	<div class="flex flex-wrap justify-center">
+
+		{% for group in page.taxonomy.group %}
+			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/{{group|lower}}">
+				{{ svg('theme://svg/icon/circles.svg', 'icon w-4 mr-1')|raw }}
+				{{ group }}
+			</a>
+		{% endfor %}
+
+		{% for category in page.taxonomy.category %}
+			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/chronik/category:{{category}}">
+				{{ svg('theme://svg/icon/folder.svg', 'icon w-4 mr-1')|raw }}
+				{{ category }}
+			</a>
+		{% endfor %}
+
+		{% for tag in page.taxonomy.tag %}
+			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/chronik/tag:{{tag}}">
+				{{ svg('theme://svg/icon/bookmark.svg', 'icon w-4 mr-1')|raw }}
+				{{ tag }}
+			</a>
+		{% endfor %}
+
+	</div>
+
+	<div class="text-center text-lg font-bold text-neutral">
+		{% if date(page.header.dtstart) < date() and date() < date(page.header.dtend) %}
+			Läuft momentan.
+		{% else %}
+			{{ page.header.dtstart|nicetime }}
+		{% endif %}
+	</div>
+
+	<dl class="columns-2">
+		<dt>Beschreibung</dt>
+		<dd>
+			<h2 class="card-title">{{ page.header.subtitle }}</h2>
+			<div class="prose">
+				{{ page.header.description ? page.header.description|markdown : 'Keine Beschreibung vorhanden.' }}
+			</div>
+		</dd>
+		<dt>Team</dt>
+		<dd>
+			{% if not page.taxonomy.lead and not page.taxonomy.team %}
+				Keine Angabe.
+			{% else %}
+				{% for lead in page.taxonomy.lead|default([])|sort %}
+					<span class="badge badge-primary shadow-sm mr-1 mb-1">
+						{{ lead }}
+					</span>
+				{% endfor %}
+				{% for user in page.taxonomy.team|default([])|sort %}
+					<span class="badge badge-secondary shadow-sm mr-1 mb-1">
+						{{ user }}
+					</span>
+				{% endfor %}
+			{% endif %}
+		</dd>
+		{% if page.header.dtend|date < 'now'|date %}
+			<dt>Anmeldung</dt>
+			<dd>
+				{% if page.header.registration.required %}
+					{% if page.header.registration.dtend and date() < date(page.header.registration.dtend) %}
+						<div class="font-light">
+							Anmeldung schliesst am
+							{{ page.header.registration.dtend|date('d. M y G:i') }}.
+						</div>
+						<div class="prose-sm mt-3">
+							{{ page.header.registration.description|markdown }}
+						</div>
+					{% else %}
+						<div>Noch nicht möglich. Infos folgen!</div>
+					{% endif %}
+				{% else %}
+					<div>Nicht nötig. Schau einfach vorbei!</div>
+				{% endif %}
+			</dd>
+		{% endif %}
+
+		{% if page.header.flyer %}
+			{% set flyer = page.media[page.header.flyer] %}
+			<dt>Flyer</dt>
+			<dd class="flex items-center">
+				{{ svg('theme://svg/icon/file-text.svg', 'icon w-5 inline')|raw }}
+				<span>PDF</span>
+				<a class="ml-2 link link-hover" href="{{flyer.url}}">Herunterladen</a>
+			</dd>
+		{% endif %}
+
+		<dt>Dauer</dt>
+		<dd>{{ page.header.dtstart|startEnd(page.header.dtend, true) }}</dd>
+
+		<dt>Ort</dt>
+		<dd>{{ page.header.location ?? 'Keine Angabe' }}</dd>
+
+		<dt>Begrüssung</dt>
+		<dd>
+			<div>{{ page.header.dtstart|date('d. M Y G:i') }}</div>
+			<div class="font-light">{{ page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
+		</dd>
+
+		<dt>Verabschiedung</dt>
+		<dd>
+			<div>{{ page.header.dtend|date('d. M Y G:i') }}</div>
+			<div class="font-light">{{ page.header.locend ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
+		</dd>
+
+		{% if page.header.cost %}
+			<dt>Kosten</dt>
+			<dd>
+				CHF
+				<b>{{ page.header.cost.amount }}</b>
+				<em>
+					{{ page.header.cost.note }}</em>
+			</dd>
+		{% endif %}
+
+	</dl>
+
+	{% set locations = getLocationAndVenues(page) %}
+	{% if locations|count %}
+		<div class="h-96" id="map">
+			{% do assets.addInlineJs("var locations = "~locations|json_encode, {group: 'bottom'}) %}
+			{% do assets.addJs('theme://js/event.js') %}
+			{% do assets.addJs('https://maps.googleapis.com/maps/api/js?callback=initMap&key='~getGoogleMapsApiKey(), {loading: 'async'}) %}
+		</div>
+	{% endif %}
+
+	{% if page.header.events %}
+		<div class="grid grid-cols-3 gap-6">
+
+			{% for event in page.header.events %}
+
+				<div id="{{ event.title|hyphenize }}" class="card compact bg-neutral-content shadow-sm bordered">
+					<div class="card-body">
+						<div class="flex">
+							<div class="uppercase text-sm font-semibold text-primary opacity-80">{{ event.dtstart|startEnd(event.dtend) }}
+							</div>
+							<div class="font-light ml-2">{{ event.location ?? page.header.location }}</div>
+						</div>
+						<h4 class="text-lg font-bold mt-1">{{ event.title }}</h4>
+
+						<dl>
+							<dt>Begrüssung</dt>
+							<dd class="flex flex-wrap">
+								<div class="font-medium mr-2">{{ event.dtstart|startEndTime(event.dtend) }}</div>
+								<div class="font-light">{{ event.locstart ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
+							</dd>
+							<dt>Verabschiedung</dt>
+							<dd class="flex flex-wrap">
+								<div class="font-medium mr-2">{{ event.dtend|startEndTime(event.dtstart) }}</div>
+								<div class="font-light">{{ event.locend ?? event.locstart ?? page.header.locend ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
+							</dd>
+							{% if event.description %}
+								<dt>Anmerkung</dt>
+								<dd class="prose prose-sm">{{ event.description }}</dd>
+							{% endif %}
+						</dl>
+
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+</div>

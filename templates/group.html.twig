@@ -8,205 +8,10 @@
 	</article>
 {% endblock %}
 
-{% set content_about %}
-<article class="prose mx-auto">
-	{{ page.content|raw }}
-</article>
-{% endset %}
-
-{% set semester = page.collection({
-  items: {
-    'taxonomy@': {
-      category: 'Semester',
-      group: page.title
-    }
-  },
-  order: {
-    by: 'header.dtend',
-    dir: 'asc'
-  },
-  dateRange: {
-    start: 'now',
-    field: 'header.dtend'
-  },
-  filter: {
-    published: true,
-    type: 'event'
-  }
-})|first %}
-
-{% set content_semester %}
-
-{% set upcoming = getUpcomingEvent(semester) %}
-
-<div class="flex flex-col lg:flex-row items-center justify-center lg:items-stretch">
-
-	<div class="card bordered w-full sm:w-2/3 lg:flex-1 lg:mb-16 lg:mt-24 shadow-sm bg-base-200">
-		<div class="card-body">
-			<div class="card-title text-center">Team</div>
-			<dl class="text-center">
-				<dt>Teamleiter</dt>
-				<dd>
-					<div>
-						{{ svg('theme://svg/icon/user.svg','icon w-4 mr-1 inline')|raw }}
-						{{ semester.taxonomy.lead|first }}
-					</div>
-					<div>
-						{{ svg('theme://svg/icon/mail.svg','icon w-4 mr-1 inline')|raw }}
-						{% include 'partials/link-mail.html.twig' with {email: page.header.contact.email} %}
-					</div>
-					<div>
-						{{ svg('theme://svg/icon/phone.svg','icon w-4 mr-1 inline')|raw }}
-						{% include 'partials/link-tel.html.twig' with {tel: page.header.contact.tel} %}
-					</div>
-				</dd>
-				<dt>Team</dt>
-				<dd>{{ semester.taxonomy.team|join(', ') }}</dd>
-				<dt>Teambegleitung</dt>
-				<dd>
-					<div>
-						{{ svg('theme://svg/icon/user.svg','icon w-4 mr-1 inline')|raw }}
-						{{ page.header.coach.name }}
-					</div>
-					<div>
-						{{ svg('theme://svg/icon/phone.svg','icon w-4 mr-1 inline')|raw }}
-						{% include 'partials/link-tel.html.twig' with {tel: page.header.coach.tel} %}
-					</div>
-				</dd>
-			</dl>
-		</div>
-	</div>
-
-	<div class="indicator w-full mt-14 mb-4 lg:mb-0 lg:mt-10 lg:w-2/5 lg:mx-6">
-
-		<div class="indicator-item indicator-center w-20 h-20 filter drop-shadow-md">
-			<div class="mask mask-squircle flex flex-col items-center justify-center bg-primary text-primary-content w-full h-full">
-				<div class="font-extrabold text-xl">{{ upcoming.dtstart|date('j')}}</div>
-				<div class="font-light -mt-1">{{ upcoming.dtstart|date('M')}}</div>
-			</div>
-		</div>
-
-		<div class="card w-full bg-neutral-content shadow-md">
-
-			{% if upcoming.image %}
-				<figure>
-					{{ upcoming.image.cropZoom(600, 300).html|raw }}
-				</figure>
-			{% else %}
-				<div class="mt-10"></div>
-			{% endif %}
-
-			<div class="card-body">
-
-				<header class="text-center mb-5">
-					<div class="uppercase font-semibold tracking-wider text-sm text-primary-focus opacity-80">{{ upcoming.parent.title }}</div>
-					<h2 class="card-title mb-0 text-center">
-						<a href="{{upcoming.url}}">{{ upcoming.title }}
-							[{{ upcoming.parent.index + 1}}/{{ upcoming.parent.total }}]</a>
-					</h2>
-				</header>
-
-				<dl>
-					<dt>Dauer</dt>
-					<dd>{{ upcoming.dtstart|startEnd(upcoming.dtend, true) }}</dd>
-					<dt>Ort</dt>
-					<dd>{{ upcoming.location ?? 'Keine Angabe' }}</dd>
-					<dt>Begrüssung</dt>
-					<dd>
-						<div>{{ upcoming.dtstart|date('d. M Y G:i') }}</div>
-						<div class="font-light">{{ upcoming.locstart ?? 'Treffpunkt unbekannt.' }}</div>
-					</dd>
-					<dt>Verabschiedung</dt>
-					<dd>
-						<div>{{ upcoming.dtend|date('d. M Y G:i') }}</div>
-						<div class="font-light">{{ upcoming.locend ?? 'Treffpunkt unbekannt.' }}</div>
-					</dd>
-					{% if upcoming.description %}
-						<dt>Anmerkung</dt>
-						<dd class="prose prose-sm">{{ upcoming.description }}</dd>
-					{% endif %}
-				</dl>
-
-				<div class="flex justify-center mt-4">
-					<a class="btn btn-outline btn-xs" href="{{ upcoming.url }}{{ '#'~event.title|hyphenize}}">Details</a>
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<div class="card bordered w-full sm:w-2/3 lg:flex-1 lg:mb-16 lg:mt-24 shadow-sm bg-base-200">
-		<div class="card-body text-center">
-			<div class="card-title">Infos</div>
-			<dl>
-				<dt>Thema</dt>
-				<dd>
-          <span>{{ semester.title }}</span> / <span class="font-light">{{ semester.header.subtitle }}</span>
-				</dd>
-				<dt>Dauer</dt>
-				<dd>{{ semester.header.dtstart|startEnd(semester.header.dtend) }}</dd>
-				<dt>Beschreibung</dt>
-				<dd class="prose prose-sm">
-          {{ semester.header.description|markdown }}
-				</dd>
-				<dt>Ausrüstung</dt>
-				<dd class="prose prose-sm">
-					{{ config.theme.group.note|markdown }}
-				</dd>
-			</dl>
-		</div>
-	</div>
-
-</div>
-{% endset %}
-
-{% set content_gallery %}
-{% include 'partials/gallery.html.twig' with { images: page.media.images ?? [] } %}
-{% endset %}
-
-{% set content_outlook %}
-<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-	{% for event in getUpcomingEvents({'@taxonomy.group': page.title}, 'header.dtstart')|slice(0,6) %}
-		{% include 'partials/event-upcoming.html.twig' %}
-	{% else %}
-		{% include 'partials/empty.html.twig' with {msg: 'Keine anstehende Anlässe.'} %}
-	{% endfor %}
-</div>
-{% endset %}
-
-{% set content_moments %}
-<div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-	{% for event in page.collection({
-    items: {
-      'taxonomy@': {
-        group: page.title
-      }
-    },
-    order: {
-      by: 'header.dtstart',
-      dir: 'desc'
-    },
-    dateRange: {
-      end: 'now',
-      field: 'header.dtend'
-    },
-    filter: {
-      published: true,
-      type: 'event'
-    }
-  })|slice(0,6) %}
-
-		{% include 'partials/event-elapsed.html.twig' %}
-	{% else %}
-		{% include 'partials/empty.html.twig' with {msg: 'Keine vergangene Anlässe.'} %}
-	{% endfor %}
-</div>
-{% endset %}
-
 {% set sections = [
   {
     title: page.title,
-    content: content_about,
+    content: include('partials/article.html.twig', { content: page.content }),
     slug: 'ueber',
     header: {
       subtitle: page.header.slogan,
@@ -216,7 +21,7 @@
   {
     title: 'Semester',
     slug: 'semester',
-    content: content_semester,
+    content: include('partials/semester.html.twig', {group: page.title }),
     header: {
       subtitle: 'Nachmittage',
       icon: 'trees.svg'
@@ -225,7 +30,9 @@
   {
     title: 'Galerie',
     slug: 'galerie',
-    content: content_gallery,
+    content: include('partials/gallery.html.twig', { 
+			images: page.media.images ?? []
+		}),
     header: {
       subtitle: 'Impressionen',
       icon: 'photo.svg'
@@ -234,16 +41,41 @@
   {
     title: 'Ausblick',
     slug: 'ausblick',
-    content: content_outlook,
-    header: {
-      icon: 'calendar.svg',
-      subtitle: 'Lager und Spezial'
-    }
-  },
-  {
-    title: 'Rückblick',
-    slug: 'rueckblick',
-    content: content_moments,
+    content: include('partials/events-upcoming.html.twig', {
+			items: {
+				'@taxonomy.group': page.title
+			}, 
+			field: 'header.dtstart'
+		}),
+		header: {
+			icon: 'calendar.svg',
+			subtitle: 'Lager und Spezial'
+		}
+	},
+	{
+		title: 'Rückblick',
+		slug: 'rueckblick',
+		content: include('partials/events-elapsed.html.twig', {
+			content: {
+				items: {
+					'taxonomy@': {
+						group: page.title
+					}
+				},
+				order: {
+					by: 'header.dtstart',
+					dir: 'desc'
+				},
+				dateRange: {
+					end: 'now',
+					field: 'header.dtend'
+				},
+				filter: {
+					published: true,
+					type: 'event'
+				}
+			}
+		}),
     header: {
       icon: 'history.svg',
       subtitle: 'Bisherige Erlebnisse'

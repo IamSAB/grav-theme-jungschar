@@ -551,7 +551,7 @@ class Jungschar extends Theme
   public function sortByExifCreated($images)
   {
     if (!extension_loaded('exif')) {
-      throw new \RuntimeException('You need to EXIF PHP Extension to use this function');
+      throw new \RuntimeException('You need the EXIF PHP Extension to use this function.');
     }
 
     $known = [];

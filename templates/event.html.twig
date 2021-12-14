@@ -6,207 +6,83 @@
 	<div class="text-2xl md:text-3xl text-bold text-base-100">{{ page.header.subtitle }}</div>
 {% endblock %}
 
-{% set infos %}
-<div class="space-y-12">
-	<div class="flex flex-wrap justify-center">
-		{% for group in page.taxonomy.group %}
-			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/{{group|lower}}">
-				{{ svg('theme://svg/icon/circles.svg', 'icon w-4 mr-1')|raw }}
-				{{ group }}
-			</a>
-		{% endfor %}
-		{% for category in page.taxonomy.category %}
-			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/chronik/category:{{category}}">
-				{{ svg('theme://svg/icon/folder.svg', 'icon w-4 mr-1')|raw }}
-				{{ category }}
-			</a>
-		{% endfor %}
-		{% for tag in page.taxonomy.tag %}
-			<a class="badge badge-lg badge-secondary shadow-sm mr-2 mb-2" href="/chronik/tag:{{tag}}">
-				{{ svg('theme://svg/icon/bookmark.svg', 'icon w-4 mr-1')|raw }}
-				{{ tag }}
-			</a>
-		{% endfor %}
-	</div>
-
-	<div class="grid lg:grid-cols-2 gap-8">
-
-		<div class="card">
-			<div class="card-body">
-				<h2 class="card-title">{{ page.header.subtitle }}</h2>
-				<div class="prose">
-					{{ page.header.description ? page.header.description|markdown : 'Keine Beschreibung vorhanden.' }}
-				</div>
-				<dl class="mt-3">
-					<dt>Team</dt>
-					<dd>
-						{% for lead in page.taxonomy.lead %}
-							<span class="badge badge-primary shadow-sm mr-1 mb-1">
-								{{ lead }}
-							</span>
-						{% endfor %}
-						{% for user in page.taxonomy.team|default([])|sort %}
-							<span class="badge badge-secondary shadow-sm mr-1 mb-1">
-								{{ user }}
-							</span>
-						{% endfor %}
-							{% if not page.taxonomy.lead and not page.taxonomy.team %}Keine Angabe.
-						{% endif %}
-					</dd>
-					<dt>Anmeldung</dt>
-					<dd>
-						{% if page.header.registration.required %}
-							{% if page.header.registration.dtend and date() < date(page.header.registration.dtend) %}
-								<div class="font-light">
-									Anmeldung schliesst am
-									{{ page.header.registration.dtend|date('d. M y G:i') }}.
-								</div>
-								<div class="prose-sm mt-3">
-									{{ page.header.registration.description|markdown }}
-								</div>
-							{% else %}
-								<div>Noch nicht möglich. Infos folgen!</div>
-							{% endif %}
-						{% else %}
-							<div>Nicht nötig. Schau einfach vorbei!</div>
-						{% endif %}
-					</dd>
-					{% if page.header.flyer %}
-						{% set flyer = page.media[page.header.flyer] %}
-						<dt>Flyer</dt>
-						<dd class="flex items-center">
-							{{ svg('theme://svg/icon/file-text.svg', 'icon w-5 inline')|raw }}
-							<span>PDF</span>
-							<a class="ml-2 link link-hover" href="{{flyer.url}}">Herunterladen</a>
-						</dd>
-					{% endif %}
-				</dl>
-			</div>
-		</div>
-
-		<div class="card">
-			<div class="card-body">
-				<dl>
-					<dt>Dauer</dt>
-					<dd>{{ page.header.dtstart|startEnd(page.header.dtend, true) }}</dd>
-					<dt>Ort</dt>
-					<dd>{{ page.header.location ?? 'Keine Angabe' }}</dd>
-					<dt>Begrüssung</dt>
-					<dd>
-						<div>{{ page.header.dtstart|date('d. M Y G:i') }}</div>
-						<div class="font-light">{{ page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
-					</dd>
-					<dt>Verabschiedung</dt>
-					<dd>
-						<div>{{ page.header.dtend|date('d. M Y G:i') }}</div>
-						<div class="font-light">{{ page.header.locend ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
-					</dd>
-					{% if page.header.cost %}
-						<dt>Kosten</dt>
-						<dd>
-							CHF
-							<b>{{ page.header.cost.amount }}</b>
-							<em>
-								{{ page.header.cost.note }}</em>
-						</dd>
-					{% endif %}
-				</dl>
-			</div>
-		</div>
-
-		{% set locations = getLocationAndVenues(page) %}
-		{% if locations|count %}
-			<div class="lg:col-span-2 h-96" id="map">
-				{% do assets.addInlineJs("var locations = "~locations|json_encode, {group: 'bottom'}) %}
-				{% do assets.addJs('theme://js/event.js') %}
-				{% do assets.addJs('https://maps.googleapis.com/maps/api/js?callback=initMap&key='~getGoogleMapsApiKey(), {loading: 'async'}) %}
-			</div>
-		{% endif %}
-
-	</div>
-
-	{% if page.header.events %}
-		<div class="lg:col-span-2 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-			{% for event in page.header.events %}
-
-				<div id="{{ event.title|hyphenize }}" class="card compact bg-neutral-content shadow-sm bordered">
-					<div class="card-body">
-						<div class="flex">
-							<div class="uppercase text-sm font-semibold text-primary opacity-80">{{ event.dtstart|startEnd(event.dtend) }}
-							</div>
-							<div class="font-light ml-2">{{ event.location ?? page.header.location }}</div>
-						</div>
-						<h4 class="text-lg font-bold mt-1">{{ event.title }}</h4>
-
-						<dl>
-							<dt>Begrüssung</dt>
-							<dd class="flex flex-wrap">
-								<div class="font-medium mr-2">{{ event.dtstart|startEndTime(event.dtend) }}</div>
-								<div class="font-light">{{ event.locstart ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
-							</dd>
-							<dt>Verabschiedung</dt>
-							<dd class="flex flex-wrap">
-								<div class="font-medium mr-2">{{ event.dtend|startEndTime(event.dtstart) }}</div>
-								<div class="font-light">{{ event.locend ?? event.locstart ?? page.header.locend ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
-							</dd>
-							{% if event.description %}
-								<dt>Anmerkung</dt>
-								<dd class="prose prose-sm">{{ event.description }}</dd>
-							{% endif %}
-						</dl>
-
-					</div>
-				</div>
-			{% endfor %}
-		</div>
-	{% endif %}
-</div>
-
-{% endset %}
-
-{% set article %}
-{% if page.content %}
-	<article class="prose mx-auto">
-		{{ page.content|raw }}
-	</article>
-{% else %}
-	{% include 'partials/empty.html.twig'  with {msg: 'Kein Bericht vorhanden'} %}
-{% endif %}
-{% endset %}
-
-{% set gallery %}
-{% include 'partials/gallery.html.twig' with { images: page.media.images ?? [] } %}
-{% endset %}
-
 {% set sections = [
-  {
-    title: 'Infos',
-    content: infos,
-    slug: 'infos',
-    header: {
-      subtitle: page.title,
-      icon: 'calendar-event.svg',
-    }
-  },
-  {
-    title: 'Bericht',
-    slug: 'bericht',
-    content: article,
-    header: {
-      icon: 'news.svg',
-      subtitle: 'Rückblick'
-    }
-  },
-  {
-    title: 'Gallerie',
-    slug: 'gallerie',
-    content: gallery,
-    header: {
-      icon: 'photo.svg',
-      subtitle: 'Impressionen'
-    }
-  }
+	{
+		title: 'Infos',
+		slug: 'infos',
+		content: (
+			page.header.tbd 
+			? include('partials/empty.html.twig', {msg: 'Infos folgen.'}) 
+			: include('partials/event-infos.html.twig')
+		),
+		header: {
+			icon: 'calendar-event.svg',
+			subtitle: page.title
+		}
+	}
 ] %}
+
+{% if event.header.dtend|date < 'now'|date %}
+
+	{% if page.content %}
+		{% set sections = sections|merge([{
+			title: 'Bericht',
+			slug: 'bericht',
+			content: include('partials/article.html.twig', { 
+				content: page.content 
+			}),
+			header: {
+				icon: 'news.svg',
+				subtitle: 'Rückblick'
+			}
+		}]) %}
+	{% endif %}
+
+	{% set images = page.media.images ?? [] %}
+	{% if images|length > 1 %}
+		{% set sections = sections|merge([{
+			title: 'Galerie',
+			slug: 'galerie',
+			content: include('partials/gallery.html.twig', { 
+				images: page.media.images ?? []
+			}),
+			header: {
+				icon: 'photo.svg',
+				subtitle: 'Impressionen'
+			}
+		}]) %}
+	{% endif %}
+	
+{% endif %}
+
+{% set sections = sections|merge([{
+	title: 'Verwandt',
+	slug: 'verwandt',
+	content: include('partials/events-elapsed.html.twig', { 
+		content: {
+			items: {
+				'taxonomy@': {
+					category: page.taxonomy.category
+				}
+			},
+			order: {
+				by: 'header.dtstart',
+				dir: 'desc'
+			},
+			dateRange: {
+				end: 'now',
+				field: 'header.dtend'
+			},
+			filter: {
+				published: true,
+				type: 'event'
+			}
+		}
+	}),
+	header: {
+		icon: 'network.svg',
+		subtitle: 'Vergangene Anlässe'
+	}
+}]) %}
 
 {% use 'blocks/sections.html.twig' %}
