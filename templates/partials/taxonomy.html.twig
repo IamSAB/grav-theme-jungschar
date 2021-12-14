@@ -1,7 +1,6 @@
 {% for tax in list %}
     {% set active = uri.param(name) == tax ? '' : 'badge-ghost' %}
     <a class="badge {{ active }}" href="/chronik/{{ name }}{{ config.system.param_sep }}{{ tax }}#body">
-      {# {{ svg('theme://svg/icon/'~icon~'.svg', 'icon w-4 mr-1')|raw }} #}
       {{ tax }}
     </a>
 {% endfor %}
