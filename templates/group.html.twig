@@ -42,10 +42,7 @@
     title: 'Ausblick',
     slug: 'ausblick',
     content: include('partials/events-upcoming.html.twig', {
-			items: {
-				'@taxonomy.group': page.title
-			}, 
-			field: 'header.dtstart'
+			events: getUpcomingEvents({'@taxonomy.group': page.title}, 'header.dtstart')
 		}),
 		header: {
 			icon: 'calendar.svg',
@@ -56,7 +53,7 @@
 		title: 'Rückblick',
 		slug: 'rueckblick',
 		content: include('partials/events-elapsed.html.twig', {
-			content: {
+			events: page.collection({
 				items: {
 					'taxonomy@': {
 						group: page.title
@@ -74,7 +71,7 @@
 					published: true,
 					type: 'event'
 				}
-			}
+			})
 		}),
     header: {
       icon: 'history.svg',

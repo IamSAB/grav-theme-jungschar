@@ -2,5 +2,5 @@
 	<div class="prose mx-auto {{ page.header.centered ? 'text-center' : '' }}">
 		{{ page.content|raw }}
 	</div>
-	{% include 'partials/events-upcoming.html.twig' %}
+	{% include 'partials/events-upcoming.html.twig' with {events: getUpcomingEvents()} %}
 </div>

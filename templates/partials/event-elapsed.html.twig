@@ -1,8 +1,31 @@
 <div class="w-full bg-neutral-content shadow rounded-box">
 
-	<div class=" p-5">
-		<div class="text-primary font-medium uppercase text-sm tracking-wide">{{ event.taxonomy.category|first }}</div>
-		<h3 class="text-xl font-bold">{{ event.title }}</h3>
+	<div class="p-5">
+		<div class="flex items-center justify-between">
+			<div>
+				<div class="text-primary font-medium uppercase text-xs tracking-wide">{{ event.taxonomy.category|first }}</div>
+				<h3 class="text-lg font-bold">
+					<a href="{{ event.url }}">{{ event.title }}</a>
+				</h3>
+			</div>
+			<div class="flex text-neutral">
+				{% if event.media.images|length > 1 %}
+					<div data-tip="Galerie" class="tooltip">
+						<a href="{{event.url}}#galerie">
+							{{ svg('theme://svg/icon/photo.svg', 'icon w-6')|raw }}
+						</a>
+					</div>
+				{% endif %}
+				{% if event.content %}
+				<div data-tip="Bericht" class="tooltip">
+					<a href="{{event.url}}#bericht">
+						{{ svg('theme://svg/icon/news.svg', 'icon w-6')|raw }}
+					</a>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+
 	</div>
 
 	{% set image = event.media.images|first %}

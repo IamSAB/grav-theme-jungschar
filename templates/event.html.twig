@@ -22,7 +22,7 @@
 	}
 ] %}
 
-{% if event.header.dtend|date < 'now'|date %}
+{% if date(page.header.dtend) < date() %}
 
 	{% if page.content %}
 		{% set sections = sections|merge([{
@@ -59,7 +59,7 @@
 	title: 'Verwandt',
 	slug: 'verwandt',
 	content: include('partials/events-elapsed.html.twig', { 
-		content: {
+		events: page.collection({
 			items: {
 				'taxonomy@': {
 					category: page.taxonomy.category
@@ -77,7 +77,7 @@
 				published: true,
 				type: 'event'
 			}
-		}
+		})
 	}),
 	header: {
 		icon: 'network.svg',

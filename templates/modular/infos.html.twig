@@ -7,8 +7,8 @@
 			<div class="w-full bg-neutral-content shadow rounded-box">
 
 				<div class="p-5">
-					<div class="text-primary font-medium uppercase text-sm tracking-wide">{{ item.taxonomy.tag|first }}</div>
-					<h3 class="text-xl font-bold">{{ item.title }}</h3>
+					<div class="text-primary font-medium uppercase text-xs tracking-wide">{{ item.taxonomy.tag|first }}</div>
+					<h3 class="text-lg font-bold">{{ item.title }}</h3>
 				</div>
 
 				{% set image = item.media.images|first %}

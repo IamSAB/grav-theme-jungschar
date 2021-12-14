@@ -84,7 +84,7 @@ class Jungschar extends Theme
     return compact('title', 'url', 'dtstart', 'dtend', 'parent', 'taxonomy', 'image', 'description', 'location', 'locstart', 'locend');
   }
 
-  public function getUpcomingEvents($items = '@root.descendants', $field = 'header.dtend')
+  public function getUpcomingEvents($items = '@root.descendants', $field = 'header.dtend', $limit = 6)
   {
     $events = $this->grav['page']->collection([
       'items' => $items,
@@ -107,7 +107,7 @@ class Jungschar extends Theme
       return strtotime($a['dtstart']) > strtotime($b['dtstart']);
     });
 
-    return $upcoming;
+    return array_slice($upcoming, 0, $limit);
   }
 
   private function geocode(string $address)

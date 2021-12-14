@@ -2,5 +2,22 @@
 	<div class="prose mx-auto {{ page.header.centered ? 'text-center' : '' }}">
 		{{ page.content|raw }}
 	</div>
-	{% include 'partials/events-elapsed.html.twig' %}
+	{% include 'partials/events-elapsed.html.twig' with {
+		events: page.collection({
+			items: '@root.descendants',
+			filter: {
+				type: 'event',
+				published: true
+			},
+			order: {
+				by: 'header.dtend',
+				dir: 'desc'
+			},
+			dateRange: {
+				end: 'now',
+				field: 'header.dtend'
+			},
+			limit: 6
+		})
+	} %}
 </div>

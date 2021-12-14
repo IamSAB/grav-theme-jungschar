@@ -1,8 +1,8 @@
-{% set events = content ? page.collection(content) : page.collection %}
+{% set events = events|default([]) %}
 
 {% if events|length %}
 	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
-		{% for event in events|slice(0,count|default(6)) %}
+		{% for event in events %}
 			{% include 'partials/event-elapsed.html.twig' %}
 		{% endfor %}
 	</div>

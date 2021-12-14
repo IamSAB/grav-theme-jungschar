@@ -2,10 +2,13 @@
 
 	<div class="p-5">
 		<div class="flex items-center justify-between">
-			<div class="whitespace-nowrap bg-primary rounded-lg font-bold tracking-wide uppercase py-2 px-3 text-primary-content text-sm">
+			<div class="whitespace-nowrap bg-primary rounded-lg font-bold tracking-wide uppercase py-2 px-3 text-primary-content text-sm mr-5">
 				{{ event.dtstart|date('j. M') }}
 			</div>
-			<div class="uppercase font-semibold text-sm tracking-wide text-primary opacity-90">{{ event.taxonomy.category|first }}</div>
+			<div class="text-right">
+				<div class="uppercase font-medium text-xs tracking-wide text-primary opacity-90">{{ event.taxonomy.category|first }}</div>
+				<h3 class="text-lg font-semibold">{{ event.title }}</h3>
+			</div>
 		</div>
 	</div>
 
@@ -23,11 +26,12 @@
 				</a>
 			{% endfor %}
 		</div>
-		<h2 class="card-title text-center mt-5">
-			<a href="{{event.url}}">{{ event.title }}</a>
-		</h2>
+		<div class="flex items-center justify-between mt-3">
+			<div class="font-medim text-sm">{{ event.dtstart|startEnd(event.dtend, true) }}</div>
+			<a class="btn btn-outline btn-xs ml-5" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
+		</div>
 		{% if event.parent %}
-			<div class="font-light text-xs mt-2 text-center">
+			<div class="font-light text-xs mt-3 text-center">
 				Anlass
 				{{ event.parent.index + 1}}
 				von
@@ -39,9 +43,5 @@
 				{{ event.parent.dtstart|startEnd(event.parent.dtend) }}
 			</div>
 		{% endif %}
-		<div class="flex items-center justify-between mt-5">
-			<div class="font-medim text-sm">{{ event.dtstart|startEnd(event.dtend, true) }}</div>
-			<a class="btn btn-outline btn-xs ml-5" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
-		</div>
 	</div>
 </div>
