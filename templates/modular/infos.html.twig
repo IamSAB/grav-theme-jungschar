@@ -1,35 +1,36 @@
-<div class="prose mx-auto {{ page.header.centered ? 'text-center' : '' }}">
-	{{ page.content|raw }}
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-start mt-6">
-	{% for item in page.collection %}
-		<div class="card indicator mt-16 overflow-visible shadow bg-neutral-content">
-			{% set image = item.media.images|first %}
-			{% if image %}
-				<div class="indicator-item indicator-center indicator-top h-32 w-32 filter drop-shadow-md">
-					{{ image.cropZoom(200,200).html(item.title, '', 'mask mask-squircle w-full')|raw }}
+<div class="space-y-8">
+	<div class="prose mx-auto {{ page.header.centered ? 'text-center' : '' }}">
+		{{ page.content|raw }}
+	</div>
+	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
+		{% for item in page.collection %}
+			<div class="w-full bg-neutral-content shadow rounded-box">
+
+				<div class="p-5">
+					<div class="text-primary font-medium uppercase text-sm tracking-wide">{{ item.taxonomy.tag|first }}</div>
+					<h3 class="text-xl font-bold">{{ item.title }}</h3>
 				</div>
-			{% endif %}
-			<div class="card-body mt-16">
-				<div class="text-center">
-					<div>
-						{% for tag in item.taxonomy.tag %}
-							<span class="badge badge-ghost">{{ tag }}</span>
-						{% endfor %}
+
+				{% set image = item.media.images|first %}
+				{% if image %}
+					<figure>
+						{{ image.cropZoom(600, 300).html|raw }}
+					</figure>
+				{% endif %}
+
+				<div class="p-5">
+					<h2 class="font-light text-sm">{{ item.header.subtitle }}</h2>
+					<div class="prose prose-sm mt-2">
+						{{ item.summary|raw }}
 					</div>
-					<h2 class="card-title mt-2 mb-0">{{ item.title }}</h2>
-					<div class="font-light">{{ item.header.subtitle }}</div>
-				</div>
-				<div class="font-semibold text-xs uppercase tracking-wide mt-3 text-primary opacity-80">{{ item.header.dtend|date('d. M y')}}</div>
-				<div class="prose prose-sm">
-					{{ item.summary|raw }}
-				</div>
-				<div class="flex justify-end mt-1">
-					<a class="btn btn-outline btn-xs" href="{{ item.url }}">Weiterlesen</a>
+					<div class="flex items-center justify-between mt-5">
+						<div class="font-medim text-sm">{{ item.header.dtend|date('d. M y')}}</div>
+						<a class="btn btn-outline btn-xs ml-5" href="{{ item.url }}">Details</a>
+					</div>
 				</div>
 			</div>
-		</div>
-	{% else %}
-		<div>Nichts gefunden.</div>
-	{% endfor %}
+		{% else %}
+			<div>Keine Infos gefunden.</div>
+		{% endfor %}
+	</div>
 </div>

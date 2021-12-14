@@ -1,11 +1,6 @@
-<div class="prose mx-auto {{ page.header.centered ? 'text-center' : '' }}">
-	{{ page.content|raw }}
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mt-6">
-	{% for event in page.collection %}
-		{% include 'partials/event-elapsed.html.twig' %}
-	{% else %}
-		{% include 'partials/empty.html.twig' with {msg: 'Keine vergangene Anlässe.'} %}
-	{% endfor %}
+<div class="space-y-8">
+	<div class="prose mx-auto {{ page.header.centered ? 'text-center' : '' }}">
+		{{ page.content|raw }}
+	</div>
+	{% include 'partials/events-upcoming.html.twig' %}
 </div>

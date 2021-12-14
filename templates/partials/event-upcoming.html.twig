@@ -1,6 +1,6 @@
 <div class="w-full bg-neutral-content shadow rounded-box">
 
-	<div class=" p-5">
+	<div class="p-5">
 		<div class="flex items-center justify-between">
 			<div class="whitespace-nowrap bg-primary rounded-lg font-bold tracking-wide uppercase py-2 px-3 text-primary-content text-sm">
 				{{ event.dtstart|date('j. M') }}
@@ -41,7 +41,7 @@
 		{% endif %}
 		<div class="flex items-center justify-between mt-5">
 			<div class="font-medim text-sm">{{ event.dtstart|startEnd(event.dtend, true) }}</div>
-			<a class="btn btn-primary btn-xs ml-5" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
+			<a class="btn btn-outline btn-xs ml-5" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
 		</div>
 	</div>
 </div>

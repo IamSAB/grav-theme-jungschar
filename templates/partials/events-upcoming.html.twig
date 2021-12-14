@@ -1,7 +1,7 @@
 {% set events = getUpcomingEvents(items|default('@root.descendants'), field|default('header.dtend'))|slice(0,count|default(6)) %}
 
 {% if events|length %}
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-start justify-items-stretch gap-8 mt-6">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
 	{% for event in events %}
 		{% include 'partials/event-upcoming.html.twig' %}
 	{% endfor %}
