@@ -14,7 +14,7 @@
 						<li>
 							<a href="#{{ section.slug|hyphenize }}" class="flex flex-col items-center hover:font-bold hover:text-primary">
 								{{ svg('theme://svg/icon/'~section.header.icon, 'icon w-8 lg:w-10')|raw }}
-								<div class="uppercase text-xs lg:text-sm font-semibold mt-1">{{ section.title }}</div>
+								<div class="text-center uppercase text-xs lg:text-sm font-semibold mt-1">{{ section.title }}</div>
 							</a>
 						</li>
 					{% endfor %}
