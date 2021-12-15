@@ -21,9 +21,9 @@
 
 {% set upcoming = getUpcomingEvent(semester) %}
 
-<div class="flex flex-col lg:flex-row items-center justify-center lg:items-stretch">
+<div class="flex flex-col lg:flex-row items-start justify-center">
 
-	<div class="card bordered w-full sm:w-2/3 lg:flex-1 lg:mb-16 lg:mt-24 shadow-sm bg-base-200">
+	<div class="card w-full sm:w-2/3 lg:flex-1 lg:mt-12">
 		<div class="card-body">
 			<div class="card-title text-center">Team</div>
 			<dl class="text-center">
@@ -59,65 +59,55 @@
 		</div>
 	</div>
 
-	<div class="indicator w-full mt-14 mb-4 lg:mb-0 lg:mt-10 lg:w-2/5 lg:mx-6">
+	<div class="card w-full lg:w-2/5 lg:mx-6 bg-neutral-content shadow my-12 lg:my-0">
 
-		<div class="indicator-item indicator-center w-20 h-20 filter drop-shadow-md">
-			<div class="mask mask-squircle flex flex-col items-center justify-center bg-primary text-primary-content w-full h-full">
-				<div class="font-extrabold text-xl">{{ upcoming.dtstart|date('j')}}</div>
-				<div class="font-light -mt-1">{{ upcoming.dtstart|date('M')}}</div>
+		<div class="card-body flex-row justify-between items-start">
+			<div class="whitespace-nowrap bg-primary rounded-lg font-bold tracking-wide uppercase py-2 px-3 text-primary-content text-sm mr-5">
+				{{ event.dtstart|date('j. M') }}
+			</div>
+			<div class="text-right">
+				<div class="space-x-2">
+					<span class="uppercase font-semibold text-sm tracking-wide text-primary opacity-90">
+						{{ semester.title }}
+					</span>
+					<span class="badge badge-outline badge-primary badge-sm">{{ upcoming.parent.index + 1}}
+						/
+						{{ upcoming.parent.total }}</span>
+				</div>
+				<h3 class="text-xl font-bold">{{ upcoming.title }}</h3>
 			</div>
 		</div>
 
-		<div class="card w-full bg-neutral-content shadow-md">
+		<figure>
+			{{ upcoming.image.cropZoom(600, 300).html|raw }}
+		</figure>
 
-			{% if upcoming.image %}
-				<figure>
-					{{ upcoming.image.cropZoom(600, 300).html|raw }}
-				</figure>
-			{% else %}
-				<div class="mt-10"></div>
-			{% endif %}
-
-			<div class="card-body">
-
-				<header class="text-center mb-5">
-					<div class="uppercase font-semibold tracking-wider text-sm text-primary-focus opacity-80">{{ upcoming.parent.title }}</div>
-					<h2 class="card-title mb-0 text-center">
-						<a href="{{upcoming.url}}">{{ upcoming.title }}
-							[{{ upcoming.parent.index + 1}}/{{ upcoming.parent.total }}]</a>
-					</h2>
-				</header>
-
-				<dl>
-					<dt>Dauer</dt>
-					<dd>{{ upcoming.dtstart|startEnd(upcoming.dtend, true) }}</dd>
-					<dt>Ort</dt>
-					<dd>{{ upcoming.location ?? 'Keine Angabe' }}</dd>
-					<dt>Begrüssung</dt>
-					<dd>
-						<div>{{ upcoming.dtstart|date('d. M Y G:i') }}</div>
-						<div class="font-light">{{ upcoming.locstart ?? 'Treffpunkt unbekannt.' }}</div>
-					</dd>
-					<dt>Verabschiedung</dt>
-					<dd>
-						<div>{{ upcoming.dtend|date('d. M Y G:i') }}</div>
-						<div class="font-light">{{ upcoming.locend ?? 'Treffpunkt unbekannt.' }}</div>
-					</dd>
-					{% if upcoming.description %}
-						<dt>Anmerkung</dt>
-						<dd class="prose prose-sm">{{ upcoming.description }}</dd>
-					{% endif %}
-				</dl>
-
-				<div class="flex justify-center mt-4">
-					<a class="btn btn-outline btn-xs" href="{{ upcoming.url }}{{ '#'~event.title|hyphenize}}">Details</a>
+		<div class="card-body">
+			<div class="text-left">
+				<div>
+					<span class="text-primary opacity-90 uppercase font-semibold tracking-wide text-sm mr-2">von</span>
+					{{ upcoming.dtstart|date('d. M Y G:i') }}
 				</div>
-
+				<div class="font-light">{{ upcoming.locstart}}</div>
+			</div>
+			<div class="text-right mt-2">
+				<div>
+					<span class="text-primary opacity-90 uppercase font-semibold tracking-wide text-sm mr-2">bis</span>
+					{{ upcoming.dtend|date('d. M Y G:i') }}
+				</div>
+				<div class="font-light">{{ upcoming.locend }}</div>
+			</div>
+			{% if upcoming.description %}
+				<div class="prose prose-sm my-4">{{ upcoming.description }}</div>
+			{% endif %}
+			<div class="flex justify-between mt-6">
+				<div>{{ upcoming.location ?? 'Keine Angabe' }}</div>
+				<a class="btn btn-outline btn-xs" href="{{ upcoming.url }}{{ '#'~event.title|hyphenize}}">Details</a>
 			</div>
 		</div>
 	</div>
 
-	<div class="card bordered w-full sm:w-2/3 lg:flex-1 lg:mb-16 lg:mt-24 shadow-sm bg-base-200">
+	<div class="card w-full sm:w-2/3 lg:flex-1 lg:mt-12">
 		<div class="card-body text-center">
 			<div class="card-title">Infos</div>
 			<dl>
@@ -140,5 +130,4 @@
 			</dl>
 		</div>
 	</div>
-
 </div>
