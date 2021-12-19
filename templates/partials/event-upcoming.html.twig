@@ -1,6 +1,6 @@
 <div class="w-full bg-neutral-content shadow rounded-box">
 
-	<div class="p-5">
+	<div class="px-4 py-4">
 		<div class="flex items-center justify-between">
 			<div class="whitespace-nowrap bg-primary rounded-lg font-bold tracking-wide uppercase py-2 px-3 text-primary-content text-sm mr-5">
 				{{ event.dtstart|date('j. M') }}
@@ -12,36 +12,59 @@
 		</div>
 	</div>
 
-	{% if event.image %}
-		<figure>
-			{{ event.image.cropZoom(600, 300).html|raw }}
-		</figure>
-	{% endif %}
 
-	<div class="p-5">
-		<div class="text-center">
+	{% if event.image %}
+		<div class="relative">
+			<figure>
+				{{ event.image.cropZoom(600, 300).html|raw }}
+			</figure>
+			<div class="absolute left-5 bottom-3 text-center">
+				{% for group in event.taxonomy.group|sort %}
+					<a class="badge badge-primary" href="/{{group|lower}}">
+						{{ group }}
+					</a>
+				{% endfor %}
+			</div>
+		</div>
+	{% else %}
+		<div class="px-5 py-3 bg-base-300">
 			{% for group in event.taxonomy.group|sort %}
-				<a class="badge badge-secondary" href="/{{group|lower}}">
+				<a class="badge" href="/{{group|lower}}">
 					{{ group }}
 				</a>
 			{% endfor %}
 		</div>
-		<div class="flex items-center justify-between mt-3">
-			<div class="font-medim text-sm">{{ event.dtstart|startEnd(event.dtend, true) }}</div>
-			<a class="btn btn-outline btn-xs ml-5" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
+	{% endif %}
+
+	{% if not event.tbd %}
+		<div class="px-5 py-3">
+			<div class="font-medium text-sm">{{ event.dtstart|startEnd(event.dtend, true) }}</div>
+			{% if event.parent %}
+				<div class="font-light text-xs mt-1">
+					Anlass
+					{{ event.parent.index + 1}}
+					von
+					{{ event.parent.total }}
+					des
+					{{ event.taxonomy.category|first }}
+					<a class="link link-hover text-primary" href="{{ event.url }}">{{ event.parent.title }}</a>
+					vom
+					{{ event.parent.dtstart|startEnd(event.parent.dtend) }}
+				</div>
+			{% endif %}
 		</div>
-		{% if event.parent %}
-			<div class="font-light text-xs mt-3 text-center">
-				Anlass
-				{{ event.parent.index + 1}}
-				von
-				{{ event.parent.total }}
-				des
-				{{ event.taxonomy.category|first }}
-				<a class="link link-hover text-primary" href="{{ event.url }}">{{ event.parent.title }}</a>
-				vom
-				{{ event.parent.dtstart|startEnd(event.parent.dtend) }}
-			</div>
+	{% endif %}
+
+	<div class="flex items-center justify-between border-t border-solid px-5 py-4 text-sm">
+		{% if event.tbd %}
+			<div>Infos folgen!</div>
+		{% elseif event.registration.required %}
+			<div>Anmeldung bis
+				{{ event.registration.dtend|date('j.n.y') }}</div>
+		{% else %}
+			<div>Keine Anmeldung nötig.</div>
 		{% endif %}
+		<a class="btn btn-outline btn-xs ml-5" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
 	</div>
+
 </div>

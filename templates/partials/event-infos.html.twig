@@ -32,7 +32,7 @@
 		{% endif %}
 	</div>
 
-	<dl class="columns-2">
+	<dl class="md:columns-2">
 		<dt>Beschreibung</dt>
 		<dd>
 			<h2 class="card-title">{{ page.header.subtitle }}</h2>
@@ -57,20 +57,19 @@
 				{% endfor %}
 			{% endif %}
 		</dd>
-		{% if page.header.dtend|date < 'now'|date %}
+		{% if date(page.header.dtstart) > date() %}
 			<dt>Anmeldung</dt>
 			<dd>
 				{% if page.header.registration.required %}
-					{% if page.header.registration.dtend and date() < date(page.header.registration.dtend) %}
-						<div class="font-light">
-							Anmeldung schliesst am
-							{{ page.header.registration.dtend|date('d. M y G:i') }}.
+					{% if date() < date(page.header.registration.dtend) %}
+						<div>
+							Möglich bis {{ page.header.registration.dtend|date('d. M y') }}
 						</div>
-						<div class="prose-sm mt-3">
+						<div class="prose-sm">
 							{{ page.header.registration.description|markdown }}
 						</div>
 					{% else %}
-						<div>Noch nicht möglich. Infos folgen!</div>
+						<div>Endete am {{ page.header.registration.dtend|date('d.n.y') }}.</div>
 					{% endif %}
 				{% else %}
 					<div>Nicht nötig. Schau einfach vorbei!</div>
@@ -140,6 +139,10 @@
 							<div class="font-light ml-2">{{ event.location ?? page.header.location }}</div>
 						</div>
 						<h4 class="text-lg font-bold mt-1">{{ event.title }}</h4>
+
+						<div class="px-6 py-4 text-sm">
+							{% include 'partials/event-startend.html.twig' %}
+						</div>
 
 						<dl>
 							<dt>Begrüssung</dt>

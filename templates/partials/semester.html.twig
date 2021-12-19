@@ -23,7 +23,7 @@
 
 <div class="flex flex-col lg:flex-row items-start justify-center">
 
-	<div class="card w-full sm:w-2/3 lg:flex-1 lg:mt-12">
+	<div class="card w-full sm:w-2/3 lg:flex-1">
 		<div class="card-body">
 			<div class="card-title text-center">Team</div>
 			<dl class="text-center">
@@ -61,18 +61,14 @@
 
 	<div class="card w-full lg:w-2/5 lg:mx-6 bg-neutral-content shadow my-12 lg:my-0">
 
-		<div class="card-body flex-row justify-between items-start">
+		<div class="flex justify-between items-start p-6">
 			<div class="whitespace-nowrap bg-primary rounded-lg font-bold tracking-wide uppercase py-2 px-3 text-primary-content text-sm mr-5">
-				{{ event.dtstart|date('j. M') }}
+				{{ upcoming.dtstart|date('j. M') }}
 			</div>
 			<div class="text-right">
-				<div class="space-x-2">
-					<span class="uppercase font-semibold text-sm tracking-wide text-primary opacity-90">
-						{{ semester.title }}
-					</span>
-					<span class="badge badge-outline badge-primary badge-sm">{{ upcoming.parent.index + 1}}
-						/
-						{{ upcoming.parent.total }}</span>
+				<div class="uppercase font-medium text-sm tracking-wide text-primary">
+					Nachmittag
+					{{ upcoming.parent.index + 1}}/{{ upcoming.parent.total }}
 				</div>
 				<h3 class="text-xl font-bold">{{ upcoming.title }}</h3>
 			</div>
@@ -82,32 +78,29 @@
 			{{ upcoming.image.cropZoom(600, 300).html|raw }}
 		</figure>
 
-		<div class="card-body">
-			<div class="text-left">
-				<div>
-					<span class="text-primary opacity-90 uppercase font-semibold tracking-wide text-sm mr-2">von</span>
-					{{ upcoming.dtstart|date('d. M Y G:i') }}
-				</div>
-				<div class="font-light">{{ upcoming.locstart}}</div>
+		<div class="px-6 py-4 text-sm">
+			{% include 'partials/event-startend.html.twig' with {event: upcoming} %}
+		</div>
+
+		{% if upcoming.description %}
+			<div class="px-6 pb-4 prose-sm my-3">{{ upcoming.description }}</div>
+		{% endif %}
+		<div class="flex justify-between border-t border-solid px-5 py-4">
+			<div>
+				{% if upcoming.tbd %}
+					<div>Infos folgen!</div>
+				{% elseif upcoming.registration.required %}
+					<div>Anmeldung bis
+						{{ upcoming.registration.dtend|date('j.n.y') }}</div>
+				{% else %}
+					<div>Keine Anmeldung nötig.</div>
+				{% endif %}
 			</div>
-			<div class="text-right mt-2">
-				<div>
-					<span class="text-primary opacity-90 uppercase font-semibold tracking-wide text-sm mr-2">bis</span>
-					{{ upcoming.dtend|date('d. M Y G:i') }}
-				</div>
-				<div class="font-light">{{ upcoming.locend }}</div>
-			</div>
-			{% if upcoming.description %}
-				<div class="prose prose-sm my-4">{{ upcoming.description }}</div>
-			{% endif %}
-			<div class="flex justify-between mt-6">
-				<div>{{ upcoming.location ?? 'Keine Angabe' }}</div>
-				<a class="btn btn-outline btn-xs" href="{{ upcoming.url }}{{ '#'~event.title|hyphenize}}">Details</a>
-			</div>
+			<a class="btn btn-outline btn-xs" href="{{ upcoming.url }}{{ '#'~event.title|hyphenize}}">Details</a>
 		</div>
 	</div>
 
-	<div class="card w-full sm:w-2/3 lg:flex-1 lg:mt-12">
+	<div class="card w-full sm:w-2/3 lg:flex-1">
 		<div class="card-body text-center">
 			<div class="card-title">Infos</div>
 			<dl>

@@ -1,0 +1,15 @@
+<div class="flex">
+  <div class="text-primary font-medium mr-3">>>></div>
+  <div>
+    {{ event.dtstart|date('d. M y G:i') }}
+    <br>
+    <span class="font-light">{{ event.locstart}}</span>
+  </div>
+</div>
+<div class="flex mt-1">
+  <div class="text-primary font-medium mr-3">&lt;&lt;&lt;</div>
+  <div>
+    {{ event.dtend|date('d. M y G:i') }}<br>
+    <span class="font-light">{{ event.locend }}</span>
+  </div>
+</div>
