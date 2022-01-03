@@ -1,4 +1,4 @@
-<div class="w-full bg-neutral-content shadow rounded-box">
+<div class="card bordered shadow-sm w-full bg-neutral-content">
 
 	<div class="p-5">
 		<div class="flex items-center justify-between">
@@ -17,11 +17,11 @@
 					</div>
 				{% endif %}
 				{% if event.content %}
-				<div data-tip="Bericht" class="tooltip">
-					<a href="{{event.url}}#bericht">
-						{{ svg('theme://svg/icon/news.svg', 'icon w-6')|raw }}
-					</a>
-				</div>
+					<div data-tip="Bericht" class="tooltip">
+						<a href="{{event.url}}#bericht">
+							{{ svg('theme://svg/icon/news.svg', 'icon w-6')|raw }}
+						</a>
+					</div>
 				{% endif %}
 			</div>
 		</div>
@@ -29,23 +29,33 @@
 	</div>
 
 	{% set image = event.media.images|first %}
+
+	{% set group_badges %}
+	{% for group in event.taxonomy.group|default([])|sort %}
+		<a class="badge" href="/{{group|lower}}">
+			{{ group }}
+		</a>
+	{% endfor %}
+	{% endset %}
+
 	{% if image %}
-		<figure>
-			{{ image.cropZoom(600, 300).html|raw }}
-		</figure>
+		<div class="relative">
+			<figure>
+				{{ image.cropZoom(600, 300).html|raw }}
+			</figure>
+			<div class="absolute left-5 bottom-3 text-center">
+				{{ group_badges }}
+			</div>
+		</div>
+	{% else %}
+		<div class="px-5 py-3 bg-base-300">
+			{{ group_badges }}
+		</div>
 	{% endif %}
 
-	<div class="p-5">
-		<div class="text-center">
-			{% for group in event.taxonomy.group %}
-				<a class="badge badge-secondary" href="/{{group|lower}}">
-					{{ group }}
-				</a>
-			{% endfor %}
-		</div>
-		<div class="flex items-center justify-between mt-5">
-			<div class="font-medim text-sm">{{ event.header.dtend|nicetime }}</div>
-			<a class="btn btn-outline btn-xs ml-5" href="{{ event.url }}">Details</a>
-		</div>
+	<div class="flex items-center justify-between p-5">
+		<div class="font-semibold text-sm opacity-50">{{ event.header.dtend|nicetime }}</div>
+		<a class="btn btn-ghost btn-xs ml-4" href="{{ event.url }}">Details</a>
 	</div>
+
 </div>
