@@ -1,9 +1,9 @@
-{% set events = events|default([]) %}
+{% set upcoming = upcoming|default([]) %}
 
-{% if events|length %}
-	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
-		{% for event in events %}
-			{% include 'partials/event-upcoming.html.twig' %}
+{% if upcoming|length %}
+	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 items-start">
+		{% for startdate,events in upcoming %}
+			{% include 'partials/events-upcoming-date.html.twig' %}
 		{% endfor %}
 	</div>
 {% else %}

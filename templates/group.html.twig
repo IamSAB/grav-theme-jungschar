@@ -21,7 +21,7 @@
   {
     title: 'Semester',
     slug: 'semester',
-    content: include('partials/semester.html.twig', {group: page.title }),
+    content: include('partials/semester.html.twig', { group: page.title }),
     header: {
       subtitle: 'Nachmittage',
       icon: 'trees.svg'
@@ -42,7 +42,7 @@
     title: 'Ausblick',
     slug: 'ausblick',
     content: include('partials/events-upcoming.html.twig', {
-			events: getUpcomingEvents({'@taxonomy.group': page.title}, 'header.dtstart')
+			upcoming: collectUpcomingEvents({items: {'@taxonomy.group': page.title}}, 'header.dtstart')
 		}),
 		header: {
 			icon: 'calendar.svg',

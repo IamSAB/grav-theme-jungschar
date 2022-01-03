@@ -35,7 +35,7 @@ class Jungschar extends Theme
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('embedMap', [$this, 'embedMap']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getGoogleMapsApiKey', [$this, 'getGoogleMapsApiKey']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventLocations', [$this, 'getEventLocations']));
-    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getUpcomingEvents', [$this, 'getUpcomingEvents']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('collectUpcomingEvents', [$this, 'collectUpcomingEvents']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('extractUpcomingEvent', [$this, 'extractUpcomingEvent']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getLocationAndVenues', [$this, 'getLocationAndVenues']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEndTime', [$this, 'startEndTime']));
@@ -128,7 +128,7 @@ class Jungschar extends Theme
     return $extracted;
   }
 
-  public function collectUpcomingEvents($options = [], $limit = 6)
+  public function collectUpcomingEvents($options = [], $limit = 3)
   {
     $options = array_merge([
       'dateRange' => [
@@ -145,7 +145,7 @@ class Jungschar extends Theme
       $starttime = strtotime($event['dtstart']);
       if ($starttime > $now && count($upcoming) <= $limit) {
         if (count($upcoming) < $limit) {
-          $key = date('d.m.y', $starttime);
+          $key = date('y-m-d', $starttime);
           if (!isset($upcoming[$key])) {
             $upcoming[$key] = [];
           }

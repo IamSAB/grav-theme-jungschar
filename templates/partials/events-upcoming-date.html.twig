@@ -1,0 +1,72 @@
+<div>
+
+	<div class="flex flex-col items-center">
+		<div class="card text-center bordered w-20 bg-neutral-content shadow-sm">
+			<div class="text-2xl font-black py-3">
+				{{ startdate|date('j') }}
+			</div>
+			<div class="font-semibold py-1.5 bg-primary text-primary-content uppercase tracking-wide text-sm">{{ startdate|date('M') }}</div>
+		</div>
+		<div class="mt-2 font-medium opacity-50">{{ startdate|nicetime }}</div>
+	</div>
+
+	<div class="mt-8 space-y-5">
+
+		{% for event in events %}
+			<div class="card bordered p-4 space-y-4 bg-neutral-content shadow-sm">
+				<div class="flex items-center">
+					<div class="w-20 mr-4">
+						{{ event.image.cropZoom(150,150).html('','','mask mask-squircle')|raw }}
+					</div>
+					<div>
+						<div class="uppercase font-medium text-xs tracking-wide text-primary">
+							{{ event.taxonomy.category|first }}
+							{% if not event.tbd and event.parent %}
+								<span class="opacity-75">{{ event.parent.title }}</span>
+							{% endif %}
+						</div>
+						<h3 class="text-lg font-semibold">
+							<span>{{ event.title }}</span>
+							{% if not event.tbd and event.parent %}
+								<span class="opacity-50 pr-1">{{ event.parent.nr}}/{{ event.parent.total }}</span>
+							{% endif %}
+						</h3>
+						<div>
+							{% for group in event.taxonomy.group|sort %}
+								<a class="badge badge-sm" href="/{{group|lower}}">
+									{{ group }}
+								</a>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+				{% if not event.tbd %}
+					<div>
+						<div>
+							<span class="font-bold">{{ event.dtstart|date('G:i') }}</span>
+							<span>{{ event.locstart }}</span>
+						</div>
+						{# {% if event.description %}
+							<div class="prose prose-sm mt-1 opacity-80">{{event.description|markdown}}</div>
+						{% endif %} #}
+					</div>
+				{% endif %}
+				<div class="flex justify-between items-center">
+					<div class="text-sm font-semibold opacity-50">
+						{% if event.tbd %}
+							Infos folgen!
+						{% elseif event.registration.required %}
+							Anmeldung bis
+							{{ event.registration.dtend|date('j.n.y') }}
+						{% else %}
+							Keine Anmeldung nötig.
+						{% endif %}
+					</div>
+					<a class="btn btn-ghost btn-xs ml-4" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
+				</div>
+			</div>
+		{% endfor %}
+
+	</div>
+
+</div>

@@ -24,10 +24,10 @@ svg.icon {
   @apply fixed bg-primary bg-hero-texture shadow-sm;
 }
 
-.scrolled .btn {
+/* .scrolled .btn {
   @apply btn-xs;
   line-height: 1.4rem;
-}
+} */
 
 .scrolled .btn svg {
   @apply w-4;
