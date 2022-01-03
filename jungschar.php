@@ -36,80 +36,127 @@ class Jungschar extends Theme
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getGoogleMapsApiKey', [$this, 'getGoogleMapsApiKey']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getEventLocations', [$this, 'getEventLocations']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getUpcomingEvents', [$this, 'getUpcomingEvents']));
-    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getUpcomingEvent', [$this, 'getUpcomingEvent']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('extractUpcomingEvent', [$this, 'extractUpcomingEvent']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getLocationAndVenues', [$this, 'getLocationAndVenues']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEndTime', [$this, 'startEndTime']));
   }
 
-  public function getUpcomingEvent($event)
+  private function merge_truthy($arr1, $arr2)
+  {
+    foreach ($arr2 as $key => $value) {
+      if ($value) {
+        $arr1[$key] = $value;
+      }
+    }
+    return $arr1;
+  }
+
+  public function extractSubEvents($event, $sort = false)
   {
     $header = (array) $event->header();
-    $now = strtotime('now');
-
-    $title = $event->title();
     $taxonomy = $event->taxonomy();
-    $image = array_values($event->media()->images())[0] ?? null;
     $url = $event->url();
-    $parent = null;
-    $dtstart = $header['dtstart'];
-    $dtend = $header['dtend'];
-    $locstart = $header['locstart'] ?? '';
-    $locend = $header['locend'] ?? $locstart;
-    $location = $header['location'] ?? '';
-    $description = $header['description'] ?? '';
-    $registration = $header['registration'] ?? [];
-    $tbd = $header['tbd'] ?? false;
-
+    $image = array_values($event->media()->images())[0] ?? null;
     $subevents = $header['events'] ?? null;
+
+    $header['locend'] = $header['locend'] ?? $header['locstart'] ?? '';
+
+    $extracted = [];
 
     if ($subevents) {
       $total = count($subevents);
+      foreach ($subevents as $i => $subevent) {
+        $subevent['locend'] = $subevent['locend'] ?? $subevent['locstart'] ?? '';
+        $subevent['image'] = $image;
+        $subevent['url'] = $url;
+        $subevent['parent'] = [
+          'nr' => $i+1,
+          'title' => $header['title'],
+          'dtstart' => $header['dtstart'],
+          'dtend' => $header['dtend'],
+          'total' => $total
+        ];
+        unset($header['events']);
+        $extracted[] = $this->merge_truthy($header, $subevent);
+      }
+    } else {
+      $extracted[] = array_merge($header, compact('image', 'url'));
+    }
 
-      usort($subevents, function ($a, $b) {
+    if ($sort) {
+      usort($extracted, function($a,$b) {
         return strtotime($a['dtstart']) > strtotime($b['dtstart']);
       });
+    }
 
-      foreach ($subevents as $index => $subevent) {
-        if (strtotime($subevent['dtstart']) > $now) {
-          $parent = compact('index', 'title', 'total', 'dtstart', 'dtend', 'description');
-          $title = $subevent['title'];
-          $dtstart = $subevent['dtstart'];
-          $dtend = $subevent['dtend'];
-          $locstart = $subevent['locstart'] ?? $locstart;
-          $locend = $subevent['locend'] ?? $locstart;
-          $description = $subevent['description'] ?? '';
+    return $extracted;
+  }
+
+  public function extractUpcomingEvent($event)
+  {
+    $events = $this->extractSubEvents($event, true);
+
+    foreach ($events as $event) {
+      if (strtotime($event['dtstart']) > time()) {
+        return $event;
+      }
+    }
+  }
+
+  public function getAllEvents(array $options = [], $sort = true)
+  {
+    $events = $this->grav['page']->collection(array_merge([
+      'items' => '@root.descendants',
+      'filter' => [
+        'published' => true,
+        'type' => 'event'
+      ]
+    ], $options));
+
+    $extracted = [];
+
+    foreach ($events as $event) {
+      $extracted = array_merge($extracted, $this->extractSubEvents($event));
+    }
+    
+    if ($sort) {
+      usort($extracted, function($a,$b) {
+        return strtotime($a['dtstart']) > strtotime($b['dtstart']);
+      });
+    }
+
+    return $extracted;
+  }
+
+  public function collectUpcomingEvents($options = [], $limit = 6)
+  {
+    $options = array_merge([
+      'dateRange' => [
+        'start' => 'now',
+        'field' => 'header.dtend'
+      ]
+    ], $options);
+
+    $now = time();
+    $events = $this->getAllEvents($options);
+
+    $upcoming = [];
+    foreach ($events as $event) {
+      $starttime = strtotime($event['dtstart']);
+      if ($starttime > $now && count($upcoming) <= $limit) {
+        if (count($upcoming) < $limit) {
+          $key = date('d.m.y', $starttime);
+          if (!isset($upcoming[$key])) {
+            $upcoming[$key] = [];
+          }
+          $upcoming[$key][] = $event;
+        } else {
           break;
         }
       }
     }
-
-    return compact('title', 'url', 'dtstart', 'dtend', 'parent', 'taxonomy', 'image', 'description', 'location', 'locstart', 'locend', 'tbd', 'registration');
-  }
-
-  public function getUpcomingEvents($items = '@root.descendants', $field = 'header.dtend', $limit = 6)
-  {
-    $events = $this->grav['page']->collection([
-      'items' => $items,
-      'filter' => [
-        'published' => true,
-        'type' => 'event'
-      ],
-      'dateRange' => [
-        'start' => 'now',
-        'field' => $field
-      ]
-    ]);
-
-    $upcoming = [];
-    foreach ($events as $event) {
-      $upcoming[] = $this->getUpcomingEvent($event);
-    }
-
-    usort($upcoming, function ($a, $b) {
-      return strtotime($a['dtstart']) > strtotime($b['dtstart']);
-    });
-
-    return array_slice($upcoming, 0, $limit);
+    
+    return $upcoming;
   }
 
   private function geocode(string $address)
