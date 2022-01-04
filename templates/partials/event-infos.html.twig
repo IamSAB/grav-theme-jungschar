@@ -63,13 +63,15 @@
 				{% if page.header.registration.required %}
 					{% if date() < date(page.header.registration.dtend) %}
 						<div>
-							Möglich bis {{ page.header.registration.dtend|date('d. M y') }}
+							Möglich bis
+							{{ page.header.registration.dtend|date('d. M y') }}
 						</div>
 						<div class="prose-sm">
 							{{ page.header.registration.description|markdown }}
 						</div>
 					{% else %}
-						<div>Endete am {{ page.header.registration.dtend|date('d.n.y') }}.</div>
+						<div>Endete am
+							{{ page.header.registration.dtend|date('d.n.y') }}.</div>
 					{% endif %}
 				{% else %}
 					<div>Nicht nötig. Schau einfach vorbei!</div>
@@ -129,41 +131,39 @@
 	{% if page.header.events %}
 		<div class="grid grid-cols-3 gap-6">
 
-			{% for event in page.header.events %}
+			{% for event in extractSubEvents(page) %}
 
-				<div id="{{ event.title|hyphenize }}" class="card compact bg-neutral-content shadow-sm bordered">
-					<div class="card-body">
-						<div class="flex">
-							<div class="uppercase text-sm font-semibold text-primary opacity-80">{{ event.dtstart|startEnd(event.dtend) }}
+				<div id="{{ event.title|hyphenize }}">
+
+					<div class="flex items-start">
+						<div class="card text-center bordered w-12 bg-neutral-content shadow-sm flex-none">
+							<div class="font-black py-2">
+								{{ event.dtstart|date('j') }}
 							</div>
-							<div class="font-light ml-2">{{ event.location ?? page.header.location }}</div>
+							<div class="font-semibold py-1 bg-primary text-primary-content uppercase tracking-wide text-xs">{{ event.dtstart|date('M') }}</div>
 						</div>
-						<h4 class="text-lg font-bold mt-1">{{ event.title }}</h4>
-
-						<div class="px-6 py-4 text-sm">
-							{% include 'partials/event-startend.html.twig' %}
-						</div>
-
-						<dl>
-							<dt>Begrüssung</dt>
-							<dd class="flex flex-wrap">
-								<div class="font-medium mr-2">{{ event.dtstart|startEndTime(event.dtend) }}</div>
-								<div class="font-light">{{ event.locstart ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
-							</dd>
-							<dt>Verabschiedung</dt>
-							<dd class="flex flex-wrap">
-								<div class="font-medium mr-2">{{ event.dtend|startEndTime(event.dtstart) }}</div>
-								<div class="font-light">{{ event.locend ?? event.locstart ?? page.header.locend ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</div>
-							</dd>
-							{% if event.description %}
-								<dt>Anmerkung</dt>
-								<dd class="prose prose-sm">{{ event.description }}</dd>
+						<div class="ml-6">
+							<h4 class="text-lg font-bold mt-1">{{ event.title }}</h4>
+							<div class="flex flex-wrap text-sm">
+								<span class="uppercase tracking-wide opacity-50 font-semibold mr-1">von</span>
+								<span class="font-medium mr-1">{{ event.dtstart|startEndTime(event.dtend) }}</span>
+								<span class="font-light">{{ event.locstart ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</span>
+							</div>
+							<div class="flex flex-wrap text-sm">
+								<span class="uppercase tracking-wide opacity-50 font-semibold mr-1">bis</span>
+								<span class="font-medium mr-1">{{ event.dtend|startEndTime(event.dtstart) }}</span>
+								<span class="font-light">{{ event.locend ?? event.locstart ?? page.header.locstart ?? 'Treffpunkt unbekannt.' }}</span>
+							</div>
+							{% if event.notice %}
+								<div class="prose prose-sm">
+									{{ event.notice }}
+								</div>
 							{% endif %}
 						</dl>
 
 					</div>
 				</div>
-			{% endfor %}
-		</div>
-	{% endif %}
-</div>
+			</div>
+		{% endfor %}
+	</div>
+{% endif %}</div>

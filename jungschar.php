@@ -39,6 +39,7 @@ class Jungschar extends Theme
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('extractUpcomingEvent', [$this, 'extractUpcomingEvent']));
     $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('getLocationAndVenues', [$this, 'getLocationAndVenues']));
     $this->grav['twig']->twig()->addFilter(new \Twig\TwigFilter('startEndTime', [$this, 'startEndTime']));
+    $this->grav['twig']->twig()->addFunction(new \Twig\TwigFunction('extractSubEvents', [$this, 'extractSubEvents']));
   }
 
   private function merge_truthy($arr1, $arr2)

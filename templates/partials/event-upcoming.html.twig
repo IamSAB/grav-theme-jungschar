@@ -31,9 +31,9 @@
 				<span class="font-bold">{{ event.dtstart|date('G:i') }}</span>
 				<span>{{ event.locstart }}</span>
 			</div>
-			{# {% if event.description %}
-										<div class="prose prose-sm mt-1 opacity-80">{{event.description|markdown}}</div>
-									{% endif %} #}
+			{% if event.notice %}
+				<div class="prose prose-sm mt-1 opacity-80">{{event.notice}}</div>
+			{% endif %}
 		</div>
 	{% endif %}
 	<div class="flex justify-between items-center border-t px-4 py-3">

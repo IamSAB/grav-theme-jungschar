@@ -38,9 +38,15 @@ form:
                     header.subtitle:
                       label: Untertitel
                       type: text
+
+                    header.notice:
+                      label: Anmerkung
+                      description: Kurzfassung der Beschreibung
+                      type: textarea
                     
                     header.description:
                       label: Beschreibung
+                      description: Ausführliche Beschreibung
                       type: markdown
 
                     header.location:
@@ -158,6 +164,6 @@ form:
                         .locend:
                           type: text
                           label: Treffpunkt zur Verabschiedung
-                        .description:
-                          type: text
+                        .notice:
+                          type: textarea
                           label: Anmerkung
