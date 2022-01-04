@@ -42,7 +42,15 @@
     title: 'Ausblick',
     slug: 'ausblick',
     content: include('partials/events-upcoming.html.twig', {
-			upcoming: collectUpcomingEvents({items: {'@taxonomy.group': page.title}}, 'header.dtstart')
+			upcoming: collectUpcomingEvents({
+				items: {
+					'@taxonomy.group': page.title
+				},
+				dateRange: {
+					start: 'now',
+					field: 'header.dtstart'
+				}
+			})
 		}),
 		header: {
 			icon: 'calendar.svg',
