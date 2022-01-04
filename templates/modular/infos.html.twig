@@ -23,10 +23,11 @@
 					<div class="prose prose-sm mt-2">
 						{{ item.summary|raw }}
 					</div>
-					<div class="flex items-center justify-between mt-5">
-						<div class="font-medim text-sm">{{ item.header.dtend|date('d. M y')}}</div>
-						<a class="btn btn-outline btn-xs ml-5" href="{{ item.url }}">Details</a>
-					</div>
+				</div>
+
+				<div class="flex items-center justify-between border-t p-5">
+					<div class="font-semibold opacity-50 text-sm">{{ item.header.dtend|date('d. M y')}}</div>
+					<a class="btn btn-ghost btn-xs ml-5" href="{{ item.url }}">Lesen</a>
 				</div>
 			</div>
 		{% else %}
