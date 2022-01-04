@@ -1,0 +1,9 @@
+<div class="flex flex-col items-center">
+	<div class="card text-center bordered w-20 bg-neutral-content shadow-sm">
+		<div class="text-2xl font-black py-3">
+			{{ date|date('j') }}
+		</div>
+		<div class="font-semibold py-1.5 bg-primary text-primary-content uppercase tracking-wide text-sm">{{ date|date('M') }}</div>
+	</div>
+	<div class="mt-2 font-medium opacity-50">{{ date|nicetime }}</div>
+</div>

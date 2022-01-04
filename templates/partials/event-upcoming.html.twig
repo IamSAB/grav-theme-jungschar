@@ -1,0 +1,52 @@
+<div class="card bordered bg-neutral-content shadow-sm">
+	<div class="flex items-center px-4 py-3">
+		<div class="w-20 mr-4">
+			{{ event.image.cropZoom(150,150).html('','','mask mask-squircle')|raw }}
+		</div>
+		<div>
+			<div class="uppercase font-medium text-xs tracking-wide text-primary">
+				{{ event.taxonomy.category|first }}
+				{% if not event.tbd and event.parent %}
+					<span class="opacity-75">{{ event.parent.title }}</span>
+				{% endif %}
+			</div>
+			<h3 class="text-lg font-semibold">
+				<span>{{ event.title }}</span>
+				{% if not event.tbd and event.parent %}
+					<span class="opacity-50 pr-1">{{ event.parent.nr}}/{{ event.parent.total }}</span>
+				{% endif %}
+			</h3>
+			<div>
+				{% for group in event.taxonomy.group|sort %}
+					<a class="badge badge-sm" href="/{{group|lower}}">
+						{{ group }}
+					</a>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	{% if not event.tbd %}
+		<div class="border-t px-4 py-3">
+			<div>
+				<span class="font-bold">{{ event.dtstart|date('G:i') }}</span>
+				<span>{{ event.locstart }}</span>
+			</div>
+			{# {% if event.description %}
+										<div class="prose prose-sm mt-1 opacity-80">{{event.description|markdown}}</div>
+									{% endif %} #}
+		</div>
+	{% endif %}
+	<div class="flex justify-between items-center border-t px-4 py-3">
+		<div class="text-sm font-semibold opacity-50">
+			{% if event.tbd %}
+				Infos folgen!
+			{% elseif event.registration.required %}
+				Anmeldung bis
+				{{ event.registration.dtend|date('j.n.y') }}
+			{% else %}
+				Keine Anmeldung nötig.
+			{% endif %}
+		</div>
+		<a class="btn btn-ghost btn-xs ml-4" href="{{ event.url }}{{ event.parent ? '#'~event.title|hyphenize : ''}}">Details</a>
+	</div>
+</div>

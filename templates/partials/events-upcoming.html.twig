@@ -2,8 +2,15 @@
 
 {% if upcoming|length %}
 	<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 items-start">
-		{% for startdate,events in upcoming %}
-			{% include 'partials/events-upcoming-date.html.twig' %}
+		{% for date,events in upcoming %}
+			<div>
+				{% include 'partials/card-date.html.twig' %}
+				<div class="mt-8 space-y-5">
+					{% for event in events %}
+						{% include 'partials/event-upcoming.html.twig' %}
+					{% endfor %}
+				</div>
+			</div>
 		{% endfor %}
 	</div>
 {% else %}
