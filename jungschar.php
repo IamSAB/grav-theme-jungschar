@@ -187,8 +187,6 @@ class Jungschar extends Theme
     $locend = $header['locend'] ?? $locstart;
     $location = $header['location'] ?? null;
 
-    $this->grav['log']->debug('markers', compact('locstart', 'locend', 'location'));
-
     if (!$locend) {
       $locend = $locstart;
     }
