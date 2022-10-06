@@ -510,6 +510,7 @@ class Jungschar extends Theme
 
         $groups = $event->taxonomy()['group'] ?? [];
         $categories = $event->taxonomy()['category'] ?? [];
+        $category = $categories[0] ?? '?';
         $subevents = $header['events'] ?? [];
         $total = count($subevents);
 
@@ -527,11 +528,11 @@ class Jungschar extends Theme
           foreach ($subevents as $i => $subevent) {
             $item = compact('title', 'url', 'color', 'extendedProps');
             $nr = $i + 1;
-            $item['title'] = "$title [{$nr}/$total]: {$subevent['title']}";
+            $item['title'] = "$title [$nr/$total]: {$subevent['title']}";
             $item['start'] = (new DateTime($subevent['dtstart'], $tz))->format(DateTime::ISO8601);
             $item['end'] = (new DateTime($subevent['dtend'], $tz))->format(DateTime::ISO8601);
             $item['extendedProps']['duration'] = $this->startEnd($subevent['dtstart'], $subevent['dtend'], true);
-            $item['extendedProps']['parent'] = "Anlass {$nr}/$total des" . $categories[0] ?? '???'. "'$title' vom $duration";
+            $item['extendedProps']['parent'] = "Anlass $nr/$total des $category '$title' vom $duration";
             $items[] = $item;
           }
         } else {
