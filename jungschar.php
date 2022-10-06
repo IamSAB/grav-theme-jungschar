@@ -393,6 +393,7 @@ class Jungschar extends Theme
       $label = $taxonomy['category'][0] ?? '';
       $format = 'd. M y G:i';
       $url = $event->url(true);
+      $modified = $event->lastModified()?? $event->modified();
 
       if (isset($header['events'])) {
         $count = count($header['events']);
@@ -423,6 +424,9 @@ class Jungschar extends Theme
           $content .= $url;
 
           $vcalendar->add('VEVENT', [
+            'UID' => $event->id(),
+            'DTSTAMP' => $modified,
+            'LAST-MODIFIED' => $modified,
             'SUMMARY' => $summary,
             'DTSTART' => $dtstart,
             'DTEND' => $dtend,
@@ -446,11 +450,14 @@ class Jungschar extends Theme
         $content .= "---\n>$url";
 
         $vcalendar->add('VEVENT', [
+          'UID' => $event->id(),
+          'DTSTAMP' => $modified,
+          'LAST-MODIFIED' => $modified,
           'SUMMARY' => $summary,
           'DTSTART' => $dtstart,
           'DTEND' => $dtend,
           'LOCATION' => $header['location'] ?? '',
-          'DESCRIPTION' => $content,
+          'DESCRIPTION' => $content . "oh my god",
           'CATEGORIES' => $categories,
           'URL' => $url
         ]);
@@ -524,7 +531,7 @@ class Jungschar extends Theme
             $item['start'] = (new DateTime($subevent['dtstart'], $tz))->format(DateTime::ISO8601);
             $item['end'] = (new DateTime($subevent['dtend'], $tz))->format(DateTime::ISO8601);
             $item['extendedProps']['duration'] = $this->startEnd($subevent['dtstart'], $subevent['dtend'], true);
-            $item['extendedProps']['parent'] = "Anlass {$nr}/$total des {$categories[0]} '$title' vom $duration";
+            $item['extendedProps']['parent'] = "Anlass {$nr}/$total des" . $categories[0] ?? '???'. "'$title' vom $duration";
             $items[] = $item;
           }
         } else {
