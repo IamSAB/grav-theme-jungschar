@@ -457,7 +457,7 @@ class Jungschar extends Theme
           'DTSTART' => $dtstart,
           'DTEND' => $dtend,
           'LOCATION' => $header['location'] ?? '',
-          'DESCRIPTION' => $content . "oh my god",
+          'DESCRIPTION' => $content,
           'CATEGORIES' => $categories,
           'URL' => $url
         ]);
