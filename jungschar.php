@@ -393,13 +393,13 @@ class Jungschar extends Theme
       $label = $taxonomy['category'][0] ?? '';
       $format = 'd. M y G:i';
       $url = $event->url(true);
-      $modified = $event->lastModified()?? $event->modified();
+      $modified = new DateTime('@' . $event->modified());
 
       if (isset($header['events'])) {
         $count = count($header['events']);
         $duration = $this->startEnd($header['dtstart'], $header['dtend']);
 
-        foreach ($header['events'] as $item) {
+        foreach ($header['events'] as $i => $item) {
           $summary = strtoupper($label == 'Semester' ? ($taxonomy['group'][0] ?? '') : $label) . " - " . $item['title'];
 
           $dtstart = new DateTime($item['dtstart'], $tz);
@@ -424,7 +424,7 @@ class Jungschar extends Theme
           $content .= $url;
 
           $vcalendar->add('VEVENT', [
-            'UID' => $event->id(),
+            'UID' => $event->id() . $i,
             'DTSTAMP' => $modified,
             'LAST-MODIFIED' => $modified,
             'SUMMARY' => $summary,
